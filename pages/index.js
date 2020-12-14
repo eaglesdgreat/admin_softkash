@@ -1,65 +1,273 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { useState } from 'react';
+import {
+  Button,
+  Card,
+  CardContent,
+  Box,
+  Container,
+  TextField,
+  Typography,
+  Grid,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'
+// import { useStateValue } from '../StateProviders';
+import axios from 'axios'
+import { useRouter } from 'next/router'
+// import { authenticate } from './../lib/auth.helper'
 
-export default function Home() {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    height: '100%',
+    margin: 'auto',
+    paddingTop: 100,
+    paddingBottom: 250,
+    backgroundColor: '#F0FAF4'
+  },
+  card: {
+    width: '400px',
+    height: 'auto',
+    paddingTop: '5%',
+    paddingBottom: '5%',
+    margin: 'auto',
+    alignItems: 'center',
+    borderRadius: '10px'
+  },
+  box: {
+    width: '80%',
+    margin: 'auto',
+    alignItem: 'center',
+    // border: '1px solid red',
+  },
+  typography: {
+    lineHeight: '35px',
+    fontSize: '25px',
+    fontWeight: 'bold',
+    fontFamily: 'Source Sans Pro',
+    letterSpacing: '0.01em',
+    fontStyle: 'normal',
+    color: '#000000',
+    textAlign: 'center',
+  },
+  textField: {
+    borderRadius: "6px",
+    // height: '45px',
+    margin: 'auto',
+    '& input': {
+      color: '#182C51',
+      fontSize: '16px',
+      fontWeight: 'bold',
+      fontFamily: 'Source Sans Pro',
+      fontStyle: 'normal',
+      lineHeight: '20px',
+    },
+    "& ::placeholder": { fontSize: "12px", fontWeight: '500' },
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(4),
+    fontSize: "14px"
+  },
+  submit: {
+    // margin: theme.spacing(3, 0, 2),
+    fontSize: "14px",
+    boxShadow: "none",
+    padding: '10px',
+    fontWeight: '600',
+    marginTop: theme.spacing(4),
+  },
+}))
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /(?=.*?[0-9])(?=.*?[A-Za-z]).+/;
+
+// validate input field 
+const validations = (value, name, required = true, type, secondValue) => {
+
+  // validation for required field 
+  if (required && !value) {
+    return { message: `${name} is required`, status: true }
+  }
+
+  // validation for email field 
+  if (type === 'email' && !emailRegex.test(value)) {
+    return { message: `${name} is invalid`, status: true }
+  }
+
+  // validation for password 
+  if (type === 'password' && !passwordRegex.test(value)) {
+    return { message: `${name} must contain at least a number and a letter`, status: true }
+  }
+
+  return { message: '', status: false };
+}
+
+export default function Index() {
+  const classes = useStyles()
+  const router = useRouter()
+  
+  const errorMessageStyle = {
+    color: "red",
+    fontSize: "10px",
+    fontWeight: "bolder",
+    fontStyle: "oblique",
+  }
+
+  const initialState = {
+    email: '',
+    password: ''
+  }
+
+  const [state, setState] = useState(initialState)
+  const [messages, setMessages] = useState({
+    ...initialState,
+    success: '',
+    failure: '',
+  })
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setState({ ...state, [name]: value })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    let isValid = true
+
+    if (isValid) {
+      const validate = validations(state.email, 'Email', true, 'email');
+      if (validate.status) {
+        setMessages({ ...messages, email: validate.message });
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      const validatePass = validations(state.password, 'password');
+      if (validatePass.status) {
+        setMessages({ ...messages, password: validatePass.message });
+        isValid = false;
+      }
+    }
+
+    const body = {
+      email: state.email || null,
+      password: state.password || null,
+    }
+
+
+    // const url = `${process.env.BACKEND_URL}/api/auth/login`
+    const url = 'http://localhost:8000/api/auth/login'
+
+    if (isValid) {
+      try {
+        const response = await axios.post(url, body)
+
+        setMessages({ ...messages, success: response.data.success });
+        setState(initialState)
+        // console.log(response.data)
+
+        if (response.data) {
+          authenticate(response.data, () => {
+            return router.push('/dashboard')
+          })
+        }
+      } catch (e) {
+        if (e.response) {
+          setMessages({ ...messages, failure: e.response.data.errors.message })
+        }
+      }
+    }
+  }
+
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className={classes.root}>
+      <Container maxWidth="sm">
+        <Box
+          display="flex"
+          className={classes.box}
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+          <Card className={classes.card}>
+
+            <CardContent>
+              <Typography className={classes.typography}>
+                Admin Login
+              </Typography>
+
+              {/* {messages.failure && (
+                <span style={errorMessageStyle}>{messages.failure}</span>
+              )} */}
+
+              <Box
+                display="flex"
+                justifyContent="center"
+                className={classes.box}
+                style={{ width: '60%' }}
+              >
+                <form className={classes.form} noValidate onSubmit={handleSubmit}>
+                  <Grid container spacing={4}>
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        className={classes.textField}
+                        type="email"
+                        placeholder="Email"
+                        id="email"
+                        name='email'
+                        variant="outlined"
+                        size="small"
+                        autoFocus
+                        required
+                        fullWidth
+                        margin="normal"
+                        value={state.email}
+                        onChange={handleChange}
+                      // onKeyUp={''}
+                      />
+                      {messages.email && (
+                        <span style={errorMessageStyle}>{messages.email}</span>
+                      )}
+                    </Grid>
+
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        className={classes.textField}
+                        type="password"
+                        placeholder="Password"
+                        id="password"
+                        name='password'
+                        variant="outlined"
+                        size="small"
+                        autoFocus
+                        required
+                        fullWidth
+                        margin="normal"
+                        value={state.password}
+                        onChange={handleChange}
+                      // onKeyUp={''}
+                      />
+                      {messages.password && (
+                        <span style={errorMessageStyle}>{messages.password}</span>
+                      )}
+                    </Grid>
+                  </Grid>
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    style={{ backgroundColor: "#007945", color: "white" }}
+                    className={classes.submit}
+                  >
+                    Login
+                  </Button>
+                </form>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      </Container>
     </div>
-  )
+  );
 }
