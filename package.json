@@ -10,6 +10,12 @@
   "dependencies": {
     "next": "10.0.3",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "@material-ui/core": "latest",
+    "@material-ui/data-grid": "latest",
+    "@material-ui/icons": "latest",
+    "swr": "latest",
+    "clsx": "latest",
+    "axios": "latest"
   }
 }
