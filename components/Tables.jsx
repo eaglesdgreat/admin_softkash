@@ -28,12 +28,13 @@ import { Add, Close } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme) => ({
   typography: {
-    fontfamily: 'Roboto',
+    fontfamily: 'Century Gothic',
     fontStyle: 'normal',
-    fontWeight: '500',
-    fontSize: '24px',
-    color: '#2F3237',
+    fontWeight: '400',
+    fontSize: '64px',
+    color: '#007945',
     lineHeight: '28px',
+    letterSpacing: '0.1px'
   },
   button: {
     '&:hover,&:focus': {
@@ -76,12 +77,17 @@ const useStyles = makeStyles((theme) => ({
     padding: '14px',
   },
   bodyWidth: {
-    width: '95%',
+    width: '100%',
+    height: '100%',
     maxWidth: "1440px",
-    boxShadow: '1px 2px 4px rgba(0, 0, 0, 0.05)',
-    [theme.breakpoints.down('md')]: {
-      width: '96%',
-    },
+    paddingTop: '25px',
+    paddingBottom: '25px',
+    // paddingRight: '10px',
+    paddingLeft: '30px',
+    // boxShadow: '1px 2px 4px rgba(0, 0, 0, 0.05)',
+    // [theme.breakpoints.down('md')]: {
+    //   width: '96%',
+    // },
   },
   modal: {
     display: 'flex',
@@ -124,45 +130,24 @@ const useStyles = makeStyles((theme) => ({
 function Tables(props) {
   const classes = useStyles()
   const router = useRouter()
-  const { tableNav, name, width, currentPath } = props
+  const { path, name, width, currentPath } = props
 
-  const [values, setValues] = useState(tableNav);
-  const [open, setOpen] = useState(false)
-  const [input, setInput] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: ""
-  });
+  // const [values, setValues] = useState(tableNav);
 
-  const handleChange = (event, newValue) => {
-    setValues(
-      values
-        .map(value => ({ ...value, active: false }))
-        .map((value, index) => ({
-          ...value,
-          active: index === newValue
-        }))
-    );
-  };
+  // const handleChange = (event, newValue) => {
+  //   setValues(
+  //     values
+  //       .map(value => ({ ...value, active: false }))
+  //       .map((value, index) => ({
+  //         ...value,
+  //         active: index === newValue
+  //       }))
+  //   );
+  // };
 
-  const handleAddInfluencerOpen = () => {
-    setOpen(true);
-  };
+  // const active = values.findIndex(value => value.active)
 
-  const handleAddInfluencerClose = () => {
-    setOpen(false);
-  };
-
-  const handleInputChange = (event) => {
-    const { value } = event.target
-    setInput(...value);
-  }
-
-  const active = values.findIndex(value => value.active)
-
-  const path = values.find(value => value.active).link
+  // const path = values.find(value => value.active).link
 
   return (
     <Layout path={path}>
@@ -175,7 +160,7 @@ function Tables(props) {
           width: '100%',
         }}
       >
-        <Box style={{
+        {/* <Box style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -184,240 +169,19 @@ function Tables(props) {
           <Typography className={classes.typography}>
             {name}
           </Typography>
-
-          {router.pathname === "/influencers" || currentPath ?
-            <Button style={{
-              background: "#FFF2EB",
-              color: "#FF5C00",
-              borderRadius: "6px",
-            }}
-              onClick={handleAddInfluencerOpen}
-            >
-              <Add style={{ fontSize: "1.2rem", marginRight: "0.3rem" }} />
-              <Typography style={{ fontSize: "0.9rem", fontWeight: 500 }}>
-                ADD
-              </Typography>
-            </Button> : ""
-          }
-        </Box>
-        <Box>
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            className={classes.modal}
-            open={open}
-            onClose={handleAddInfluencerClose}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500,
-            }}
-          >
-            <Fade in={open}>
-              <Box className={classes.paper}>
-                <Button style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  borderRadius: "2px",
-                  width: "4.2rem",
-                  padding: 0,
-                  margin: "1rem 0 2rem 0"
-                }}
-                  size="large"
-                  disableRipple
-                  onClick={handleAddInfluencerClose}
-                >
-                  <Close style={{
-                    fontWeight: 500, fontSize: "1.2rem",
-                    color: "#000000", marginRight: "0.3rem"
-                  }} />
-                  <Typography style={{ fontWeight: 400, color: "#242120" }}>
-                    Close
-                  </Typography>
-                </Button>
-                <h2 style={{ marginBottom: "3rem" }} id="transition-modal-title">Add Influencer</h2>
-                <form>
-                  <Box style={{ display: "flex", justifyContent: "space-between" }}>
-                    <Box style={{ width: "48%" }}>
-                      <Typography
-                        className={classes.label}
-                        component="legend">First Name</Typography>
-                      <InputBase
-                        name="firstName"
-                        className={classes.textField}
-                        variant="outlined"
-                        value={input.firstName}
-                        onChange={handleInputChange}
-                      />
-                    </Box>
-
-                    <Box style={{ width: "48%" }}>
-                      <Typography
-                        className={classes.label}
-                        component="legend">Last Name</Typography>
-                      <InputBase
-                        name="lastName"
-                        className={classes.textField}
-                        variant="outlined"
-                        value={input.lastName}
-                        onChange={handleInputChange}
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box>
-                    <Typography
-                      className={classes.label}
-                      component="legend">Email</Typography>
-                    <InputBase
-                      name="email"
-                      className={classes.textField}
-                      variant="outlined"
-                      value={input.email}
-                      onChange={handleInputChange}
-                    />
-                  </Box>
-
-                  <Box>
-                    <Typography
-                      className={classes.label}
-                      component="legend">Phone</Typography>
-                    <InputBase
-                      name="email"
-                      className={classes.textField}
-                      variant="outlined"
-                      value={input.phone}
-                      onChange={handleInputChange}
-                    />
-                  </Box>
-
-                  <Box>
-                    <Typography
-                      className={classes.label}
-                      component="legend">Address</Typography>
-                    <InputBase
-                      style={{ height: "84px", }}
-                      className={classes.textField}
-                      variant="outlined"
-                      multiline
-                      type="text"
-                      rows={4}
-                      value={input.address}
-                      name="address"
-                      onChange={handleInputChange}
-                    />
-                  </Box>
-
-                  <Box className={classes.buttonBox}>
-                    <Button
-                      style={{
-                        color: "#888888",
-                        borderRadius: "4px",
-                        marginRight: "1rem",
-                      }}
-                      onClick={handleAddInfluencerClose}
-                    >
-                      <Typography style={{ fontSize: "0.9rem", }}>
-                        CANCEL
-                      </Typography>
-                    </Button>
-
-                    <Button
-                      style={{
-                        background: "#FF5C00",
-                        color: "#FFFFFF",
-                        borderRadius: "4px",
-                      }}
-                      variant="contained"
-                    >
-                      <Typography style={{ fontSize: "0.9rem", }}>
-                        ADD
-                      </Typography>
-                    </Button>
-                  </Box>
-                </form>
-              </Box>
-            </Fade>
-          </Modal>
-        </Box>
+        </Box> */}
 
         <Box
           display="flex"
           flexDirection="column"
           className={classes.bodyWidth}
           style={{
-            border: '1px solid #EAEAEA',
-            marginTop: '30px',
-            borderRadius: '10px',
+            // border: '1px solid #EAEAEA',
+            background: 'rgba(0, 121, 69, 0.05)',
+            borderRadius: '25px',
+            marginTop: '10px',
           }}
         >
-          <AppBar className={classes.appbar} position="static">
-            <Hidden lgUp>
-              <Toolbar>
-                {values.map((value, i) => (
-                  <Link key={value.label} href={value.link}>
-                    <Button
-                      variant="text"
-                      disableRipple
-                      // size="small"
-                      className={clsx(classes.button)}
-                    >
-                      <Typography
-                        className={classes.typography}
-                        style={{
-                          fontWeight: '400',
-                          fontSize: '15px',
-                          lineHeight: '18px',
-                          lineSpacing: '0.05em',
-                          color: '#242120',
-                          borderBottom: path === value.link ? '2px solid #FF5C00' : 'none',
-                          paddingBottom: '6px',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        {value.label}
-                      </Typography>
-                    </Button>
-                  </Link>
-                ))}
-              </Toolbar>
-            </Hidden>
-
-            <Hidden mdDown>
-              <Tabs
-                value={active}
-                onChange={handleChange}
-                variant="scrollable"
-                scrollButtons={['xs', 'sm'].includes(width) ? 'on' : 'auto'}
-                classes={{
-                  indicator: classes.indicator,
-                }}
-              >
-                {values.map((value, i) => (
-                  <Link key={value.label} href={value.link}>
-                    <Tab
-                      key={value.label}
-                      value={i}
-                      label={value.label}
-                      className={clsx(classes.typography && classes.tab1)}
-                      style={{
-                        fontWeight: '400',
-                        fontSize: '15px',
-                        lineHeight: '18px',
-                        lineSpacing: '0.05em',
-                        color: '#242120',
-                        textTransform: 'uppercase',
-                      }}
-                    />
-                  </Link>
-                ))}
-              </Tabs>
-            </Hidden>
-          </AppBar>
-
-          <Divider light />
-
           <main>
             {props.children}
           </main>

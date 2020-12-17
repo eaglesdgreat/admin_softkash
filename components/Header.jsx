@@ -19,13 +19,14 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { logout, isAuthenticated } from '../lib/auth.helper'
+// import { logout, isAuthenticated } from '../lib/auth.helper'
 import Notifications from './Notifications'
+import Search from './Search'
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
     backgroundColor: '#FFFFFF',
-    paddingRight: '4%',
+    // paddingRight: '1%',
     paddingBottom: '1%',
     paddingTop: '1%',
   },
@@ -47,12 +48,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   typography: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Century Gothic',
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: 'i8px',
     lineHeight: '21px',
-    color: '#171616',
+    color: '#007945',
   },
   button: {
     '&:hover,&:focus': {
@@ -73,7 +74,8 @@ function Header(props) {
   const router = useRouter()
   const classes = useStyles()
   const { onDrawerToggle } = props;
-  const headName = isAuthenticated().user.firstName
+  // const headName = isAuthenticated().user.firstName
+  const headName = 'John'
 
 
   const [anchorEl2, setAnchorEl2] = useState(null);
@@ -106,7 +108,7 @@ function Header(props) {
         <AppBar className={classes.appbar} position="sticky" elevation={0}>
           <Toolbar>
             <Grid container spacing={1} alignItems="center">
-              <Hidden smUp>
+              {/* <Hidden smUp> */}
                 <Grid item>
                   <IconButton
                     color="inherit"
@@ -114,10 +116,17 @@ function Header(props) {
                     onClick={onDrawerToggle}
                   // className={classes.menuButton}
                   >
-                    <MenuIcon style={{ backgroundColor: '#FF5C00' }} />
+                    <img src="/handleBar.svg" alt="menu" />
+                    {/* <MenuIcon style={{ backgroundColor: '#007945' }} /> */}
                   </IconButton>
                 </Grid>
-              </Hidden>
+              {/* </Hidden> */}
+
+              <Grid item />
+
+              <Grid item>
+                <Search />
+              </Grid>
 
               <Grid item xs />
 
@@ -128,100 +137,47 @@ function Header(props) {
               <Grid item>
                 <IconButton color="inherit"
                   disableRipple
-                  style={{ marginRight: '70px' }}>
-                  <Avatar className={classes.avatar}>{(headName ? headName : 'User').split('')[0]}</Avatar>
-                  {/* <img src="/Ellipse.svg" alt="ellipse" /> */}
+                  style={{ marginRight: '-10px' }}
+                >
+                  {/* <Avatar className={classes.avatar}>{(headName ? headName : 'User').split('')[0]}</Avatar> */}
+                  <img src="/avatar.svg" alt="avatar" />
                 </IconButton>
               </Grid>
 
               <Grid item>
                 <Box
                   display="flex"
+                  flexDirection="column"
                 >
                   <Typography
                     className={classes.typography}
                     style={{
-                      fontWeight: '500',
-                      fontSize: '15px',
-                      lineHeight: '17.58px',
-                      color: '#242120',
-                      marginLeft: '-80px',
-                      marginRight: '5px'
+                      fontWeight: '400',
+                      fontSize: '13px',
+                      lineHeight: '28px',
+                      color: '#007945',
+                      letterSpacing: '0.1px'
+                      // marginLeft: '-80px',
+                      // marginRight: '5px'
                     }}
                   >
-                    Hello, {headName ? headName : 'User'}
+                    Okponobi Emmanuel
                   </Typography>
 
-                  <img src="/profile.svg" alt="menu"
-                    aria-controls="avatar-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick2}
-                  />
-                  
-                  <Menu
-                    id="avatar-menu"
-                    anchorEl={anchorEl2}
-                    keepMounted
-                    open={Boolean(anchorEl2)}
-                    onClose={handleClose2}
-                    PaperProps={{
-                      style: {
-                        borderRadius: '8px',
-                        margin: '40px 0px 0px -53px',
-                        boxShadow: '0px 12px 24px rgba(0, 0, 0, 0.08)',
-                        backgroundColor: '#FFFFFF',
-                        width: '172px',
-                        height: '153px',
-                        paddingTop: '2.5%',
-                        paddingBottom: '1%',
-                        paddingLeft: '1%',
-                      }
+                  <Typography
+                    className={classes.typography}
+                    style={{
+                      fontWeight: '400',
+                      fontSize: '11.5px',
+                      lineHeight: '28px',
+                      color: '#979797',
+                      letterSpacing: '0.1px'
+                      // marginLeft: '-80px',
+                      // marginRight: '5px'
                     }}
                   >
-                    <MenuItem>
-                      <Typography
-                        className={classes.typography}
-                        style={{
-                          fontWeight: '400',
-                          fontSize: '15px',
-                          lineHeight: '17.58px',
-                          color: '#242120',
-                        }}
-                      >
-                        Profile
-                      </Typography>
-                    </MenuItem>
-
-                    <MenuItem>
-                      <Typography
-                        className={classes.typography}
-                        style={{
-                          fontWeight: '400',
-                          fontSize: '15px',
-                          lineHeight: '17.58px',
-                          color: '#242120',
-                        }}
-                      >
-                        Settings
-                      </Typography>
-                    </MenuItem>
-
-                    <MenuItem
-                      onClick={handleLogout}
-                    >
-                      <Typography
-                        className={classes.typography}
-                        style={{
-                          fontWeight: '400',
-                          fontSize: '15px',
-                          lineHeight: '17.58px',
-                          color: '#242120',
-                        }}
-                      >
-                        Logout
-                      </Typography>
-                    </MenuItem>
-                  </Menu>
+                    Admin
+                  </Typography>
                 </Box>
               </Grid>
             </Grid>

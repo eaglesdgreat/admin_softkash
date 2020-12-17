@@ -1,38 +1,20 @@
 import React, { useState, useRef, Fragment, useEffect } from 'react'
 import {
   Box,
-  Table,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-  Paper,
   Typography,
   InputAdornment,
   TextField,
-  TablePagination,
   Button,
-  Divider,
   IconButton,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
   InputBase,
-  FormControl,
-  TableContainer,
   Hidden,
-  Checkbox,
+  Grid,
 } from '@material-ui/core'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import clsx from 'clsx';
 
-import Sort from './Sort'
+// import Sort from './Sort'
 
 
 
@@ -40,12 +22,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '80%',
     display: 'flex',
-  },
-  table: {
-    width: '90%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
   },
   typography: {
     fontfamily: 'Roboto',
@@ -55,22 +31,10 @@ const useStyles = makeStyles((theme) => ({
     color: '#2F3237',
     lineHeight: '28px',
   },
-  search: {
-    border: '1px solid #EAEAEA',
-    borderRadius: '6px'
-  },
-  tableCell: {
-    borderBottom: 'none',
-  },
   button: {
     '&:hover,&:focus': {
       backgroundColor: '#ffffff00',
     },
-  },
-  tContainer: {
-    padding: 30,
-    paddingBottom: 0,
-    paddingRight: 0,
   },
   image: {
     maxWidth: '90%',
@@ -80,6 +44,43 @@ const useStyles = makeStyles((theme) => ({
       maxHeight: 'auto'
     },
   },
+  cssLabel: {
+    color: " #007945",
+    fontfamily: 'Century Gothic',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '12px',
+    lineHeight: '28px',
+    letterSpacing: '0.1px',
+  },
+  cssOutlinedInput: {
+    whiteSpace: 'initial',
+    '&$cssFocused $notchedOutline': {
+      borderColor: '#FFFFFF00'
+    },
+  },
+  cssFocused: {},
+  notchedOutline: {
+    borderWidth: '1px',
+    borderColor: '#FFFFFF00 !important'
+  },
+  roots: {
+    // background: "blue",
+    border: "1px solid #979797",
+    borderRadius: "23px",
+    width: '200%',
+    height: '38px',
+  },
+  input: {
+    color: "#007945",
+    fontfamily: 'Century Gothic',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '13px',
+    lineHeight: '28px',
+    letterSpacing: '0.1px',
+    marginTop: '-10px',
+  }
 }))
 
 
@@ -129,30 +130,30 @@ function Search(props) {
   } = props
 
   // item for the filter to change between search
-  const filterItems = [
-    // { name: 'Cancelled', value: 'cancelled' },
-    { name: 'Comfirmed', value: 'comfirmed' },
-    { name: 'Wholesale', value: 'wholesaler' },
-    { name: 'Marketplace', value: 'vendor' },
-  ]
+  // const filterItems = [
+  //   // { name: 'Cancelled', value: 'cancelled' },
+  //   { name: 'Comfirmed', value: 'comfirmed' },
+  //   { name: 'Wholesale', value: 'wholesaler' },
+  //   { name: 'Marketplace', value: 'vendor' },
+  // ]
 
   // Setting state value with react useState
-  const [anchorEl, setAnchorEl] = useState(null);
+  // const [anchorEl, setAnchorEl] = useState(null);
   // const [selected, setSelected] = useState('')
-  const [checked, setChecked] = useState(true)
+  // const [checked, setChecked] = useState(true)
 
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  }
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // }
 
-  const handleCheck = (e) => {
-    setChecked(e.target.checked)
-  }
+  // const handleCheck = (e) => {
+  //   setChecked(e.target.checked)
+  // }
 
   // const onSelected = (selected) => () => {
   //   setSelected(selected)
@@ -162,69 +163,57 @@ function Search(props) {
 
   return (
     <Grid container spacing={10}>
-      <Grid item
-        xs={router.pathname === '/influencers/all' ? 4 : 5}
-        md={router.pathname === '/influencers/all' ? 4 : 5}
-        lg={router.pathname === '/influencers/all' ? 4 : 5}
-        xl={router.pathname === '/influencers/all' ? 4 : 5}
-      >
+      <Grid item>
         <Box
-          display="flex"
+          // display="flex"
           style={{
-            padding: 10,
-            minWidth: '200px',
             paddingLeft: 30,
+            width: '100%'
           }}
         >
-          <FormControl>
-            <BootstrapInput
-              value={search}
-              onChange={onSearchChange}
-              // onKeyDown={onSearchChange}
-              placeholder={"Search"}
-              className={classes.search}
-              id="input-search"
-            // InputProps={{
-            //     startAdornment: (
-            //     <InputAdornment position="start">
-            //         <SearchIcon />
-            //     </InputAdornment>
-            //     )
+          <TextField
+            type="text"
+            fullWidth
+            variant="outlined"
+            margin="none"
+            className={classes.roots}
+            value={search}
+            onChange={onSearchChange}
+            placeholder="Search"
+            id="input-search"
+            // InputLabelProps={{
+            //   classes: {
+            //     root: classes.cssLabel,
+            //     focused: classes.cssFocused,
+            //   },
             // }}
-            />
-          </FormControl>
+            InputProps={{
+              className: classes.input,
+              classes: {
+                root: classes.cssOutlinedInput,
+                focused: classes.cssFocused,
+                notchedOutline: classes.notchedOutline,
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <img src="/search.svg" alt="search" />
+                </InputAdornment>
+              )
+            }}
+          />
         </Box>
       </Grid>
 
-      { showRemoveButton ?
-        <Grid item xs={2} sm={2} md={2} lg={2} xl={2}>
-          <Button
-            style={{
-              background: "#FF5C00",
-              color: "#FFFFFF",
-              borderRadius: "4px",
-              marginTop: "0.9rem"
-            }}
-            variant="contained"
-            onClick={handleDelete}
-          >
-            <Typography style={{ fontSize: "0.9rem", }}>
-              Remove
-            </Typography>
-          </Button>
-        </Grid> : ""
-      }
-
-      <Grid item xs={4} md={4} lg={4} xl={4} >
+      {/* <Grid item xs={4} md={4} lg={4} xl={4} >
         <Sort
           selectSort={selectSort}
           onSortClick={(arg) => {
             onSortClick(arg)
           }}
         />
-      </Grid>
+      </Grid> */}
 
-      <Grid item
+      {/* <Grid item
         xs={router.pathname === '/influencers/all' ? 2 : 3}
         md={router.pathname === '/influencers/all' ? 2 : 3}
         lg={router.pathname === '/influencers/all' ? 2 : 3}
@@ -342,7 +331,7 @@ function Search(props) {
             </Box>
           </Menu>
         </Box>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }

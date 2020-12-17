@@ -11,11 +11,10 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useSWR from 'swr'
 import axios from 'axios';
-import ReactLoading from 'react-loading'
 import clsx from 'clsx';
 
-import PrivateRoute from './PrivateRoute'
-import { isAuthenticated } from '../lib/auth.helper'
+// import PrivateRoute from './PrivateRoute'
+// import { isAuthenticated } from '../lib/auth.helper'
 
 
 
@@ -111,19 +110,19 @@ const fetcher = async (...arg) => {
 }
 
 
-const productData = () => {
-  const url = `${process.env.BACKEND_URL}/api/all-products`
-  // const url = 'http://localhost:8000/api/all-products'
-  const token = isAuthenticated().authToken
+// const productData = () => {
+//   const url = `${process.env.BACKEND_URL}/api/all-products`
+//   // const url = 'http://localhost:8000/api/all-products'
+//   // const token = isAuthenticated().authToken
 
-  const { data, error } = useSWR([url, token], fetcher, { shouldRetryOnError: false })
+//   const { data, error } = useSWR([url, token], fetcher, { shouldRetryOnError: false })
 
-  return {
-    products: data,
-    isLoading: !error && !data,
-    isError: error
-  }
-}
+//   return {
+//     products: data,
+//     isLoading: !error && !data,
+//     isError: error
+//   }
+// }
 
 
 
@@ -132,7 +131,7 @@ function Notifications() {
   const classes = useStyles()
 
   // Fetching data from backend with SWR
-  const { products, isLoading, isError } = productData()
+  // const { products, isLoading, isError } = productData()
 
   const note = []
   for (let id = 1; id <= 100; id++)
@@ -171,9 +170,9 @@ function Notifications() {
           aria-controls="notification"
           aria-haspopup="true"
           onClick={handleClick}
-          style={{ float: 'right', marginRight: '20px' }}
+          style={{ float: 'right', marginRight: '-10px' }}
         >
-          <CssBadge
+          {/* <CssBadge
             badgeContent={(state.filter(product => product.read === false)).length}
             // overlap="circle"
             anchorOrigin={{
@@ -182,8 +181,9 @@ function Notifications() {
             }}
             variant="standard"
           >
-            <img src="/bell.svg" alt="notification" />
-          </CssBadge>
+            <img src="/notificationBell.svg" alt="notification" />
+          </CssBadge> */}
+          <img src="/notificationBell.svg" alt="notification" />
         </IconButton>
       </Tooltip>
 
@@ -229,7 +229,7 @@ function Notifications() {
               component="span"
               // m={1}
               style={{
-                backgroundColor: '#FFF2EB',
+                backgroundColor: '#F0FAF4',
                 margin: 'auto',
                 borderRadius: '4px',
                 marginLeft: '10px',
@@ -239,9 +239,10 @@ function Notifications() {
               <Typography
                 className={classes.typography}
                 style={{
-                  color: '#FF5C00',
-                  fontWeight: '500',
-                  fontSize: '14px',
+                  color: '#007945',
+                  fontfamily: 'Century Gothic',
+                  fontWeight: '400',
+                  fontSize: '12px',
                   lineHeight: '16.41px',
                 }}
               >

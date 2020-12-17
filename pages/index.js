@@ -8,8 +8,10 @@ import {
   TextField,
   Typography,
   Grid,
+  Snackbar,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
+import Alert from '@material-ui/lab/Alert'
 // import { useStateValue } from '../StateProviders';
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -124,6 +126,7 @@ export default function Index() {
     success: '',
     failure: '',
   })
+  const [open, setOpen] = useState(false)
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -157,8 +160,7 @@ export default function Index() {
     }
 
 
-    // const url = `${process.env.BACKEND_URL}/api/auth/login`
-    const url = 'http://localhost:8000/api/auth/login'
+    const url = `${process.env.BACKEND_URL}/api/login`
 
     if (isValid) {
       try {
@@ -166,6 +168,7 @@ export default function Index() {
 
         setMessages({ ...messages, success: response.data.success });
         setState(initialState)
+        setOpen(true)
         // console.log(response.data)
 
         if (response.data) {
@@ -174,8 +177,11 @@ export default function Index() {
           })
         }
       } catch (e) {
-        if (e.response) {
-          setMessages({ ...messages, failure: e.response.data.errors.message })
+        console.log(e)
+        if (e) {
+          setMessages({ ...messages, failure: "User not found" })
+          setOpen(true)
+          setState(initialState)
         }
       }
     }
@@ -268,6 +274,44 @@ export default function Index() {
           </Card>
         </Box>
       </Container>
+
+      {
+        messages.failure &&
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          open={open}
+          onClose={() => {
+            setOpen(false)
+          }}
+          autoHideDuration={3000}
+          message={
+            <Alert severity="error" style={{ maxWidth: '1440px' }}
+              onClose={() => clearError('failure')}
+              color="error">
+              {messages.failure}
+            </Alert>
+          }
+        />
+      }
+
+      {
+        messages.success &&
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={open}
+          onClose={() => {
+            setOpen(false)
+          }}
+          autoHideDuration={1000}
+          message={
+            <Alert severity="success" style={{ maxWidth: '1440px' }}
+              onClose={() => clearError('success')}
+              color="info">
+              {messages.success}
+            </Alert>
+          }
+        />
+      }
     </div>
   );
 }

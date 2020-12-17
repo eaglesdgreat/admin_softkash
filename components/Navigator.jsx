@@ -13,77 +13,59 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Typography from '@material-ui/core/Typography'
 
-import { logout } from '../lib/auth.helper'
-import { isAuthenticated } from '../lib/auth.helper'
+// import { logout } from '../lib/auth.helper'
+// import { isAuthenticated } from '../lib/auth.helper'
 
 
 
 const categories = [
   {
     id: 'Dashboard',
-    icon: <img src="/home.svg" alt="home" />,
-    activeIcon: <img src="/homeActive.svg" alt="home" />,
+    icon: <img src="/dashboard.svg" alt="home" />,
+    activeIcon: <img src="/activeDashboard.svg" alt="home" />,
     path: "/dashboard"
   },
   {
-    id: 'Orders',
-    icon: <img src="/clipboardorder.svg" alt="orders" />,
-    activeIcon: <img src="/clipboardActive.svg" alt="orders" />,
-    path: "/orders"
+    id: 'Borrowers List',
+    icon: <img src="/borrowersLists.svg" alt="borrowers" />,
+    activeIcon: <img src="/activeBorrowersList.svg" alt="borrowers" />,
+    path: "/borrowerslist"
   },
   {
-    id: 'Products',
-    icon: <img src="/box.svg" alt="products" />,
-    activeIcon: <img src="/boxActive.svg" alt="products" />,
-    path: "/products"
+    id: 'Loans Pending Approval',
+    icon: <img src="/loansPending.svg" alt="loanPending" />,
+    activeIcon: <img src="/activeLoansPending.svg" alt="loanPending" />,
+    path: "/loanspending"
   },
   {
-    id: 'Services',
-    icon: <img src="/tool.svg" alt="services" />,
-    activeIcon: <img src="/toolActive.svg" alt="services" />,
-    path: "/services"
+    id: 'Loans Missed',
+    icon: <img src="/loanMissed.svg" alt="loansMissed" />,
+    activeIcon: <img src="/activeLoansMissed.svg" alt="loansMissed" />,
+    path: "/loansmissed"
   },
   {
-    id: 'Campus Reps',
-    icon: <img src="/users.svg" alt="users" />,
-    activeIcon: <img src="/usersActive.svg" alt="users" />,
-    path: "/campusreps"
+    id: 'Messages',
+    icon: <img src="/messages.svg" alt="messages" />,
+    activeIcon: <img src="/activeMessages.svg" alt="messages" />,
+    path: "/messages"
   },
   {
-    id: 'Influencers',
-    icon: <img src="/influencer.svg" alt="influencers" />,
-    activeIcon: <img src="/influencerActive.svg" alt="influencers" />,
-    path: "/influencers"
+    id: 'Employees',
+    icon: <img src="/employees.svg" alt="employees" />,
+    activeIcon: <img src="/activeEmployees.svg" alt="employees" />,
+    path: "/employees"
   },
   {
-    id: 'Users',
-    icon: <img src="/user.svg" alt="user" />,
-    activeIcon: <img src="/userActive.svg" alt="user" />,
-    path: "/users"
-  },
-  {
-    id: 'Central Wallet',
-    icon: <img src="/dollar-sign.svg" alt="coupons" />,
-    activeIcon: <img src="/dollarSignActive.svg" alt="coupons" />,
-    path: "/centralwallet"
-  },
-  {
-    id: 'Coupons',
-    icon: <img src="/coupon.svg" alt="coupons" />,
-    activeIcon: <img src="/couponActive.svg" alt="coupons" />,
-    path: "/coupons"
-  },
-  {
-    id: 'Send Mail',
-    icon: <img src="/mail.svg" alt="mail" />,
-    activeIcon: <img src="/mailActive.svg" alt="mail" />,
-    path: "/sendmail"
+    id: 'Module Permission Role',
+    icon: <img src="/employees.svg" alt="admin" />,
+    activeIcon: <img src="/activeEmployees.svg" alt="admin" />,
+    path: "/modulepermission"
   },
   // {
-  //     id: 'Searches', 
-  //     icon: <img src="/search.svg" alt="search" />,
-  //     activeIcon: <img src="/searchActive.svg" alt="search" />,
-  //     path: "/search"
+  //   id: 'Central Wallet',
+  //   icon: <img src="/dollar-sign.svg" alt="coupons" />,
+  //   activeIcon: <img src="/dollarSignActive.svg" alt="coupons" />,
+  //   path: "/centralwallet"
   // },
 ];
 
@@ -93,29 +75,54 @@ const styles = (theme) => ({
     marginBottom: theme.spacing(4),
   },
   item: {
-    fontfamily: 'Roboto',
+    fontfamily: 'Century Gothic',
     fontStyle: 'normal',
     fontWeight: '400',
-    fontSize: '16px',
-    lineHeight: '18.75px',
-    color: '#687282',
-    '&:hover,&:focus': {
-      backgroundColor: '#F8F8F8',
-    },
+    fontSize: '12px',
+    lineHeight: '28px',
+    letterSpacing: '0.1px',
+    color: '#007945',
   },
   itemActiveItem: {
-    color: '#FF5C00',
+    fontfamily: 'Century Gothic',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '12px',
+    lineHeight: '28px',
+    letterSpacing: '0.1px',
+    color: '#FFFFFF',
+    // '&:hover,&:focus': {
+    //   backgroundColor: '#007945',
+    // },
   },
   itemIcon: {
     minWidth: 'auto',
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
   },
+  box: {
+    backgroundColor: '#FFFFFF00',
+    width: '100%',
+    borderRadius: '5px',
+    paddingTop: '1%',
+    paddingBottom: '1%',
+  },
+  activeBox: {
+    backgroundColor: '#007945',
+    width: '100%',
+    borderRadius: '5px',
+    paddingTop: '1%',
+    paddingBottom: '1%',
+  },
   logout: {
     // margin: 'auto',
     display: 'flex',
     justifyContent: 'flex-start',
     paddingRight: 10,
+  },
+  paper: {
+    background: "#FFFFFF",
+    borderColor: "#FFFFFF"
   }
 });
 
@@ -123,7 +130,8 @@ function Navigator(props) {
   const router = useRouter()
   const { classes, ...other } = props;
 
-  const token = isAuthenticated()
+  // const token = isAuthenticated()
+  const token = true
   const checkPath = props.path.split('/')[1]
   // console.log(checkPath)
 
@@ -134,37 +142,51 @@ function Navigator(props) {
   }
 
   return (
-    <Drawer variant="permanent" {...other}>
+    <Drawer
+      classes={{ paper: classes.paper }}
+      variant="permanent" 
+      {...other}
+    >
       <Box
         display='flex'
         style={{
           // margin: 'auto',
           // border: '1px solid red',
-          marginTop: '30px'
+          marginTop: '10px'
         }}
       >
         <List disablePadding>
           <ListItem className={clsx(classes.header)}>
-            <img width="100%" src="/VasitiLogoblack.svg" alt="vasiti Logo" />
+            <img width="100%" src="/logo-main.svg" alt="softkash Logo" />
           </ListItem>
+
           {categories.map(({ id, icon, path, activeIcon }) => (
             <React.Fragment key={id}>
               <Link href={path}>
                 <a style={{ textDecoration: 'none' }}>
                   <ListItem >
-                    <ListItemIcon className={classes.itemIcon}>
-                      {path === `/${checkPath}` ? activeIcon : icon}
-                    </ListItemIcon>
-                    <ListItemText>
-                      <Typography
-                        className={
-                          clsx(classes.item, router.pathname === props.path,
-                            path === `/${checkPath}` && classes.itemActiveItem)
-                        }
-                      >
-                        {id}
-                      </Typography>
-                    </ListItemText>
+                    <Box
+                      display="flex"
+                      className={
+                        clsx(classes.box, router.pathname === props.path,
+                          path === `/${checkPath}` && classes.activeBox)
+                      }
+                    >
+                      <ListItemIcon className={classes.itemIcon}>
+                        {path === `/${checkPath}` ? activeIcon : icon}
+                      </ListItemIcon>
+
+                      <ListItemText>
+                        <Typography
+                          className={
+                            clsx(classes.item, router.pathname === props.path,
+                              path === `/${checkPath}` && classes.itemActiveItem)
+                          }
+                        >
+                          {id}
+                        </Typography>
+                      </ListItemText>
+                    </Box>
                   </ListItem>
                 </a>
               </Link>
@@ -176,7 +198,7 @@ function Navigator(props) {
       <Box
         display="flex"
         style={{
-          paddingTop: 45,
+          paddingTop: 120,
           // marginTop: '40px'
         }}
       >
@@ -184,11 +206,11 @@ function Navigator(props) {
           varaint="contained"
           onClick={handleLogout}
           style={{
-            backgroundColor: '#687282',
+            backgroundColor: '#007945',
             borderRadius: '6px',
-            fontfamily: 'Roboto',
+            fontfamily: 'Century Gothic',
             fontStyle: 'normal',
-            fontWeight: 'normal',
+            fontWeight: '400',
             fontSize: '16px',
             color: '#FFFFFF',
             width: '80%',
@@ -196,7 +218,7 @@ function Navigator(props) {
           }}
         >
           <span className={classes.logout}>
-            <img src="/logout.svg" alt="logout" />
+            {/* <img src="/logout.svg" alt="logout" /> */}
           </span>
           {token === false ? 'LOGIN' : 'LOGOUT'}
         </Button>

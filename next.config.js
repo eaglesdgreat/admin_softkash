@@ -4,7 +4,7 @@ dotenv.config();
 
 module.exports = {
   env: {
-    // BACKEND_URL: process.env.BACKEND_URL,
+    BACKEND_URL: process.env.BACKEND_URL,
     // BACKEND_URL_DEV: process.env.BACKEND_URL_DEV,
     // SENDGRID_API: process.env.SENDGRID_API,
     // SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
