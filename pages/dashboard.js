@@ -1,12 +1,14 @@
 import React from 'react'
 import {
 	Box,
-	Typography, 
+	Typography,
 	Grid,
 } from '@material-ui/core'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import TableLayout from './../components/Tables'
+import Graph from '../components/graph/DashboardGraph'
+import TextGraph from '../components/graph/TextGraph.tsx'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -134,8 +136,8 @@ const Dashboard = () => {
 					marginTop: '50px',
 				}}
 			>
-				<Grid 
-					container 
+				<Grid
+					container
 					spacing={3}
 					direction="row"
 					justify="flex-start"
@@ -143,12 +145,12 @@ const Dashboard = () => {
 				>
 					{
 						gridBoxes.map((box, i) => (
-							<Grid 
-								item xs={4} sm={4} md={4} lg={4} xl={4} 
+							<Grid
+								item xs={4} sm={4} md={4} lg={4} xl={4}
 								key={i}
-								// style={{
-								// 	flexBasic: '40%'
-								// }}
+							// style={{
+							// 	flexBasic: '40%'
+							// }}
 							>
 								<Box
 									display="flex"
@@ -189,10 +191,17 @@ const Dashboard = () => {
 						))
 					}
 				</Grid>
+			</Box>
 
-				<Box>
-					
-				</Box>
+			<Box
+				display="flex"
+				style={{
+					width: '100%',
+					marginTop: '30px'
+				}}
+			>
+				{/* <Graph /> */}
+				<TextGraph />
 			</Box>
 		</TableLayout>
 	)
