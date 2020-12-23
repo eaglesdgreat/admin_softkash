@@ -41,28 +41,23 @@ const useStyles = makeStyles((theme) => ({
 		letterSpacing: '0.1px',
 	},
 	button: {
-		'&:hover,&:focus': {
-			backgroundColor: '#ffffff00',
-		},
-		border: '1px solid #E4EBF6',
-		borderRadius: '4px',
-	},
-	button2: {
-		'&:hover,&:focus': {
-			backgroundColor: '#ffffff00',
-		}
-	},
-	tContainer: {
-		border: '1px solid #E4EBF6',
-		borderRadius: '10px',
-		background: '#FFFFFF'
-	},
-	box2: {
-		paddingRight: 20,
-		width: '100%',
-		display: 'flex',
+    '&:hover,&:focus': {
+      backgroundColor: '#ffffff00',
+    },
+    border: '1px solid #E4EBF6',
+    borderRadius: '4px',
+  },
+  tContainer: {
+    border: '1px solid #E4EBF6',
+    borderRadius: '10px',
+    background: '#FFFFFF'
+  },
+  box2: {
+    paddingRight: 20,
+    width: '100%',
+    display: 'flex',
 
-	},
+  },
 }))
 
 
@@ -169,7 +164,13 @@ function LoansMissed() {
 							<TableRow>
 								<TableCell>
 									<Typography
-										className={classes.typography}
+                    className={classes.typography}
+                    style={{
+                      fontFamily: 'Cerebri Sans',
+                      fontSize: '36px',
+                      lineHeight: '46px',
+                      letterSpacing: '-0.01em',
+                    }}
 									>
 										Loans Missed
                   </Typography>

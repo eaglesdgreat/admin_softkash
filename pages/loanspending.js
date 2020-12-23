@@ -201,7 +201,13 @@ function LoansPending() {
 							<TableRow>
 								<TableCell>
 									<Typography
-										className={classes.typography}
+                    className={classes.typography}
+                    style={{
+                      fontFamily: 'Cerebri Sans',
+                      fontSize: '36px',
+                      lineHeight: '46px',
+                      letterSpacing: '-0.01em',
+                    }}
 									>
 										Loans Pending Approval
                   </Typography>

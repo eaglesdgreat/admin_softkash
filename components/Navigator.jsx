@@ -97,22 +97,20 @@ const styles = (theme) => ({
   },
   itemIcon: {
     minWidth: 'auto',
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(1),
   },
   box: {
     backgroundColor: '#FFFFFF00',
     width: '100%',
     borderRadius: '5px',
-    paddingTop: '1%',
-    paddingBottom: '1%',
+    padding: '1%',
   },
   activeBox: {
     backgroundColor: '#007945',
     width: '100%',
     borderRadius: '5px',
-    paddingTop: '1%',
-    paddingBottom: '1%',
+    padding: '1%',
   },
   logout: {
     // margin: 'auto',
@@ -164,9 +162,10 @@ function Navigator(props) {
             <React.Fragment key={id}>
               <Link href={path}>
                 <a style={{ textDecoration: 'none' }}>
-                  <ListItem >
+                  <ListItem style={{paddingLeft: '30px'}}>
                     <Box
                       display="flex"
+                      justifyContent="center"
                       className={
                         clsx(classes.box, router.pathname === props.path,
                           path === `/${checkPath}` && classes.activeBox)

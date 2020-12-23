@@ -10,41 +10,35 @@ import {
   Typography,
   Button,
   Box,
+  Grid,
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
 
 import TableLayout from './../components/Tables'
-
-
+// import Graph from './../components/graph/DashboardGraph'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '80%',
-    display: 'flex',
-  },
-  table: {
-    width: '90%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
+    background: 'rgba(0, 121, 69, 0.05)',
+    borderRadius: '25px'
   },
   typography: {
-    fontFamily: 'Cerebri Sans',
+    fontFamily: 'Century Gothic',
     fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: '36px',
-    lineHeight: '46px',
+    fontWeight: 'bold',
+    fontSize: '18px',
+    lineHeight: '28px',
     letterSpacing: '-1%',
     color: '#007945',
   },
-  search: {
-    border: '1px solid #EAEAEA',
-    borderRadius: '6px'
-  },
-  tableCell: {
-    // borderBottom: 'none',
-    // width: '100%',
+  box: {
+    fontFamily: 'Century Gothic',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '24px',
+    lineHeight: '28px',
+    letterSpacing: '0.1px',
   },
   button: {
     '&:hover,&:focus': {
@@ -53,13 +47,18 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #E4EBF6',
     borderRadius: '4px',
   },
+  button2: {
+    '&:hover,&:focus': {
+      backgroundColor: '#ffffff00',
+    }
+  },
   tContainer: {
     border: '1px solid #E4EBF6',
     borderRadius: '10px',
     background: '#FFFFFF'
   },
-  box: {
-    paddingRight: 30,
+  box2: {
+    paddingRight: 20,
     width: '100%',
     display: 'flex',
 
@@ -68,18 +67,17 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function BorrowersList() {
-  const path = '/borrowerslist'
+function ModulePermission() {
+  const path = '/modulepermission'
   const classes = useStyles()
 
   const users = []
-  for (let id = 1; id <= 1000; id++)
+  for (let id = 1; id <= 500; id++)
     for (let name of ['Peterson Frankinstine'])
       for (let email of ['softkash@example.com'])
-        for (let amount of ['3,000,000'])
-          for (let date of [moment().format('DD/MM/YYYY')])
-            for (let time of [moment().format('hh:mm a')])
-              users.push({ id, name, email, amount, date, time })
+        for (let phone of ['07033390533'])
+          for (let role of ['Super Admin', 'Admin'])
+            users.push({ id, name, email, phone, role })
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -97,7 +95,72 @@ function BorrowersList() {
 
   return (
     <TableLayout path={path}>
-      <Box className={classes.box}>
+      <Box
+        display="flex"
+        style={{
+          marginTop: '5px',
+          marginBottom: '15px'
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+        >
+          <Grid item xs={4} sm={4} md={4} lg={4} xl={4}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              style={{
+                width: '100%',
+                height: '160px',
+                background: '#000060',
+                borderRadius: '13px',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                paddingLeft: '30px',
+                paddingRight: '20px',
+              }}
+            >
+              <Typography
+                className={classes.box}
+                style={{
+                  color: '#FFFFFF',
+                  marginBottom: '25px',
+                  fontWeight: '700',
+                  fontFamily: 'Century Gothic',
+                  fontSize: '24px',
+                  lineHeight: '28px',
+                  letterSpacing: '0.1px',
+                  fontStyle: 'normal',
+                }}
+              >
+                {'Module Permission Role'}
+              </Typography>
+
+              <Typography
+                className={classes.box}
+                style={{
+                  color: '#FFFFFF',
+                  marginBottom: '20px',
+                  fontWeight: 'normal',
+                  fontFamily: 'Century Gothic',
+                  fontSize: '36px',
+                  lineHeight: '28px',
+                  letterSpacing: '0.1px',
+                  fontStyle: 'normal',
+                }}
+              >
+                500
+							</Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box className={classes.box2}>
         <TableContainer className={classes.tContainer} component="div">
           <Table>
             <TableHead>
@@ -112,14 +175,44 @@ function BorrowersList() {
                       letterSpacing: '-0.01em',
                     }}
                   >
-                    Borrowers List
+                    Module Permission
                   </Typography>
                 </TableCell>
 
                 <TableCell></TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
+
+                <TableCell>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-end"
+                    style={{
+                      width: '100%',
+                      paddingRight: '20px',
+                    }}
+                  >
+                    <Button
+                      variant="text"
+                      className={classes.button2}
+                      disableRipple
+                      size="small"
+                    >
+                      <Typography
+                        style={{
+                          fontSize: '14px',
+                          lineHeight: '28px',
+                          color: '#007945',
+                          fontWeight: '500',
+                          letterSpacing: '0.1px',
+                          fontFamily: 'Roboto',
+                          fontStyle: 'normal'
+                        }}
+                      >
+                        Sort by
+                      </Typography>
+                    </Button>
+                  </Box>
+                </TableCell>
 
                 <TableCell>
                   <Button
@@ -145,7 +238,7 @@ function BorrowersList() {
             </TableHead>
 
             <TableHead>
-              <TableRow style={{background: 'rgba(249, 250, 252, 0.5)'}}>
+              <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
                 <TableCell
                   size="small"
                   numeric
@@ -210,7 +303,7 @@ function BorrowersList() {
                       letterSpacing: '0.08em',
                     }}
                   >
-                    AMOUNT
+                    PHONE NO
                   </Typography>
                 </TableCell>
 
@@ -226,23 +319,7 @@ function BorrowersList() {
                       letterSpacing: '0.08em',
                     }}
                   >
-                    DATE
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    TIME
+                    ROLE
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -252,8 +329,8 @@ function BorrowersList() {
               {
                 users
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(user => (
-                    <TableRow key={user.id}>
+                  .map((user, i) => (
+                    <TableRow key={i}>
                       <TableCell
                         className={classes.tableCell}
                       >
@@ -263,11 +340,38 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
-                          {user.id}
+                          {i + 1}
                         </Typography>
+                      </TableCell>
+
+                      <TableCell
+                        className={classes.tableCell}
+                      >
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          style={{
+                            // marginLeft: '10px'
+                          }}
+                        >
+                          <Typography
+                            className={classes.typography}
+                            style={{
+                              fontSize: '15px',
+                              lineHeight: '165.1%',
+                              marginBottom: '5px',
+                              color: '#283E59',
+                              fontFamily: 'Cerebri Sans',
+                              fontWeight: '400'
+                            }}
+                          >
+                            {user.name}
+                          </Typography>
+                        </Box>
                       </TableCell>
 
                       <TableCell
@@ -279,22 +383,7 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.name}
-                        </Typography>
-                      </TableCell>
-
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
@@ -311,10 +400,11 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
-                          ₦{user.amount}
+                          {user.phone}
                         </Typography>
                       </TableCell>
 
@@ -327,26 +417,11 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
-                          {user.date}
-                        </Typography>
-                      </TableCell>
-
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.time}
+                          {user.role}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -366,12 +441,8 @@ function BorrowersList() {
           />
         </TableContainer>
       </Box>
-
-      <Box>
-
-      </Box>
     </TableLayout>
   )
 }
 
-export default BorrowersList
+export default ModulePermission
