@@ -10,43 +10,35 @@ import {
   Typography,
   Button,
   Box,
+  Grid,
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
 
-import TableLayout from './../components/Tables'
-import Graph from './../components/graph/BorrowListGraph.tsx'
-import Graph2 from '../components/graph/BorrowersListGraph'
-
-
+import TableLayout from '../components/Tables'
+// import Graph from './../components/graph/DashboardGraph'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '80%',
-    display: 'flex',
-  },
-  table: {
-    width: '90%',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
+    background: 'rgba(0, 121, 69, 0.05)',
+    borderRadius: '25px'
   },
   typography: {
-    fontFamily: 'Cerebri Sans',
+    fontFamily: 'Century Gothic',
     fontStyle: 'normal',
-    fontWeight: '600',
-    fontSize: '36px',
-    lineHeight: '46px',
+    fontWeight: 'bold',
+    fontSize: '18px',
+    lineHeight: '28px',
     letterSpacing: '-1%',
     color: '#007945',
   },
-  search: {
-    border: '1px solid #EAEAEA',
-    borderRadius: '6px'
-  },
-  tableCell: {
-    // borderBottom: 'none',
-    // width: '100%',
+  box: {
+    fontFamily: 'Century Gothic',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '24px',
+    lineHeight: '28px',
+    letterSpacing: '0.1px',
   },
   button: {
     '&:hover,&:focus': {
@@ -60,8 +52,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     background: '#FFFFFF'
   },
-  box: {
-    paddingRight: 30,
+  box2: {
+    paddingRight: 20,
     width: '100%',
     display: 'flex',
 
@@ -70,196 +62,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const mockData = [
-  {
-    year: '2017',
-    month: {
-      january: {
-        borrowers: 100,
-        total: 300000,
-      },
-      february: {
-        borrowers: 200,
-        total: 100000,
-      },
-      march: {
-        borrowers: 500,
-        total: 1003000,
-      },
-      april: {
-        borrowers: 1000,
-        total: 900000,
-      },
-      may: {
-        borrowers: 400,
-        total: 200000,
-      },
-      june: {
-        borrowers: 50,
-        total: 9000,
-      },
-      july: {
-        borrowers: 600,
-        total: 1000000,
-      },
-      august: {
-        borrowers: 100,
-        total: 2000000,
-      },
-      september: {
-        borrowers: 900,
-        total: 2000000000,
-      },
-      october: {
-        borrowers: 800,
-        total: 5000000,
-      },
-      november: {
-        borrowers: 30,
-        total: 600000,
-      },
-      december: {
-        borrowers: 20000,
-        total: 3000000000,
-      },
-    },
-  },
-  {
-    year: '2018',
-    month: {
-      january: {
-        borrowers: 100,
-        total: 300000,
-      },
-      february: {
-        borrowers: 200,
-        total: 100000,
-      },
-      march: {
-        borrowers: 500,
-        total: 1003000,
-      },
-      april: {
-        borrowers: 1000,
-        total: 900000,
-      },
-      may: {
-        borrowers: 400,
-        total: 200000,
-      },
-      june: {
-        borrowers: 50,
-        total: 9000,
-      },
-      july: {
-        borrowers: 600,
-        total: 1000000,
-      },
-      august: {
-        borrowers: 100,
-        total: 2000000,
-      },
-      september: {
-        borrowers: 900,
-        total: 2000000000,
-      },
-      october: {
-        borrowers: 800,
-        total: 5000000,
-      },
-      november: {
-        borrowers: 30,
-        total: 600000,
-      },
-      December: {
-        borrowers: 20000,
-        total: 3000000000,
-      },
-    },
-  },
-  {
-    year: '2019',
-    month: {
-      january: {
-        borrowers: 100,
-        total: 300000,
-      },
-      february: {
-        borrowers: 200,
-        total: 100000,
-      },
-      march: {
-        borrowers: 500,
-        total: 1003000,
-      },
-      april: {
-        borrowers: 1000,
-        total: 900000,
-      },
-      may: {
-        borrowers: 400,
-        total: 200000,
-      },
-      june: {
-        borrowers: 50,
-        total: 9000,
-      },
-      july: {
-        borrowers: 600,
-        total: 1000000,
-      },
-      august: {
-        borrowers: 100,
-        total: 2000000,
-      },
-      september: {
-        borrowers: 900,
-        total: 2000000000,
-      },
-      october: {
-        borrowers: 800,
-        total: 5000000,
-      },
-      november: {
-        borrowers: 30,
-        total: 600000,
-      },
-      December: {
-        borrowers: 20000,
-        total: 3000000000,
-      },
-    },
-  }
-]
-
-const mockData2 = [
-  {
-   year: '2017',
-   joe: 1000,
-   chandler: 2000,
-   ross: 800,
-  },
-  {
-   year: '2018',
-   joe: 1500,
-   chandler: 1800,
-   ross: 1000,
-  },
-  {
-   year: '2019',
-   joe: 2000,
-   chandler: 1750,
-   ross: 950,
-  }]
-
-const colorArray = ['#191919', '#FFCF02', '#FF5F00']
-// Object.keys(mockData).slice(1) -> ['joe','chandler','ross']
-// Object.keys(mockData).shift() -> 'year'
-
-
-
-function BorrowersList() {
-  const path = '/borrowerslist'
+function LoansRejected() {
+  const path = '/loansrejected'
   const classes = useStyles()
 
   const users = []
@@ -268,20 +72,14 @@ function BorrowersList() {
       for (let email of ['softkash@example.com'])
         for (let amount of ['3,000,000'])
           for (let date of [moment().format('DD/MM/YYYY')])
-            for (let time of [moment().format('hh:mm a')])
-              users.push({ id, name, email, amount, date, time })
+            for (let status of ['Rejected'])
+              for (let forward of ['/forward.svg'])
+                for (let account_name of ['GTBank'])
+                  for (let account_number of ['0125957592'])
+                    users.push({ id, name, email, amount, date, status, forward, account_name, account_number })
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-
-  const yearlyData = (arg) => {
-    const byYear = mockData.filter(date => date.year === arg)
-
-    return byYear
-  }
-  // console.log(yearlyData('2017').year)
-  // console.log(Object.keys(yearlyData('2017').month))
-  // console.log(Object.keys(yearlyData('2017').month).shift())
 
   // handle change per page
   const handleChangePage = (event, newPage) => {
@@ -296,7 +94,70 @@ function BorrowersList() {
 
   return (
     <TableLayout path={path}>
-      <Box className={classes.box}>
+      <Box
+        display="flex"
+        style={{
+          marginTop: '5px',
+          marginBottom: '15px'
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+        >
+          <Grid item xs={4} sm={4} md={4} lg={4} xl={4}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              style={{
+                width: '100%',
+                height: '148px',
+                background: '#FF0000',
+                borderRadius: '13px',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                paddingLeft: '30px',
+                paddingRight: '20px',
+              }}
+            >
+              <Typography
+                className={classes.box}
+                style={{
+                  color: '#FFFFFF',
+                  marginBottom: '20px',
+                  fontWeight: '400',
+                  fontFamily: 'Roboto',
+                  fontSize: '24px',
+                  lineHeight: '28px',
+                  letterSpacing: '0.1px'
+                }}
+              >
+                {'Loans Rejected'}
+              </Typography>
+
+              <Typography
+                className={classes.box}
+                style={{
+                  color: '#FFFFFF',
+                  marginBottom: '20px',
+                  fontWeight: 'bold',
+                  fontFamily: 'Mulish',
+                  fontSize: '40px',
+                  lineHeight: '18px',
+                  letterSpacing: '1px'
+                }}
+              >
+                ₦{'400,000:00'}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+
+      <Box className={classes.box2}>
         <TableContainer className={classes.tContainer} component="div">
           <Table>
             <TableHead>
@@ -315,7 +176,7 @@ function BorrowersList() {
                       letterSpacing: '-0.01em',
                     }}
                   >
-                    Borrowers List
+                    Loans Rejected
                   </Typography>
                 </TableCell>
 
@@ -352,7 +213,6 @@ function BorrowersList() {
               <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
                 <TableCell
                   size="small"
-                  numeric
                   className={classes.tableCell}
                 >
                   <Typography
@@ -369,7 +229,7 @@ function BorrowersList() {
                 </TableCell>
 
                 <TableCell
-                  align="left"
+                  align="center"
                   size="small"
                   className={classes.tableCell}
                 >
@@ -446,7 +306,7 @@ function BorrowersList() {
                       letterSpacing: '0.08em',
                     }}
                   >
-                    TIME
+                    STATUS
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -467,6 +327,7 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
@@ -477,17 +338,53 @@ function BorrowersList() {
                       <TableCell
                         className={classes.tableCell}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
+                        <Box
+                          display="flex"
                         >
-                          {user.name}
-                        </Typography>
+                          <Button
+                            size="small"
+                            variant="text"
+                            disableRipple
+                            className={classes.button2}
+                          >
+                            <img src={user.forward} />
+                          </Button>
+
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            style={{
+                              // marginLeft: '10px'
+                            }}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                marginBottom: '5px',
+                                color: '#283E59',
+                                fontFamily: 'Cerebri Sans',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.name}
+                            </Typography>
+
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '9px',
+                                lineHeight: '15px',
+                                color: '#283E59',
+                                fontFamily: 'Cerebri Sans',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.account_name} {user.account_number}
+                            </Typography>
+                          </Box>
+                        </Box>
                       </TableCell>
 
                       <TableCell
@@ -499,6 +396,7 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
@@ -515,6 +413,7 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
@@ -531,6 +430,7 @@ function BorrowersList() {
                             fontSize: '15px',
                             lineHeight: '165.1%',
                             color: '#283E59',
+                            fontFamily: 'Cerebri Sans',
                             fontWeight: '400'
                           }}
                         >
@@ -546,11 +446,11 @@ function BorrowersList() {
                           style={{
                             fontSize: '15px',
                             lineHeight: '165.1%',
-                            color: '#283E59',
+                            color: '#FF0000',
                             fontWeight: '400'
                           }}
                         >
-                          {user.time}
+                          {user.status}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -570,63 +470,8 @@ function BorrowersList() {
           />
         </TableContainer>
       </Box>
-
-      <Box
-        diaplay="flex"
-        style={{
-          paddingTop: '30px',
-          width: '100%',
-        }}
-      >
-        <Box
-          display="flex"
-          flexDirection="column"
-          style={{
-            background: '#ffffff',
-            width: '96%',
-            border: '1px solid #E4EBF6',
-            borderRadius: '10px'
-          }}
-        >
-          <Box
-            display="flex"
-            // justifyContent="flex-start"
-            style={{
-              background: '#ffffff',
-              // borderRadius: '10px',
-              width: '96%',
-            }}
-          >
-            <Typography
-              style={{
-                fontFamily: 'Cerebri Sans',
-                fontSize: '24px',
-                fontWeight: '600',
-                lineHeight: '30.48px',
-                fontStyle: 'normal',
-                letterSpacing: '-1%',
-                color: '#007945'
-              }}
-            >
-              Borrowers List Statistics
-            </Typography>
-          </Box>
-
-          <Graph
-            width={930}
-            height={400}
-            graphData={mockData}
-          />
-          {/* <Graph2 
-          graphData={mockData2}
-          categoryAPI={Object.keys(mockData2).shift()}
-          colorArray={colorArray}
-          keysToInclude={Object.keys(mockData2).slice(1)}
-        /> */}
-        </Box>
-      </Box>
     </TableLayout>
   )
 }
 
-export default BorrowersList
+export default LoansRejected

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 import {
   Table,
   TablePagination,
@@ -11,9 +11,13 @@ import {
   Button,
   Box,
   Grid,
+  CircularProgress,
 } from '@material-ui/core'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
+import useSWR, { mutate } from 'swr'
+import { useRouter } from 'next/router'
+import axios from 'axios'
 
 import TableLayout from './../components/Tables'
 // import Graph from './../components/graph/DashboardGraph'
@@ -67,17 +71,52 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+const fetcher = async (...arg) => {
+  // const [url, token] = arg
+  const [url] = arg
+
+  const response = await axios.get(
+    url,
+    // { headers: { authenticate: token } }
+  )
+
+  return response.data
+}
+
+
+const employeesData = () => {
+  // const router = useRouter()
+
+  const url = `${process.env.BACKEND_URL}/api/employers`
+
+  // const token = isAuthenticated().authToken
+
+  const { data, error } = useSWR([url], fetcher, { shouldRetryOnError: false })
+
+  return {
+    employees: data,
+    isLoading: !error && !data,
+    isError: error
+  }
+}
+
+
+
 function Employees() {
   const path = '/employees'
   const classes = useStyles()
+  const router = useRouter()
 
-  const users = []
-  for (let id = 1; id <= 500; id++)
-    for (let name of ['Peterson Frankinstine'])
-      for (let email of ['softkash@example.com'])
-        for (let phone of ['07033390533'])
-          for (let role of ['Super Admin', 'Admin'])
-            users.push({ id, name, email, phone, role })
+  const { employees, isLoading, isError } = employeesData()
+  // console.log(employees)
+
+  // const users = []
+  // for (let id = 1; id <= 500; id++)
+  //   for (let name of ['Peterson Frankinstine'])
+  //     for (let email of ['softkash@example.com'])
+  //       for (let phone of ['07033390533'])
+  //         for (let role of ['Super Admin', 'Admin'])
+  //           users.push({ id, name, email, phone, role })
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -140,21 +179,38 @@ function Employees() {
                 {'Employees'}
               </Typography>
 
-              <Typography
-                className={classes.box}
-                style={{
-                  color: '#000060',
-                  marginBottom: '20px',
-                  fontWeight: 'normal',
-                  fontFamily: 'Century Gothic',
-                  fontSize: '36px',
-                  lineHeight: '28px',
-                  letterSpacing: '0.1px',
-                  fontStyle: 'normal',
-                }}
-              >
-                200
-							</Typography>
+              {
+                isError ? (<p>Try Again Please</p>)
+                  : isLoading ?
+                    <Box
+                      display="flex"
+                      justifyContent="flex-start"
+                      style={{
+                        // margin: 'auto',
+                        // paddingLeft: 100,
+                        // paddingRight: 100,
+                        // paddingTop: 150,
+                        // paddingBottom: 150,
+                      }}
+                    >
+                      <CircularProgress style={{ 'color': '#000060' }} />
+                    </Box> : employees &&
+                    <Typography
+                      className={classes.box}
+                      style={{
+                        color: '#000060',
+                        marginBottom: '20px',
+                        fontWeight: 'normal',
+                        fontFamily: 'Century Gothic',
+                        fontSize: '36px',
+                        lineHeight: '28px',
+                        letterSpacing: '0.1px',
+                        fontStyle: 'normal',
+                      }}
+                    >
+                      {employees.data.length}
+                    </Typography>
+              }
             </Box>
           </Grid>
         </Grid>
@@ -165,7 +221,11 @@ function Employees() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell
+                  align="left"
+                  size="medium"
+                  variant="head"
+                >
                   <Typography
                     className={classes.typography}
                     style={{
@@ -179,10 +239,11 @@ function Employees() {
                   </Typography>
                 </TableCell>
 
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-
-                <TableCell>
+                <TableCell
+                  align="right"
+                  size="medium"
+                  variant="head"
+                >
                   <Box
                     display="flex"
                     justifyContent="flex-end"
@@ -214,7 +275,11 @@ function Employees() {
                   </Box>
                 </TableCell>
 
-                <TableCell>
+                <TableCell
+                  align="left"
+                  size="medium"
+                  variant="head"
+                >
                   <Button
                     variant="text"
                     className={classes.button}
@@ -236,158 +301,62 @@ function Employees() {
                 </TableCell>
               </TableRow>
             </TableHead>
+          </Table>
 
-            <TableHead>
-              <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
-                <TableCell
-                  size="small"
-                  numeric
-                  className={classes.tableCell}
+          {
+            isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
+              : isLoading ?
+                (<Box
+                  display="flex"
+                  justifyContent="center"
+                  style={{
+                    width: '100%',
+                    margin: 'auto',
+                    paddingLeft: 100,
+                    paddingRight: 100,
+                    paddingTop: 150,
+                    paddingBottom: 150,
+                  }}
                 >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    S/N
-                  </Typography>
-                </TableCell>
+                  <CircularProgress style={{ color: '#007945' }} />
+                </Box>)
+                : employees &&
 
-                <TableCell
-                  align="left"
-                  size="small"
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    NAME
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    EMAIL ADDRESS
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    PHONE NO
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    ROLE
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {
-                users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user, i) => (
-                    <TableRow key={i}>
+                <Table>
+                  <TableHead>
+                    <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
                       <TableCell
+                        size="small"
                         className={classes.tableCell}
                       >
                         <Typography
                           className={classes.typography}
                           style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
                           }}
                         >
-                          {i + 1}
+                          S/N
                         </Typography>
                       </TableCell>
 
                       <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          style={{
-                            // marginLeft: '10px'
-                          }}
-                        >
-                          <Typography
-                            className={classes.typography}
-                            style={{
-                              fontSize: '15px',
-                              lineHeight: '165.1%',
-                              marginBottom: '5px',
-                              color: '#283E59',
-                              fontFamily: 'Cerebri Sans',
-                              fontWeight: '400'
-                            }}
-                          >
-                            {user.name}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-
-                      <TableCell
+                        align="left"
+                        size="small"
                         className={classes.tableCell}
                       >
                         <Typography
                           className={classes.typography}
                           style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
                           }}
                         >
-                          {user.email}
+                          NAME
                         </Typography>
                       </TableCell>
 
@@ -397,14 +366,13 @@ function Employees() {
                         <Typography
                           className={classes.typography}
                           style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
                           }}
                         >
-                          {user.phone}
+                          EMAIL ADDRESS
                         </Typography>
                       </TableCell>
 
@@ -414,31 +382,153 @@ function Employees() {
                         <Typography
                           className={classes.typography}
                           style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
                           }}
                         >
-                          {user.role}
+                          PHONE NO
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          ROLE
                         </Typography>
                       </TableCell>
                     </TableRow>
-                  ))
-              }
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[3, 5, 10, 20]}
-            component="div"
-            count={users.length}
-            page={page}
-            style={{ paddingRight: 30 }}
-            onChangePage={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onChangeRowsPerPage={handleRowsChangePerPage}
-          />
+                  </TableHead>
+
+                  <TableBody>
+                    {
+                      employees.data
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((user, i) => (
+                          <TableRow key={i}>
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.id}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                style={{
+                                  // marginLeft: '10px'
+                                }}
+                              >
+                                <Typography
+                                  className={classes.typography}
+                                  style={{
+                                    fontSize: '15px',
+                                    lineHeight: '165.1%',
+                                    marginBottom: '5px',
+                                    color: '#283E59',
+                                    fontFamily: 'Cerebri Sans',
+                                    fontWeight: '400'
+                                  }}
+                                >
+                                  {user.employer_name}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.company_email}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.company_phone_number}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.position}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                    }
+                  </TableBody>
+                </Table>
+          }
+          {
+            isError ? ''
+              : isLoading ? '' : employees &&
+                <TablePagination
+                  rowsPerPageOptions={[3, 5, 10, 20]}
+                  component="div"
+                  count={employees.data.length}
+                  page={page}
+                  style={{ paddingRight: 30 }}
+                  onChangePage={handleChangePage}
+                  rowsPerPage={rowsPerPage}
+                  onChangeRowsPerPage={handleRowsChangePerPage}
+                />
+          }
         </TableContainer>
       </Box>
     </TableLayout>

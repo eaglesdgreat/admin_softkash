@@ -38,10 +38,10 @@ const categories = [
     path: "/loanspending"
   },
   {
-    id: 'Loans Missed',
-    icon: <img src="/loanMissed.svg" alt="loansMissed" />,
-    activeIcon: <img src="/activeLoansMissed.svg" alt="loansMissed" />,
-    path: "/loansmissed"
+    id: 'Loans Rejected',
+    icon: <img src="/loanRejected.svg" alt="loansRejected" />,
+    activeIcon: <img src="/activeLoansRejected.svg" alt="loansRejected" />,
+    path: "/loansrejected"
   },
   {
     id: 'Messages',
