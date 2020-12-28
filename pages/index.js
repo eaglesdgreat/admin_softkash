@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Card,
@@ -15,7 +15,7 @@ import Alert from '@material-ui/lab/Alert'
 // import { useStateValue } from '../StateProviders';
 import axios from 'axios'
 import { useRouter } from 'next/router'
-// import { authenticate } from './../lib/auth.helper'
+import dashboardData from './../lib/dashboardData'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,6 +104,8 @@ const validations = (value, name, required = true, type, secondValue) => {
   return { message: '', status: false };
 }
 
+
+
 export default function Index() {
   const classes = useStyles()
   const router = useRouter()
@@ -119,6 +121,10 @@ export default function Index() {
     email: '',
     password: ''
   }
+
+  useEffect(() => {
+
+  })
 
   const [state, setState] = useState(initialState)
   const [messages, setMessages] = useState({

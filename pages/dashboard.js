@@ -7,8 +7,7 @@ import {
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import TableLayout from './../components/Tables'
-import Graph from '../components/graph/DashboardGraph'
-import TextGraph from '../components/graph/TextGraph.tsx'
+import Graph from '../components/graph/DashboardGraph.tsx'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -83,7 +82,7 @@ const Dashboard = () => {
 		},
 		{
 			color: '#FFFFFF',
-			text: 'Loans Missed',
+			text: 'Loans Rejected',
 			background: '#FF0000',
 			data: '10,000',
 			marginBottom: '50px',
@@ -200,8 +199,10 @@ const Dashboard = () => {
 					marginTop: '30px'
 				}}
 			>
-				{/* <Graph /> */}
-				<TextGraph />
+				<Graph
+          width={930}
+          height={400}
+        />
 			</Box>
 		</TableLayout>
 	)
