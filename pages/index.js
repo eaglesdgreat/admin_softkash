@@ -15,7 +15,6 @@ import Alert from '@material-ui/lab/Alert'
 // import { useStateValue } from '../StateProviders';
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import dashboardData from './../lib/dashboardData'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,10 +120,6 @@ export default function Index() {
     email: '',
     password: ''
   }
-
-  useEffect(() => {
-
-  })
 
   const [state, setState] = useState(initialState)
   const [messages, setMessages] = useState({

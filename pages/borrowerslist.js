@@ -16,7 +16,6 @@ import moment from 'moment'
 
 import TableLayout from './../components/Tables'
 import Graph from './../components/graph/BorrowListGraph.tsx'
-import Graph2 from '../components/graph/BorrowersListGraph'
 
 
 
@@ -617,12 +616,6 @@ function BorrowersList() {
             height={400}
             graphData={mockData}
           />
-          {/* <Graph2 
-          graphData={mockData2}
-          categoryAPI={Object.keys(mockData2).shift()}
-          colorArray={colorArray}
-          keysToInclude={Object.keys(mockData2).slice(1)}
-        /> */}
         </Box>
       </Box>
     </TableLayout>

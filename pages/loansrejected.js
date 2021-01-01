@@ -11,9 +11,14 @@ import {
   Button,
   Box,
   Grid,
+  CircularProgress,
 } from '@material-ui/core'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
+import NumberFormat from 'react-number-format'
+import useSWR, { mutate } from 'swr'
+import { useRouter } from 'next/router'
+import axios from 'axios'
 
 import TableLayout from '../components/Tables'
 // import Graph from './../components/graph/DashboardGraph'
@@ -61,10 +66,42 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
+const fetcher = async (...arg) => {
+  // const [url, token] = arg
+  const [url] = arg
+
+  const response = await axios.get(
+    url,
+    // { headers: { authenticate: token } }
+  )
+
+  return response.data
+}
+
+
+const loansRejectedData = () => {
+  // const router = useRouter()
+
+  const url = `${process.env.BACKEND_URL}/api/loans/by_status/rejected`
+
+  // const token = isAuthenticated().authToken
+
+  const { data, error } = useSWR([url], fetcher, { shouldRetryOnError: false })
+
+  return {
+    loansRejected: data,
+    isLoading: !error && !data,
+    isError: error
+  }
+}
+
+
 
 function LoansRejected() {
   const path = '/loansrejected'
   const classes = useStyles()
+
+  const { loansRejected, isLoading, isError } = loansRejectedData()
 
   const users = []
   for (let id = 1; id <= 1000; id++)
@@ -138,20 +175,48 @@ function LoansRejected() {
                 {'Loans Rejected'}
               </Typography>
 
-              <Typography
-                className={classes.box}
-                style={{
-                  color: '#FFFFFF',
-                  marginBottom: '20px',
-                  fontWeight: 'bold',
-                  fontFamily: 'Mulish',
-                  fontSize: '40px',
-                  lineHeight: '18px',
-                  letterSpacing: '1px'
-                }}
-              >
-                ₦{'400,000:00'}
-              </Typography>
+              {
+                isError ? (<p>Try Again Please</p>)
+                  : isLoading ?
+                    <Box
+                      display="flex"
+                      justifyContent="flex-start"
+                      style={{
+                        // margin: 'auto',
+                        // paddingLeft: 100,
+                        // paddingRight: 100,
+                        // paddingTop: 150,
+                        // paddingBottom: 150,
+                      }}
+                    >
+                      <CircularProgress style={{ 'color': '#FFFFFF' }} />
+                    </Box> : loansRejected &&
+                    <Typography
+                      className={classes.box}
+                      style={{
+                        color: '#FFFFFF',
+                        marginBottom: '20px',
+                        fontWeight: 'bold',
+                        fontFamily: 'Mulish',
+                        fontSize: '40px',
+                        lineHeight: '18px',
+                        letterSpacing: '1px'
+                      }}
+                    >
+                      <NumberFormat
+                        value={
+                          loansRejected.data
+                            .filter(loan => loan.status === 'rejected')
+                            .map(loan => loan.amount)
+                            .reduce((a, b) => a = Number(a) + Number(b), 0)
+
+                        }
+                        displayType={'text'}
+                        thousandSeparator={true}
+                        prefix={'₦'}
+                      />
+                    </Typography>
+              }
             </Box>
           </Grid>
         </Grid>

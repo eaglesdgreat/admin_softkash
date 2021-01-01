@@ -155,7 +155,7 @@ function Navigator(props) {
       >
         <List disablePadding>
           <ListItem className={clsx(classes.header)}>
-            <img width="100%" src="/logo-main.svg" alt="softkash Logo" />
+            <img width="100%" src="/logo-main.jpg" alt="softkash Logo" />
           </ListItem>
 
           {categories.map(({ id, icon, path, activeIcon }) => (
