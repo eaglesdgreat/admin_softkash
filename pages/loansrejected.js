@@ -102,18 +102,19 @@ function LoansRejected() {
   const classes = useStyles()
 
   const { loansRejected, isLoading, isError } = loansRejectedData()
+  // console.log(loansRejected)
 
-  const users = []
-  for (let id = 1; id <= 1000; id++)
-    for (let name of ['Peterson Frankinstine'])
-      for (let email of ['softkash@example.com'])
-        for (let amount of ['3,000,000'])
-          for (let date of [moment().format('DD/MM/YYYY')])
-            for (let status of ['Rejected'])
-              for (let forward of ['/forward.svg'])
-                for (let account_name of ['GTBank'])
-                  for (let account_number of ['0125957592'])
-                    users.push({ id, name, email, amount, date, status, forward, account_name, account_number })
+  // const users = []
+  // for (let id = 1; id <= 1000; id++)
+  //   for (let name of ['Peterson Frankinstine'])
+  //     for (let email of ['softkash@example.com'])
+  //       for (let amount of ['3,000,000'])
+  //         for (let date of [moment().format('DD/MM/YYYY')])
+  //           for (let status of ['Rejected'])
+  //             for (let forward of ['/forward.svg'])
+  //               for (let account_name of ['GTBank'])
+  //                 for (let account_number of ['0125957592'])
+  //                   users.push({ id, name, email, amount, date, status, forward, account_name, account_number })
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -181,13 +182,6 @@ function LoansRejected() {
                     <Box
                       display="flex"
                       justifyContent="flex-start"
-                      style={{
-                        // margin: 'auto',
-                        // paddingLeft: 100,
-                        // paddingRight: 100,
-                        // paddingTop: 150,
-                        // paddingBottom: 150,
-                      }}
                     >
                       <CircularProgress style={{ 'color': '#FFFFFF' }} />
                     </Box> : loansRejected &&
@@ -206,7 +200,7 @@ function LoansRejected() {
                       <NumberFormat
                         value={
                           loansRejected.data
-                            .filter(loan => loan.status === 'rejected')
+                            .filter(loan => loan.status.toLowerCase() === 'rejected')
                             .map(loan => loan.amount)
                             .reduce((a, b) => a = Number(a) + Number(b), 0)
 
@@ -379,154 +373,177 @@ function LoansRejected() {
 
             <TableBody>
               {
-                users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(user => (
-                    <TableRow key={user.id}>
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.id}
-                        </Typography>
-                      </TableCell>
-
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Box
-                          display="flex"
-                        >
-                          <Button
-                            size="small"
-                            variant="text"
-                            disableRipple
-                            className={classes.button2}
-                          >
-                            <img src={user.forward} />
-                          </Button>
-
-                          <Box
-                            display="flex"
-                            flexDirection="column"
-                            style={{
-                              // marginLeft: '10px'
-                            }}
+                isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
+                  : isLoading ?
+                    (<Box
+                      display="flex"
+                      justifyContent="center"
+                      style={{
+                        width: '100%',
+                        margin: 'auto',
+                        paddingLeft: '900px',
+                        paddingRight: 100,
+                        paddingTop: 150,
+                        paddingBottom: 150,
+                      }}
+                    >
+                      <CircularProgress style={{ color: '#007945' }} />
+                    </Box>)
+                    : loansRejected &&
+                    loansRejected.data
+                      .filter(loan => loan.status.toLowerCase() === 'rejected')
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map(user => (
+                        <TableRow key={user.id}>
+                          <TableCell
+                            className={classes.tableCell}
                           >
                             <Typography
                               className={classes.typography}
                               style={{
                                 fontSize: '15px',
                                 lineHeight: '165.1%',
-                                marginBottom: '5px',
                                 color: '#283E59',
                                 fontFamily: 'Cerebri Sans',
                                 fontWeight: '400'
                               }}
                             >
-                              {user.name}
+                              {user.id}
                             </Typography>
+                          </TableCell>
 
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Box
+                              display="flex"
+                            >
+                              <Button
+                                size="small"
+                                variant="text"
+                                disableRipple
+                                className={classes.button2}
+                              >
+                                <img src="/forward.svg" />
+                              </Button>
+
+                              <Box
+                                display="flex"
+                                flexDirection="column"
+                                style={{
+                                  // marginLeft: '10px'
+                                }}
+                              >
+                                <Typography
+                                  className={classes.typography}
+                                  style={{
+                                    fontSize: '15px',
+                                    lineHeight: '165.1%',
+                                    marginBottom: '5px',
+                                    color: '#283E59',
+                                    fontFamily: 'Cerebri Sans',
+                                    fontWeight: '400'
+                                  }}
+                                >
+                                  {user.user.first_name}  {user.user.last_name}
+                                </Typography>
+
+                                <Typography
+                                  className={classes.typography}
+                                  style={{
+                                    fontSize: '9px',
+                                    lineHeight: '15px',
+                                    color: '#283E59',
+                                    fontFamily: 'Cerebri Sans',
+                                    fontWeight: '400'
+                                  }}
+                                >
+                                  {user.user.username}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </TableCell>
+
+                          <TableCell
+                            className={classes.tableCell}
+                          >
                             <Typography
                               className={classes.typography}
                               style={{
-                                fontSize: '9px',
-                                lineHeight: '15px',
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
                                 color: '#283E59',
                                 fontFamily: 'Cerebri Sans',
                                 fontWeight: '400'
                               }}
                             >
-                              {user.account_name} {user.account_number}
+                              {user.user.email}
                             </Typography>
-                          </Box>
-                        </Box>
-                      </TableCell>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.email}
-                        </Typography>
-                      </TableCell>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontFamily: 'Cerebri Sans',
+                                fontWeight: '400'
+                              }}
+                            >
+                              <NumberFormat
+                                value={user.amount}
+                                displayType={'text'}
+                                thousandSeparator={true}
+                                prefix={'₦'}
+                              />
+                            </Typography>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
-                          }}
-                        >
-                          ₦{user.amount}
-                        </Typography>
-                      </TableCell>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontFamily: 'Cerebri Sans',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {moment(user.created_at).format('DD/MM/YYYY')}
+                            </Typography>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontFamily: 'Cerebri Sans',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.date}
-                        </Typography>
-                      </TableCell>
-
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#FF0000',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.status}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#FF0000',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.status}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))
               }
             </TableBody>
           </Table>
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
-            count={users.length}
+            count={isError ? '' : isLoading ? '' : loansRejected && loansRejected.data.length}
             page={page}
             style={{ paddingRight: 30 }}
             onChangePage={handleChangePage}
