@@ -26,10 +26,10 @@ const categories = [
     path: "/dashboard"
   },
   {
-    id: 'Borrowers List',
+    id: 'Active Loans List',
     icon: <img src="/borrowersLists.svg" alt="borrowers" />,
     activeIcon: <img src="/activeBorrowersList.svg" alt="borrowers" />,
-    path: "/borrowerslist"
+    path: "/activeloanslist"
   },
   {
     id: 'Loans Pending Approval',

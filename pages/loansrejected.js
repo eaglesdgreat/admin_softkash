@@ -379,7 +379,7 @@ function LoansRejected() {
                     style={{
                       width: '100%',
                       margin: 'auto',
-                      paddingLeft: '600px',
+                      paddingLeft: '500px',
                       paddingRight: 100,
                       paddingTop: 150,
                       paddingBottom: 150,
@@ -395,7 +395,7 @@ function LoansRejected() {
                       style={{
                         width: '100%',
                         margin: 'auto',
-                        paddingLeft: '600px',
+                        paddingLeft: '500px',
                         paddingRight: 100,
                         paddingTop: 150,
                         paddingBottom: 150,

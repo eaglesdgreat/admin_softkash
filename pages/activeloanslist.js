@@ -11,12 +11,17 @@ import {
   Button,
   Box,
   Divider,
+  CircularProgress,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import moment from 'moment'
+import useSWR, { mutate } from 'swr'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import NumberFormat from 'react-number-format'
 
-import TableLayout from './../components/Tables'
-import Graph from './../components/graph/BarChart'
+import TableLayout from '../components/Tables'
+import Graph from '../components/graph/BarChart'
 
 
 
@@ -70,30 +75,54 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function BorrowersList() {
-  const path = '/borrowerslist'
+const fetcher = async (...arg) => {
+  // const [url, token] = arg
+  const [url] = arg
+
+  const response = await axios.get(
+    url,
+    // { headers: { authenticate: token } }
+  )
+
+  return response.data
+}
+
+
+const activeLoansData = () => {
+  // const router = useRouter()
+
+  const url = `${process.env.BACKEND_URL}/api/loans`
+
+  // const token = isAuthenticated().authToken
+
+  const { data, error } = useSWR([url], fetcher, { shouldRetryOnError: false })
+
+  return {
+    activeLoans: data,
+    isLoading: !error && !data,
+    isError: error
+  }
+}
+
+
+
+function ActiveLoansList() {
+  const path = '/activeloanslist'
   const classes = useStyles()
 
-  const users = []
-  for (let id = 1; id <= 1000; id++)
-    for (let name of ['Peterson Frankinstine'])
-      for (let email of ['softkash@example.com'])
-        for (let amount of ['3,000,000'])
-          for (let date of [moment().format('DD/MM/YYYY')])
-            for (let time of [moment().format('hh:mm a')])
-              users.push({ id, name, email, amount, date, time })
+  // const users = []
+  // for (let id = 1; id <= 1000; id++)
+  //   for (let name of ['Peterson Frankinstine'])
+  //     for (let email of ['softkash@example.com'])
+  //       for (let amount of ['3,000,000'])
+  //         for (let date of [moment().format('DD/MM/YYYY')])
+  //           for (let time of [moment().format('hh:mm a')])
+  //             users.push({ id, name, email, amount, date, time })
+
+  const { activeLoans, isLoading, isError } = activeLoansData()
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-
-  const yearlyData = (arg) => {
-    const byYear = mockData.filter(date => date.year === arg)
-
-    return byYear
-  }
-  // console.log(yearlyData('2017').year)
-  // console.log(Object.keys(yearlyData('2017').month))
-  // console.log(Object.keys(yearlyData('2017').month).shift())
 
   // handle change per page
   const handleChangePage = (event, newPage) => {
@@ -258,7 +287,7 @@ function BorrowersList() {
                       letterSpacing: '0.08em',
                     }}
                   >
-                    TIME
+                    STATUS
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -266,114 +295,166 @@ function BorrowersList() {
 
             <TableBody>
               {
-                users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(user => (
-                    <TableRow key={user.id}>
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.id}
-                        </Typography>
-                      </TableCell>
+                isError ? (<Box display="flex"
+                  style={{
+                    width: '100%',
+                    margin: 'auto',
+                    paddingLeft: '500px',
+                    paddingRight: 100,
+                    paddingTop: 150,
+                    paddingBottom: 150,
+                  }}
+                >
+                  <p style={{ color: '#FFFFFF' }}>Try Again Please</p>
+                </Box>)
+                  : isLoading ?
+                    (<Box
+                      display="flex"
+                      justifyContent="center"
+                      style={{
+                        width: '100%',
+                        margin: 'auto',
+                        paddingLeft: '500px',
+                        paddingRight: 100,
+                        paddingTop: 150,
+                        paddingBottom: 150,
+                      }}
+                    >
+                      <CircularProgress style={{ color: '#007945' }} />
+                    </Box>)
+                    : activeLoans &&
+                    activeLoans.data.data
+                      .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
+                        || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map(user => (
+                        <TableRow key={user.id}>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.id}
+                            </Typography>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.name}
-                        </Typography>
-                      </TableCell>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.user.first_name}  {user.user.last_name}
+                            </Typography>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.email}
-                        </Typography>
-                      </TableCell>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.user.email}
+                            </Typography>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          ₦{user.amount}
-                        </Typography>
-                      </TableCell>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              <NumberFormat
+                                value={user.amount}
+                                displayType={'text'}
+                                thousandSeparator={true}
+                                prefix={'₦'}
+                              />
+                            </Typography>
+                          </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.date}
-                        </Typography>
-                      </TableCell>
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {moment(user.created_at).format('DD/MM/YYYY')}
+                            </Typography>
 
-                      <TableCell
-                        className={classes.tableCell}
-                      >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '15px',
-                            lineHeight: '165.1%',
-                            color: '#283E59',
-                            fontWeight: '400'
-                          }}
-                        >
-                          {user.time}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {moment(user.created_at).format('hh:mm a')}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell
+                            className={classes.tableCell}
+                          >
+                            <Typography
+                              className={classes.typography}
+                              style={{
+                                fontSize: '15px',
+                                lineHeight: '165.1%',
+                                color: '#283E59',
+                                fontWeight: '400'
+                              }}
+                            >
+                              {user.status}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))
               }
             </TableBody>
           </Table>
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
-            count={users.length}
+            count={
+              isError ? '' : isLoading ? '' : activeLoans &&
+                activeLoans.data.data
+                  .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
+                    || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue').length
+            }
             page={page}
             style={{ paddingRight: 30 }}
             onChangePage={handleChangePage}
@@ -510,7 +591,7 @@ function BorrowersList() {
                   borderRadius: '50px',
                   data: [65, 59, 80, 81, 56, 55, 40, 56, 70, 90, 78, 45]
                 },
-      
+
                 {
                   label: "Total Amount Per Month",
                   backgroundColor: "#D2DDEC",
@@ -528,4 +609,4 @@ function BorrowersList() {
   )
 }
 
-export default BorrowersList
+export default ActiveLoansList

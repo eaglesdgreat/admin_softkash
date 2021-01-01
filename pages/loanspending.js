@@ -231,7 +231,7 @@ function LoansPending() {
                     className={classes.box}
                     style={{
                       color: box.color,
-                      marginBottom: '20px',
+                      marginBottom: '35px',
                       fontWeight: '400',
                       fontFamily: 'Roboto',
                       fontSize: '24px',
@@ -445,7 +445,7 @@ function LoansPending() {
                   style={{
                     width: '100%',
                     margin: 'auto',
-                    paddingLeft: '600px',
+                    paddingLeft: '500px',
                     paddingRight: 100,
                     paddingTop: 150,
                     paddingBottom: 150,
@@ -460,7 +460,7 @@ function LoansPending() {
                       style={{
                         width: '100%',
                         margin: 'auto',
-                        paddingLeft: '600px',
+                        paddingLeft: '500px',
                         paddingRight: 100,
                         paddingTop: 150,
                         paddingBottom: 150,
@@ -468,7 +468,7 @@ function LoansPending() {
                     >
                       <CircularProgress style={{ color: '#007945' }} />
                     </Box>)
-                    :
+                    : loansPending &&
                     loansPending.data.data
                       .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved')
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
