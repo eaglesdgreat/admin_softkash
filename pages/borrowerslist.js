@@ -10,12 +10,13 @@ import {
   Typography,
   Button,
   Box,
+  Divider,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import moment from 'moment'
 
 import TableLayout from './../components/Tables'
-import Graph from './../components/graph/BorrowListGraph.tsx'
+import Graph from './../components/graph/BarChart'
 
 
 
@@ -66,194 +67,6 @@ const useStyles = makeStyles((theme) => ({
 
   },
 }))
-
-
-
-const mockData = [
-  {
-    year: '2017',
-    month: {
-      january: {
-        borrowers: 100,
-        total: 300000,
-      },
-      february: {
-        borrowers: 200,
-        total: 100000,
-      },
-      march: {
-        borrowers: 500,
-        total: 1003000,
-      },
-      april: {
-        borrowers: 1000,
-        total: 900000,
-      },
-      may: {
-        borrowers: 400,
-        total: 200000,
-      },
-      june: {
-        borrowers: 50,
-        total: 9000,
-      },
-      july: {
-        borrowers: 600,
-        total: 1000000,
-      },
-      august: {
-        borrowers: 100,
-        total: 2000000,
-      },
-      september: {
-        borrowers: 900,
-        total: 2000000000,
-      },
-      october: {
-        borrowers: 800,
-        total: 5000000,
-      },
-      november: {
-        borrowers: 30,
-        total: 600000,
-      },
-      december: {
-        borrowers: 20000,
-        total: 3000000000,
-      },
-    },
-  },
-  {
-    year: '2018',
-    month: {
-      january: {
-        borrowers: 100,
-        total: 300000,
-      },
-      february: {
-        borrowers: 200,
-        total: 100000,
-      },
-      march: {
-        borrowers: 500,
-        total: 1003000,
-      },
-      april: {
-        borrowers: 1000,
-        total: 900000,
-      },
-      may: {
-        borrowers: 400,
-        total: 200000,
-      },
-      june: {
-        borrowers: 50,
-        total: 9000,
-      },
-      july: {
-        borrowers: 600,
-        total: 1000000,
-      },
-      august: {
-        borrowers: 100,
-        total: 2000000,
-      },
-      september: {
-        borrowers: 900,
-        total: 2000000000,
-      },
-      october: {
-        borrowers: 800,
-        total: 5000000,
-      },
-      november: {
-        borrowers: 30,
-        total: 600000,
-      },
-      December: {
-        borrowers: 20000,
-        total: 3000000000,
-      },
-    },
-  },
-  {
-    year: '2019',
-    month: {
-      january: {
-        borrowers: 100,
-        total: 300000,
-      },
-      february: {
-        borrowers: 200,
-        total: 100000,
-      },
-      march: {
-        borrowers: 500,
-        total: 1003000,
-      },
-      april: {
-        borrowers: 1000,
-        total: 900000,
-      },
-      may: {
-        borrowers: 400,
-        total: 200000,
-      },
-      june: {
-        borrowers: 50,
-        total: 9000,
-      },
-      july: {
-        borrowers: 600,
-        total: 1000000,
-      },
-      august: {
-        borrowers: 100,
-        total: 2000000,
-      },
-      september: {
-        borrowers: 900,
-        total: 2000000000,
-      },
-      october: {
-        borrowers: 800,
-        total: 5000000,
-      },
-      november: {
-        borrowers: 30,
-        total: 600000,
-      },
-      December: {
-        borrowers: 20000,
-        total: 3000000000,
-      },
-    },
-  }
-]
-
-const mockData2 = [
-  {
-   year: '2017',
-   joe: 1000,
-   chandler: 2000,
-   ross: 800,
-  },
-  {
-   year: '2018',
-   joe: 1500,
-   chandler: 1800,
-   ross: 1000,
-  },
-  {
-   year: '2019',
-   joe: 2000,
-   chandler: 1750,
-   ross: 950,
-  }]
-
-const colorArray = ['#191919', '#FFCF02', '#FF5F00']
-// Object.keys(mockData).slice(1) -> ['joe','chandler','ross']
-// Object.keys(mockData).shift() -> 'year'
 
 
 
@@ -594,6 +407,9 @@ function BorrowersList() {
               background: '#ffffff',
               // borderRadius: '10px',
               width: '96%',
+              paddingTop: '20px',
+              paddingLeft: '20px',
+              paddingBottom: '20px',
             }}
           >
             <Typography
@@ -609,12 +425,102 @@ function BorrowersList() {
             >
               Borrowers List Statistics
             </Typography>
+
+            <Box
+              display="flex"
+              justifyContent="flex-end"
+              style={{
+                width: '69%'
+              }}
+            >
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+              >
+                <Typography
+                  style={{
+                    fontFamily: 'Cerebri Sans',
+                    fontWeight: '400',
+                    fontSize: '13px',
+                    lineHeight: '21px',
+                    letterSpacing: '-0.01em',
+                    color: '#95AAC9',
+                  }}
+                >
+                  Borrowers Per Month
+                </Typography>
+
+                <Box
+                  display="flex"
+                  component="span"
+                  style={{
+                    marginLeft: '7px',
+                    width: '25px',
+                    height: '25px',
+                    background: '#007945'
+                  }}
+                ></Box>
+              </Box>
+
+              <Box
+                display="flex"
+                justifyContent="flex-end"
+                style={{
+                  paddingLeft: '30px'
+                }}
+              >
+                <Typography
+                  style={{
+                    fontFamily: 'Cerebri Sans',
+                    fontWeight: '400',
+                    fontSize: '13px',
+                    lineHeight: '21px',
+                    letterSpacing: '-0.01em',
+                    color: '#95AAC9',
+                  }}
+                >
+                  Total Amount Per Month
+                </Typography>
+
+                <Box
+                  display="flex"
+                  component="span"
+                  style={{
+                    marginLeft: '7px',
+                    width: '25px',
+                    height: '25px',
+                    background: '#D2DDEC'
+                  }}
+                ></Box>
+              </Box>
+            </Box>
           </Box>
 
+          <Divider style={{ border: '1px solid #EDF2F9' }} />
+
           <Graph
-            width={930}
-            height={400}
-            graphData={mockData}
+            data={{
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              datasets: [
+                {
+                  label: "Borrowers Per Month",
+                  backgroundColor: "#007945",
+                  borderColor: "#007945",
+                  borderWidth: 1,
+                  borderRadius: '50px',
+                  data: [65, 59, 80, 81, 56, 55, 40, 56, 70, 90, 78, 45]
+                },
+      
+                {
+                  label: "Total Amount Per Month",
+                  backgroundColor: "#D2DDEC",
+                  borderColor: "#D2DDEC",
+                  borderWidth: 1,
+                  borderRadius: '50px',
+                  data: [45, 79, 50, 41, 16, 85, 20, 45, 67, 89, 90, 67]
+                }
+              ]
+            }}
           />
         </Box>
       </Box>
