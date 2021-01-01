@@ -373,7 +373,21 @@ function LoansRejected() {
 
             <TableBody>
               {
-                isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
+                isError ? (
+                  <Box 
+                    display="flex" 
+                    style={{
+                      width: '100%',
+                      margin: 'auto',
+                      paddingLeft: '600px',
+                      paddingRight: 100,
+                      paddingTop: 150,
+                      paddingBottom: 150,
+                    }}
+                  >
+                    <p style={{color: '#FFFFFF'}}>Try Again Please</p>
+                  </Box>
+                )
                   : isLoading ?
                     (<Box
                       display="flex"
@@ -381,7 +395,7 @@ function LoansRejected() {
                       style={{
                         width: '100%',
                         margin: 'auto',
-                        paddingLeft: '900px',
+                        paddingLeft: '600px',
                         paddingRight: 100,
                         paddingTop: 150,
                         paddingBottom: 150,

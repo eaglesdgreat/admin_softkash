@@ -109,17 +109,17 @@ function LoansPending() {
   const path = '/loanspending'
   const classes = useStyles()
 
-  const users = []
-  for (let id = 1; id <= 1000; id++)
-    for (let name of ['Peterson Frankinstine'])
-      for (let email of ['softkash@example.com'])
-        for (let amount of ['3,000,000'])
-          for (let date of [moment().format('DD/MM/YYYY')])
-            for (let status of [(id / 2 === 0) ? 'active' : 'pending'])
-              users.push({ id, name, email, amount, date, status })
+  // const users = []
+  // for (let id = 1; id <= 1000; id++)
+  //   for (let name of ['Peterson Frankinstine'])
+  //     for (let email of ['softkash@example.com'])
+  //       for (let amount of ['3,000,000'])
+  //         for (let date of [moment().format('DD/MM/YYYY')])
+  //           for (let status of [(id / 2 === 0) ? 'active' : 'pending'])
+  //             users.push({ id, name, email, amount, date, status })
 
   const { loansPending, isLoading, isError } = loansPendingData()
-  console.log(loansPending)
+  // console.log(loansPending)
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -441,7 +441,18 @@ function LoansPending() {
 
             <TableBody>
               {
-                isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
+                isError ? (<Box display="flex"
+                  style={{
+                    width: '100%',
+                    margin: 'auto',
+                    paddingLeft: '600px',
+                    paddingRight: 100,
+                    paddingTop: 150,
+                    paddingBottom: 150,
+                  }}
+                >
+                  <p style={{color: '#FFFFFF'}}>Try Again Please</p>
+                </Box>)
                   : isLoading ?
                     (<Box
                       display="flex"
@@ -449,7 +460,7 @@ function LoansPending() {
                       style={{
                         width: '100%',
                         margin: 'auto',
-                        paddingLeft: '900px',
+                        paddingLeft: '600px',
                         paddingRight: 100,
                         paddingTop: 150,
                         paddingBottom: 150,
@@ -579,8 +590,8 @@ function LoansPending() {
             component="div"
             count={
               isError ? '' : isLoading ? '' : loansPending &&
-              loansPending.data.data
-                .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved').length
+                loansPending.data.data
+                  .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved').length
             }
             page={page}
             style={{ paddingRight: 30 }}
