@@ -13,8 +13,8 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Typography from '@material-ui/core/Typography'
 
-// import { logout } from '../lib/auth.helper'
-// import { isAuthenticated } from '../lib/auth.helper'
+import { logout } from '../lib/auth.helper'
+import { isAuthenticated } from '../lib/auth.helper'
 
 
 
@@ -128,8 +128,7 @@ function Navigator(props) {
   const router = useRouter()
   const { classes, ...other } = props;
 
-  // const token = isAuthenticated()
-  const token = true
+  const token = isAuthenticated().token
   const checkPath = props.path.split('/')[1]
   // console.log(checkPath)
 
@@ -219,7 +218,7 @@ function Navigator(props) {
           <span className={classes.logout}>
             {/* <img src="/logout.svg" alt="logout" /> */}
           </span>
-          {token === false ? 'LOGIN' : 'LOGOUT'}
+          {token ? 'LOGOUT' : 'LOGIN'}
         </Button>
       </Box>
     </Drawer>

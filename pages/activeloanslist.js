@@ -22,6 +22,7 @@ import NumberFormat from 'react-number-format'
 
 import TableLayout from '../components/Tables'
 import Graph from '../components/graph/BarChart'
+import { useStateValue } from '../StateProviders';
 
 
 
@@ -110,6 +111,8 @@ function ActiveLoansList() {
   const path = '/activeloanslist'
   const classes = useStyles()
 
+  const [{ activeLoansResult }, dispatch] = useStateValue();
+
   // const users = []
   // for (let id = 1; id <= 1000; id++)
   //   for (let name of ['Peterson Frankinstine'])
@@ -120,6 +123,7 @@ function ActiveLoansList() {
   //             users.push({ id, name, email, amount, date, time })
 
   const { activeLoans, isLoading, isError } = activeLoansData()
+  // console.log(activeLoans)
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -134,6 +138,11 @@ function ActiveLoansList() {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
+  console.log(activeLoansResult)
+
+  // if (activeLoansResult.length > 0) {
+  //   setPage(0)
+  // }
 
   return (
     <TableLayout path={path}>
@@ -156,7 +165,7 @@ function ActiveLoansList() {
                       letterSpacing: '-0.01em',
                     }}
                   >
-                    Borrowers List
+                    Active Loans List
                   </Typography>
                 </TableCell>
 
@@ -188,270 +197,260 @@ function ActiveLoansList() {
             </TableHead>
           </Table>
 
-          <Table>
-            <TableHead>
-              <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
-                <TableCell
-                  size="small"
-                  numeric
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    S/N
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  align="left"
-                  size="small"
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    NAME
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    EMAIL ADDRESS
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    AMOUNT
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    DATE
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  className={classes.tableCell}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    STATUS
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {
-                isError ? (<Box display="flex"
+          {
+            isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
+              : isLoading ?
+                (<Box
+                  display="flex"
+                  justifyContent="center"
                   style={{
                     width: '100%',
                     margin: 'auto',
-                    paddingLeft: '500px',
+                    paddingLeft: 100,
                     paddingRight: 100,
                     paddingTop: 150,
                     paddingBottom: 150,
                   }}
                 >
-                  <p style={{ color: '#FFFFFF' }}>Try Again Please</p>
+                  <CircularProgress style={{ color: '#007945' }} />
                 </Box>)
-                  : isLoading ?
-                    (<Box
-                      display="flex"
-                      justifyContent="center"
-                      style={{
-                        width: '100%',
-                        margin: 'auto',
-                        paddingLeft: '500px',
-                        paddingRight: 100,
-                        paddingTop: 150,
-                        paddingBottom: 150,
-                      }}
-                    >
-                      <CircularProgress style={{ color: '#007945' }} />
-                    </Box>)
-                    : activeLoans &&
-                    activeLoans.data.data
-                      .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
-                        || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map(user => (
-                        <TableRow key={user.id}>
-                          <TableCell
-                            className={classes.tableCell}
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
-                            >
-                              {user.id}
-                            </Typography>
-                          </TableCell>
+                : activeLoans &&
+                <Table>
+                  <TableHead>
+                    <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
+                      <TableCell
+                        size="small"
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          S/N
+                        </Typography>
+                      </TableCell>
 
-                          <TableCell
-                            className={classes.tableCell}
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
-                            >
-                              {user.user.first_name}  {user.user.last_name}
-                            </Typography>
-                          </TableCell>
+                      <TableCell
+                        align="left"
+                        size="small"
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          NAME
+                        </Typography>
+                      </TableCell>
 
-                          <TableCell
-                            className={classes.tableCell}
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
-                            >
-                              {user.user.email}
-                            </Typography>
-                          </TableCell>
+                      <TableCell
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          EMAIL ADDRESS
+                        </Typography>
+                      </TableCell>
 
-                          <TableCell
-                            className={classes.tableCell}
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
-                            >
-                              <NumberFormat
-                                value={user.amount}
-                                displayType={'text'}
-                                thousandSeparator={true}
-                                prefix={'₦'}
-                              />
-                            </Typography>
-                          </TableCell>
+                      <TableCell
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          AMOUNT
+                        </Typography>
+                      </TableCell>
 
-                          <TableCell
-                            className={classes.tableCell}
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
-                            >
-                              {moment(user.created_at).format('DD/MM/YYYY')}
-                            </Typography>
+                      <TableCell
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          DATE
+                        </Typography>
+                      </TableCell>
 
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
-                            >
-                              {moment(user.created_at).format('hh:mm a')}
-                            </Typography>
-                          </TableCell>
+                      <TableCell
+                        className={classes.tableCell}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          STATUS
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
 
-                          <TableCell
-                            className={classes.tableCell}
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontWeight: '400'
-                              }}
+                  <TableBody>
+                    {
+                      (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
+                        .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
+                          || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((user, i) => (
+                          <TableRow key={user.id}>
+                            <TableCell
+                              className={classes.tableCell}
                             >
-                              {user.status}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ))
-              }
-            </TableBody>
-          </Table>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {i + 1}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.user ? user.user.first_name : 'User'}  {user.user ? user.user.last_name : 'User'}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.user ? user.user.email : 'Email'}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                <NumberFormat
+                                  value={user.amount}
+                                  displayType={'text'}
+                                  thousandSeparator={true}
+                                  prefix={'₦'}
+                                />
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {moment(user.created_at).format('DD/MM/YYYY')}
+                              </Typography>
+
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {moment(user.created_at).format('hh:mm a')}
+                              </Typography>
+                            </TableCell>
+
+                            <TableCell
+                              className={classes.tableCell}
+                            >
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.status}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                    }
+                  </TableBody>
+                </Table>
+          }
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
             count={
-              isError ? '' : isLoading ? '' : activeLoans &&
-                activeLoans.data.data
+              isError ? 0 : isLoading ? 0 : activeLoans &&
+              (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
                   .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
                     || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue').length
             }
@@ -504,7 +503,7 @@ function ActiveLoansList() {
                 color: '#007945'
               }}
             >
-              Borrowers List Statistics
+              Active Loans Stats
             </Typography>
 
             <Box
@@ -528,7 +527,7 @@ function ActiveLoansList() {
                     color: '#95AAC9',
                   }}
                 >
-                  Borrowers Per Month
+                  Active Loans Per Month
                 </Typography>
 
                 <Box
@@ -605,7 +604,7 @@ function ActiveLoansList() {
           />
         </Box>
       </Box>
-    </TableLayout>
+    </TableLayout >
   )
 }
 

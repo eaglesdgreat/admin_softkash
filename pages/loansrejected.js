@@ -557,7 +557,7 @@ function LoansRejected() {
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
-            count={isError ? '' : isLoading ? '' : loansRejected && loansRejected.data.length}
+            count={isError ? 0 : isLoading ? 0 : loansRejected && loansRejected.data.length}
             page={page}
             style={{ paddingRight: 30 }}
             onChangePage={handleChangePage}

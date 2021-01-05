@@ -9,12 +9,15 @@ import {
   Typography,
   Grid,
   Snackbar,
+  CircularProgress,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
-// import { useStateValue } from '../StateProviders';
 import axios from 'axios'
 import { useRouter } from 'next/router'
+
+import { authenticate } from './../lib/auth.helper'
+// import { useStateValue } from '../StateProviders';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,6 +131,7 @@ export default function Index() {
     failure: '',
   })
   const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -161,26 +165,29 @@ export default function Index() {
     }
 
 
-    const url = `${process.env.BACKEND_URL}/api/login`
+    const url = `${process.env.BACKEND_URL}/api/admin/login`
 
     if (isValid) {
+      setLoading(true); 
+
       try {
         const response = await axios.post(url, body)
+        // console.log(response)
 
-        setMessages({ ...messages, success: response.data.success });
-        setState(initialState)
-        setOpen(true)
-        // console.log(response.data)
+        if(response.data) {
+          setMessages({ ...messages, success: `${response.data.response_message}. You are being redirected to your dashboard` });
+          setState(initialState)
+          setOpen(true)
 
-        if (response.data) {
-          authenticate(response.data, () => {
+          authenticate(response.data.data, () => {
             return router.push('/dashboard')
           })
         }
       } catch (e) {
-        console.log(e)
-        if (e) {
-          setMessages({ ...messages, failure: "User not found" })
+        setLoading(false);
+        // console.log(e.response.data)
+        if (e.response.data) {
+          setMessages({ ...messages, failure: `${e.response.data.response_message}. Try again or click forget password` })
           setOpen(true)
           setState(initialState)
         }
@@ -267,7 +274,7 @@ export default function Index() {
                     style={{ backgroundColor: "#007945", color: "white" }}
                     className={classes.submit}
                   >
-                    Login
+                    {loading ? <CircularProgress size="2em" style={{ color: '#fff' }} /> : 'LOGIN'}
                   </Button>
                 </form>
               </Box>
@@ -279,12 +286,12 @@ export default function Index() {
       {
         messages.failure &&
         <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           open={open}
           onClose={() => {
             setOpen(false)
           }}
-          autoHideDuration={3000}
+          autoHideDuration={10000}
           message={
             <Alert severity="error" style={{ maxWidth: '1440px' }}
               onClose={() => clearError('failure')}
@@ -298,12 +305,12 @@ export default function Index() {
       {
         messages.success &&
         <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           open={open}
           onClose={() => {
             setOpen(false)
           }}
-          autoHideDuration={1000}
+          autoHideDuration={15000}
           message={
             <Alert severity="success" style={{ maxWidth: '1440px' }}
               onClose={() => clearError('success')}

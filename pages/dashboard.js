@@ -16,7 +16,7 @@ import axios from 'axios'
 
 import TableLayout from './../components/Tables'
 import Chart from '../components/graph/LineChart'
-import { useStateValue } from '../StateProviders';
+// import { useStateValue } from '../StateProviders';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,6 +110,12 @@ const Dashboard = (props) => {
   const path = '/dashboard'
   const classes = useStyles()
 
+  const tabData = [
+    { name: 'All', active: true },
+    { name: 'Direct', active: false },
+    { name: 'Organic', active: false },
+  ]
+
   const {
     usersCount,
     loansDisbursedCount,
@@ -119,13 +125,7 @@ const Dashboard = (props) => {
     employeesCount,
     adminsCount
   } = props
-  // console.log(messagesCount)
-
-  const tabData = [
-    { name: 'All', active: true },
-    { name: 'Direct', active: false },
-    { name: 'Organic', active: false },
-  ]
+  // console.log(totalLoansCount)
 
   const [values, setValues] = useState(tabData)
 

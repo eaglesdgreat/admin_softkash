@@ -589,7 +589,7 @@ function LoansPending() {
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
             count={
-              isError ? '' : isLoading ? '' : loansPending &&
+              isError ? 0 : isLoading ? 0 : loansPending &&
                 loansPending.data.data
                   .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved').length
             }

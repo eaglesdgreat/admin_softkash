@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-// import { logout, isAuthenticated } from '../lib/auth.helper'
+import { isAuthenticated } from '../lib/auth.helper'
 import Notifications from './Notifications'
 import Search from './Search'
 
@@ -74,9 +74,7 @@ function Header(props) {
   const router = useRouter()
   const classes = useStyles()
   const { onDrawerToggle } = props;
-  // const headName = isAuthenticated().user.firstName
-  const headName = 'John'
-
+  // const headName = isAuthenticated().user.first_name
 
   const [anchorEl2, setAnchorEl2] = useState(null);
 
@@ -161,7 +159,7 @@ function Header(props) {
                       // marginRight: '5px'
                     }}
                   >
-                    Okponobi Emmanuel
+                    {isAuthenticated().first_name} {isAuthenticated().last_name}
                   </Typography>
 
                   <Typography
@@ -176,7 +174,7 @@ function Header(props) {
                       // marginRight: '5px'
                     }}
                   >
-                    Admin
+                    {isAuthenticated().role_name}
                   </Typography>
                 </Box>
               </Grid>
