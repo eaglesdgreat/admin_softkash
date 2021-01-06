@@ -127,6 +127,12 @@ function AddAdmin() {
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false)
+  const [messages, setMessages] = useState({
+    ...initialState, success: '', failure: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [input, setInput] = useState({
     first_name: "",
     last_name: "",
@@ -134,6 +140,7 @@ function AddAdmin() {
     phone_number: "",
     department: "",
     password: "",
+    confirm_password: "",
     role_name: "",
     role_id: "",
     staff_id: "",
@@ -200,20 +207,21 @@ function AddAdmin() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        width: "95%"
+        width: "95%",
       }}>
         {/* <Typography className={classes.typography}>
           {name}
         </Typography> */}
         <Button style={{
-          background: "#FFF2EB",
-          color: "#FF5C00",
+          background: "#FFFFFF",
+          color: "#007945",
           borderRadius: "6px",
+          border: '1px solid #007945',
         }}
           onClick={handleAddInfluencerOpen}
         >
-          <Add style={{ fontSize: "1.2rem", marginRight: "0.3rem" }} />
-          <Typography style={{ fontSize: "0.9rem", fontWeight: 500 }}>
+          <Add style={{ fontSize: "1.0rem", marginRight: "0.1rem" }} />
+          <Typography style={{ fontSize: "0.6rem", fontWeight: 500 }}>
             ADMIN
           </Typography>
         </Button>
@@ -256,7 +264,7 @@ function AddAdmin() {
               </Typography>
               </Button>
 
-              <h2 style={{ marginBottom: "3rem" }} id="transition-modal-title">Add Influencer</h2>
+              <h2 style={{ marginBottom: "3rem" }} id="transition-modal-title">Add Admin User</h2>
 
               <form noValidate onSubmit={handleSubmit}>
                 <Box style={{ display: "flex", justifyContent: "space-between" }}>
@@ -278,6 +286,7 @@ function AddAdmin() {
                     <Typography
                       className={classes.label}
                       component="legend">Last Name</Typography>
+
                     <InputBase
                       name="last_name"
                       className={classes.textField}
@@ -292,6 +301,7 @@ function AddAdmin() {
                   <Typography
                     className={classes.label}
                     component="legend">Email</Typography>
+
                   <InputBase
                     name="email"
                     className={classes.textField}
@@ -301,34 +311,97 @@ function AddAdmin() {
                   />
                 </Box>
 
-                <Box>
-                  <Typography
-                    className={classes.label}
-                    component="legend">Phone Number</Typography>
-                  <InputBase
-                    name="phone_number"
-                    className={classes.textField}
-                    variant="outlined"
-                    value={input.phone_number}
-                    onChange={handleInputChange}
-                  />
+                <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                  <Box style={{ width: "48%" }}>
+                    <Typography
+                      className={classes.label}
+                      component="legend">Phone Number</Typography>
+
+                    <InputBase
+                      name="phone_number"
+                      className={classes.textField}
+                      variant="outlined"
+                      value={input.phone_number}
+                      onChange={handleInputChange}
+                    />
+                  </Box>
+
+                  <Box style={{ width: "48%" }}>
+                    <Typography
+                      className={classes.label}
+                      component="legend">Department</Typography>
+                    <InputBase
+                      // style={{ height: "84px", }}
+                      className={classes.textField}
+                      variant="outlined"
+                      // multiline
+                      type="text"
+                      // rows={4}
+                      value={input.department}
+                      name="department"
+                      onChange={handleInputChange}
+                    />
+                  </Box>
                 </Box>
 
-                <Box>
-                  <Typography
-                    className={classes.label}
-                    component="legend">Department</Typography>
-                  <InputBase
-                    style={{ height: "84px", }}
-                    className={classes.textField}
-                    variant="outlined"
-                    multiline
-                    type="text"
-                    rows={4}
-                    value={input.department}
-                    name="department"
-                    onChange={handleInputChange}
-                  />
+                <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                  <Box style={{ width: "48%" }}>
+                    <Typography
+                      className={classes.label}
+                      component="legend">Staff Id</Typography>
+
+                    <InputBase
+                      name="staff_id"
+                      className={classes.textField}
+                      variant="outlined"
+                      value={input.staff_id}
+                      onChange={handleInputChange}
+                    />
+                  </Box>
+
+                  <Box style={{ width: "48%" }}>
+                    <Typography
+                      className={classes.label}
+                      component="legend">Role Id</Typography>
+                    <InputBase
+                      className={classes.textField}
+                      variant="outlined"
+                      type="text"
+                      value={input.role_id}
+                      name="role_id"
+                      onChange={handleInputChange}
+                    />
+                  </Box>
+                </Box>
+
+                <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                  <Box style={{ width: "48%" }}>
+                    <Typography
+                      className={classes.label}
+                      component="legend">Password</Typography>
+
+                    <InputBase
+                      name="password"
+                      className={classes.textField}
+                      variant="outlined"
+                      value={input.password}
+                      onChange={handleInputChange}
+                    />
+                  </Box>
+
+                  <Box style={{ width: "48%" }}>
+                    <Typography
+                      className={classes.label}
+                      component="legend">Confirm Password</Typography>
+                    <InputBase
+                      className={classes.textField}
+                      variant="outlined"
+                      type="text"
+                      value={input.confirm_password}
+                      name="confirm_password"
+                      onChange={handleInputChange}
+                    />
+                  </Box>
                 </Box>
 
                 <Box className={classes.buttonBox}>
@@ -347,7 +420,7 @@ function AddAdmin() {
 
                   <Button
                     style={{
-                      background: "#FF5C00",
+                      background: "#007945",
                       color: "#FFFFFF",
                       borderRadius: "4px",
                     }}

@@ -38,11 +38,6 @@ function AuthProvider({ children }) {
     }
   }
 
-  // We check if the user’s authenticated with every route change
-  useEffect(() => {
-    getUser()
-  }, [pathname])
-
   // This check if the user is not authenticated or authorized to access a route and redirect them back to the login page
   useEffect(() => {
     // Check that a new route is OK
@@ -65,6 +60,11 @@ function AuthProvider({ children }) {
       events.off('routeChangeStart', handleRouteChange)
     }
   }, [user])
+
+  // We check if the user’s authenticated with every route change
+  useEffect(() => {
+    getUser()
+  }, [pathname])
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

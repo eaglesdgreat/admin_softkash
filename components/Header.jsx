@@ -100,7 +100,7 @@ function Header(props) {
         display="flex"
         style={{
           width: '100%',
-          // paddingTop: '1.5%',
+          paddingRight: '1.9%',
           // paddingBottom: '1.5%',
         }}
       >
@@ -108,17 +108,17 @@ function Header(props) {
           <Toolbar>
             <Grid container spacing={1} alignItems="center">
               {/* <Hidden smUp> */}
-                <Grid item>
-                  <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={onDrawerToggle}
-                  // className={classes.menuButton}
-                  >
-                    <img src="/handleBar.svg" alt="menu" />
-                    {/* <MenuIcon style={{ backgroundColor: '#007945' }} /> */}
-                  </IconButton>
-                </Grid>
+              <Grid item>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={onDrawerToggle}
+                // className={classes.menuButton}
+                >
+                  <img src="/handleBar.svg" alt="menu" />
+                  {/* <MenuIcon style={{ backgroundColor: '#007945' }} /> */}
+                </IconButton>
+              </Grid>
               {/* </Hidden> */}
 
               <Grid item />
@@ -129,9 +129,15 @@ function Header(props) {
 
               <Grid item xs />
 
-              <Grid item>
-                <AddAdmin />
-              </Grid>
+              {
+                isAuthenticated().role_name.toLowerCase() === 'super admin'
+                  ? (
+                    <Grid item>
+                      <AddAdmin />
+                    </Grid>
+                  )
+                  : ''
+              }
 
               <Grid item>
                 <Notifications />
