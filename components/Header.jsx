@@ -22,6 +22,7 @@ import Link from 'next/link'
 import { isAuthenticated } from '../lib/auth.helper'
 import Notifications from './Notifications'
 import Search from './Search'
+import AddAdmin from './AddAdmin'
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -127,6 +128,10 @@ function Header(props) {
               </Grid>
 
               <Grid item xs />
+
+              <Grid item>
+                <AddAdmin />
+              </Grid>
 
               <Grid item>
                 <Notifications />

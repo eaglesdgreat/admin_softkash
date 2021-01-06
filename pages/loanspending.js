@@ -246,20 +246,28 @@ function LoansPending() {
                     {box.text}
                   </Typography>
 
-                  <Typography
-                    className={classes.box}
-                    style={{
-                      color: box.color,
-                      marginBottom: '20px',
-                      fontWeight: 'bold',
-                      fontFamily: 'Mulish',
-                      fontSize: '40px',
-                      lineHeight: '18px',
-                      letterSpacing: '0.1px'
-                    }}
-                  >
-                    {box.amount}
-                  </Typography>
+                  {
+                    isLoading ?
+                    <Box
+                      display="flex"
+                    >
+                      {box.amount}
+                    </Box> :
+                    <Typography
+                      className={classes.box}
+                      style={{
+                        color: box.color,
+                        marginBottom: '20px',
+                        fontWeight: 'bold',
+                        fontFamily: 'Mulish',
+                        fontSize: '40px',
+                        lineHeight: '18px',
+                        letterSpacing: '0.1px'
+                      }}
+                    >
+                      {box.amount}
+                    </Typography>
+                  }
 
                   {/* <Typography
                     className={classes.box}

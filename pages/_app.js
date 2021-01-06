@@ -8,6 +8,7 @@ import theme from '../src/theme';
 import { StateProvider } from '../StateProviders';
 import reducer, { initialState } from '../reducer';
 import { SnackbarProvider } from 'notistack'
+import { AuthProvider } from './../components/withAuth'
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -26,20 +27,22 @@ export default function MyApp(props) {
         <title>Admin Board</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider maxSnack={3}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-        >
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <StateProvider initialState={initialState} reducer={reducer} >
-            <Component {...pageProps} />
-          </StateProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider maxSnack={3}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+          >
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <StateProvider initialState={initialState} reducer={reducer} >
+              <Component {...pageProps} />
+            </StateProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </React.Fragment>
   );
 }
