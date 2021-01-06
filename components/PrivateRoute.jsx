@@ -12,7 +12,7 @@ import { isAuthenticated } from './../lib/auth.helper'
 //   return { auth: null }; // change null to { isAdmin: true } for test it.
 // };
 
-export default WrappedComponent => {
+export default function WrappedComponent() {
   const router = useRouter();
   const hocComponent = ({ ...props }) => <WrappedComponent {...props} />;
 
@@ -20,7 +20,7 @@ export default WrappedComponent => {
     const userAuth = await isAuthenticated();
 
     // Are you an authorized user or not?
-    if (!userAuth?.toekn) {
+    if (!userAuth?.token) {
       // Handle server-side and client-side rendering.
       if (context.res) {
         context.res?.writeHead(302, {

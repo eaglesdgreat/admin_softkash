@@ -138,7 +138,7 @@ function ActiveLoansList() {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
-  console.log(activeLoansResult)
+  // console.log(activeLoansResult)
 
   // if (activeLoansResult.length > 0) {
   //   setPage(0)

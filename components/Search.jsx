@@ -14,6 +14,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import clsx from 'clsx';
+import moment from 'moment'
 
 import { useStateValue } from '../StateProviders';
 
@@ -91,7 +92,7 @@ function Search() {
   // const { tableNav } = props
   const router = useRouter();
 
-  const [{ activeLoansSearch }, dispatch] = useStateValue();
+  const [{ loansSearch, messagesSearch, employeesSearch, adminsSearch }, dispatch] = useStateValue();
 
   useEffect(() => {
     (async () => {
@@ -103,6 +104,60 @@ function Search() {
           dispatch({
             type: 'GET_ACTIVE_LOANS_SEARCH',
             items: response.data.data.data
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    })()
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(`${process.env.BACKEND_URL}/api/contacts`)
+        // console.log(response.data.data)
+
+        if (response.data.data) {
+          dispatch({
+            type: 'GET_MESSAGES_SEARCH',
+            items: response.data.data
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    })()
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(`${process.env.BACKEND_URL}/api/employers`)
+        // console.log(response.data.data)
+
+        if (response.data.data) {
+          dispatch({
+            type: 'GET_EMPLOYEES_SEARCH',
+            items: response.data.data
+          })
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    })()
+  }, [])
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get(`${process.env.BACKEND_URL}/api/admins`)
+        // console.log(response.data.data)
+
+        if (response.data.data) {
+          dispatch({
+            type: 'GET_ADMINS_SEARCH',
+            items: response.data.data
           })
         }
       } catch (e) {
@@ -125,8 +180,44 @@ function Search() {
           items: []
         })
       }
+
+      if (router.pathname === '/loanspending') {
+        dispatch({
+          type: 'GET_PENDING_APPROVED_LOANS',
+          items: []
+        })
+      }
+
+      if (router.pathname === '/loansrejected') {
+        dispatch({
+          type: 'GET_REJECTED_LOANS',
+          items: []
+        })
+      }
+
+      if (router.pathname === '/messages') {
+        dispatch({
+          type: 'GET_MESSAGES_RESULT',
+          items: []
+        })
+      }
+
+      if (router.pathname === '/employees') {
+        dispatch({
+          type: 'GET_EMPLOYEES_RESULT',
+          items: []
+        })
+      }
+
+      if (router.pathname === '/modulepermission') {
+        dispatch({
+          type: 'GET_ADMINS_RESULT',
+          items: []
+        })
+      }
     }
   }
+  // console.log(adminsSearch)
 
   const enterSearch = (event) => {
     if (event.charCode === 13) {
@@ -136,7 +227,7 @@ function Search() {
 
   const searchResult = () => {
     if (router.pathname === '/activeloanslist') {
-      const data = activeLoansSearch
+      const data = loansSearch
         .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
           || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
 
@@ -164,9 +255,8 @@ function Search() {
     }
 
     if (router.pathname === '/loanspending') {
-      const data = activeLoansSearch
-        .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
-          || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
+      const data = loansSearch
+        .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved')
 
       let currentList = data.map(request => {
         // console.log({...item})
@@ -185,7 +275,114 @@ function Search() {
         // console.log(newList)
 
         dispatch({
-          type: 'GET_ACTIVE_LOANS_RESULT',
+          type: 'GET_PENDING_APPROVED_LOANS',
+          items: newList
+        })
+      }
+    }
+
+    if (router.pathname === '/loansrejected') {
+      const data = loansSearch
+        .filter(loan => loan.status.toLowerCase() === 'rejected')
+
+      let currentList = data.map(request => {
+        // console.log({...item})
+        return { ...request }
+      })
+      // console.log(currentList)
+
+      if (search !== '') {
+        let newList = []
+
+        newList = currentList.filter(request => {
+          const name = (`${request.user ? request.user.first_name : ''} ${request.user ? request.user.last_name : ''} 
+          ${request.status} ${request.amount} ${request.user ? request.user.email : ''}`).toLowerCase()
+          return name.includes(search.toLowerCase())
+        })
+        // console.log(newList)
+
+        dispatch({
+          type: 'GET_REJECTED_LOANS',
+          items: newList
+        })
+      }
+    }
+
+    if (router.pathname === '/messages') {
+      const data = messagesSearch
+        // .filter(loan => loan.status.toLowerCase() === 'rejected')
+
+      let currentList = data.map(request => {
+        // console.log({...item})
+        return { ...request }
+      })
+      // console.log(currentList)
+
+      if (search !== '') {
+        let newList = []
+
+        newList = currentList.filter(request => {
+          const name = (`${request.first_name} ${request.last_name} ${moment(request.created_at).format('ddd:DD/MM/YYYY')}`).toLowerCase()
+          return name.includes(search.toLowerCase())
+        })
+        // console.log(newList)
+
+        dispatch({
+          type: 'GET_MESSAGES_RESULT',
+          items: newList
+        })
+      }
+    }
+
+    if (router.pathname === '/employees') {
+      const data = employeesSearch
+        // .filter(loan => loan.status.toLowerCase() === 'rejected')
+
+      let currentList = data.map(request => {
+        // console.log({...item})
+        return { ...request }
+      })
+      // console.log(currentList)
+
+      if (search !== '') {
+        let newList = []
+
+        newList = currentList.filter(request => {
+          const name = (`${request.employer_name} ${request.company_email} 
+            ${request.position} ${request.company_phone_number}`).toLowerCase()
+          return name.includes(search.toLowerCase())
+        })
+        // console.log(newList)
+
+        dispatch({
+          type: 'GET_EMPLOYEES_RESULT',
+          items: newList
+        })
+      }
+    }
+
+    if (router.pathname === '/modulepermission') {
+      const data = adminsSearch
+        // .filter(loan => loan.status.toLowerCase() === 'rejected')
+
+      let currentList = data.map(request => {
+        // console.log({...item})
+        return { ...request }
+      })
+      // console.log(currentList)
+
+      if (search !== '') {
+        let newList = []
+
+        newList = currentList.filter(request => {
+          const name = (`${request.first_name} ${request.last_name} ${request.email} 
+            ${request.role_name} ${request.phone_number}`).toLowerCase()
+          return name.includes(search.toLowerCase())
+        })
+        // console.log(newList)
+
+        dispatch({
+          type: 'GET_ADMINS_RESULT',
           items: newList
         })
       }

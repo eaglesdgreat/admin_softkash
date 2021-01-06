@@ -22,6 +22,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 
 import TableLayout from './../components/Tables'
+import { useStateValue } from '../StateProviders';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -109,6 +110,8 @@ function LoansPending() {
   const path = '/loanspending'
   const classes = useStyles()
 
+  const [{ pendingApprovedLoans }, dispatch] = useStateValue();
+
   // const users = []
   // for (let id = 1; id <= 1000; id++)
   //   for (let name of ['Peterson Frankinstine'])
@@ -134,6 +137,7 @@ function LoansPending() {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
+  // console.log(pendingApprovedLoans)
 
 
   const gridBoxes = [
@@ -151,7 +155,7 @@ function LoansPending() {
         </Box>
         : <NumberFormat
           value={
-            loansPending.data.data
+            (pendingApprovedLoans.length < 1 ? loansPending.data.data : pendingApprovedLoans)
               .filter(loan => loan.status.toLowerCase() === 'approved')
               .map(loan => loan.amount)
               .reduce((a, b) => a = Number(a) + Number(b), 0)
@@ -177,7 +181,7 @@ function LoansPending() {
         </Box>
         : <NumberFormat
           value={
-            loansPending.data.data
+            (pendingApprovedLoans.length < 1 ? loansPending.data.data : pendingApprovedLoans)
               .filter(loan => loan.status.toLowerCase() === 'pending')
               .map(loan => loan.amount)
               .reduce((a, b) => a = Number(a) + Number(b), 0)
@@ -328,269 +332,260 @@ function LoansPending() {
             </TableHead>
           </Table>
 
-          <Table>
-            <TableHead>
-              <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
-                <TableCell
-                  size="small"
-                  align="left"
-                  style={{
-                    // wordWrap: "initial",
-                    maxWidth: "50px",
-                  }}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    S/N
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-                  align="left"
-                  size="small"
-                  style={{
-                    // wordWrap: "initial",
-                    maxWidth: "50px",
-                  }}
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    NAME
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    EMAIL ADDRESS
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    AMOUNT
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    DATE
-                  </Typography>
-                </TableCell>
-
-                <TableCell
-
-                >
-                  <Typography
-                    className={classes.typography}
-                    style={{
-                      fontSize: '12px',
-                      lineHeight: '15px',
-                      color: '#95AAC9',
-                      letterSpacing: '0.08em',
-                    }}
-                  >
-                    STATUS
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {
-                isError ? (<Box display="flex"
+          {
+            isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
+              : isLoading ?
+                (<Box
+                  display="flex"
+                  justifyContent="center"
                   style={{
                     width: '100%',
                     margin: 'auto',
-                    paddingLeft: '500px',
+                    paddingLeft: 100,
                     paddingRight: 100,
                     paddingTop: 150,
                     paddingBottom: 150,
                   }}
                 >
-                  <p style={{color: '#FFFFFF'}}>Try Again Please</p>
+                  <CircularProgress style={{ color: '#007945' }} />
                 </Box>)
-                  : isLoading ?
-                    (<Box
-                      display="flex"
-                      justifyContent="center"
-                      style={{
-                        width: '100%',
-                        margin: 'auto',
-                        paddingLeft: '500px',
-                        paddingRight: 100,
-                        paddingTop: 150,
-                        paddingBottom: 150,
-                      }}
-                    >
-                      <CircularProgress style={{ color: '#007945' }} />
-                    </Box>)
-                    : loansPending &&
-                    loansPending.data.data
-                      .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved')
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map(user => (
-                        <TableRow key={user.id}>
-                          <TableCell
+                : loansPending &&
+                <Table>
+                  <TableHead>
+                    <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
+                      <TableCell
+                        size="small"
+                        align="left"
+                        style={{
+                          // wordWrap: "initial",
+                          maxWidth: "50px",
+                        }}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          S/N
+                        </Typography>
+                      </TableCell>
 
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontFamily: 'Cerebri Sans',
-                                fontWeight: '400'
-                              }}
+                      <TableCell
+                        align="left"
+                        size="small"
+                        style={{
+                          // wordWrap: "initial",
+                          maxWidth: "50px",
+                        }}
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          NAME
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          EMAIL ADDRESS
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          AMOUNT
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          DATE
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell
+
+                      >
+                        <Typography
+                          className={classes.typography}
+                          style={{
+                            fontSize: '12px',
+                            lineHeight: '15px',
+                            color: '#95AAC9',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          STATUS
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+
+                  <TableBody>
+                    {
+                      (pendingApprovedLoans.length < 1 ? loansPending.data.data : pendingApprovedLoans)
+                        .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved')
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((user, i) => (
+                          <TableRow key={user.id}>
+                            <TableCell
+
                             >
-                              {user.id}
-                            </Typography>
-                          </TableCell>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {i + 1}
+                              </Typography>
+                            </TableCell>
 
-                          <TableCell
+                            <TableCell
 
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontFamily: 'Cerebri Sans',
-                                fontWeight: '400'
-                              }}
                             >
-                              {user.user.first_name}  {user.user.last_name}
-                            </Typography>
-                          </TableCell>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.user.first_name}  {user.user.last_name}
+                              </Typography>
+                            </TableCell>
 
-                          <TableCell
+                            <TableCell
 
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontFamily: 'Cerebri Sans',
-                                fontWeight: '400'
-                              }}
                             >
-                              {user.user.email}
-                            </Typography>
-                          </TableCell>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.user.email}
+                              </Typography>
+                            </TableCell>
 
-                          <TableCell
+                            <TableCell
 
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontFamily: 'Cerebri Sans',
-                                fontWeight: '400'
-                              }}
                             >
-                              <NumberFormat
-                                value={user.amount}
-                                displayType={'text'}
-                                thousandSeparator={true}
-                                prefix={'₦'}
-                              />
-                            </Typography>
-                          </TableCell>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                <NumberFormat
+                                  value={user.amount}
+                                  displayType={'text'}
+                                  thousandSeparator={true}
+                                  prefix={'₦'}
+                                />
+                              </Typography>
+                            </TableCell>
 
-                          <TableCell
+                            <TableCell
 
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontFamily: 'Cerebri Sans',
-                                fontWeight: '400'
-                              }}
                             >
-                              {moment(user.created_at).format('DD/MM/YYYY')}
-                            </Typography>
-                          </TableCell>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {moment(user.created_at).format('DD/MM/YYYY')}
+                              </Typography>
+                            </TableCell>
 
-                          <TableCell
+                            <TableCell
 
-                          >
-                            <Typography
-                              className={classes.typography}
-                              style={{
-                                fontSize: '15px',
-                                lineHeight: '165.1%',
-                                color: '#283E59',
-                                fontFamily: 'Cerebri Sans',
-                                fontWeight: '400'
-                              }}
                             >
-                              {user.status}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ))
-              }
-            </TableBody>
-          </Table>
+                              <Typography
+                                className={classes.typography}
+                                style={{
+                                  fontSize: '15px',
+                                  lineHeight: '165.1%',
+                                  color: '#283E59',
+                                  fontFamily: 'Cerebri Sans',
+                                  fontWeight: '400'
+                                }}
+                              >
+                                {user.status}
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                    }
+                  </TableBody>
+                </Table>
+          }
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
             count={
               isError ? 0 : isLoading ? 0 : loansPending &&
-                loansPending.data.data
+                (pendingApprovedLoans.length < 1 ? loansPending.data.data : pendingApprovedLoans)
                   .filter(loan => loan.status.toLowerCase() === 'pending' || loan.status.toLowerCase() === 'approved').length
             }
             page={page}

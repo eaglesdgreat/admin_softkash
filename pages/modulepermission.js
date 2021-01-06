@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 
 import TableLayout from './../components/Tables'
-// import Graph from './../components/graph/DashboardGraph'
+import { useStateValue } from '../StateProviders';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,6 +105,8 @@ function ModulePermission() {
   const path = '/modulepermission'
   const classes = useStyles()
 
+  const [{ adminsResult }, dispatch] = useStateValue();
+
   const { admins, isLoading, isError } = adminsData()
   // console.log(admins)
 
@@ -123,6 +125,7 @@ function ModulePermission() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
+  // console.log(adminsResult)
 
   // handler for pagination change per page
   const handleRowsChangePerPage = (event) => {
@@ -206,7 +209,7 @@ function ModulePermission() {
                         fontStyle: 'normal',
                       }}
                     >
-                      {admins.data.length}
+                      {(adminsResult.length < 1 ? admins.data.length : adminsResult.length)}
                     </Typography>
               }
             </Box>
@@ -409,7 +412,7 @@ function ModulePermission() {
 
                   <TableBody>
                     {
-                      admins.data
+                      (adminsResult.length < 1 ? admins.data : adminsResult)
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((user, i) => (
                           <TableRow key={i}>
@@ -518,7 +521,7 @@ function ModulePermission() {
                 <TablePagination
                   rowsPerPageOptions={[3, 5, 10, 20]}
                   component="div"
-                  count={admins.data.length}
+                  count={(adminsResult.length < 1 ? admins.data.length : adminsResult.length)}
                   page={page}
                   style={{ paddingRight: 30 }}
                   onChangePage={handleChangePage}

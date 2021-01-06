@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 
 import TableLayout from './../components/Tables'
-// import Graph from './../components/graph/DashboardGraph'
+import { useStateValue } from '../StateProviders';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,6 +107,8 @@ function Employees() {
   const classes = useStyles()
   const router = useRouter()
 
+  const [{ employeesResult }, dispatch] = useStateValue();
+
   const { employees, isLoading, isError } = employeesData()
   // console.log(employees)
 
@@ -125,6 +127,7 @@ function Employees() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
+  // console.log(employeesResult)
 
   // handler for pagination change per page
   const handleRowsChangePerPage = (event) => {
@@ -208,7 +211,7 @@ function Employees() {
                         fontStyle: 'normal',
                       }}
                     >
-                      {employees.data.length}
+                      {(employeesResult.length < 1 ? employees.data.length : employeesResult.length)}
                     </Typography>
               }
             </Box>
@@ -412,7 +415,7 @@ function Employees() {
 
                   <TableBody>
                     {
-                      employees.data
+                      (employeesResult.length < 1 ? employees.data : employeesResult)
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((user, i) => (
                           <TableRow key={i}>
@@ -521,7 +524,7 @@ function Employees() {
                 <TablePagination
                   rowsPerPageOptions={[3, 5, 10, 20]}
                   component="div"
-                  count={employees.data.length}
+                  count={(employeesResult.length < 1 ? employees.data.length : employeesResult.length)}
                   page={page}
                   style={{ paddingRight: 30 }}
                   onChangePage={handleChangePage}

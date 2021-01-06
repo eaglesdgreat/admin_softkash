@@ -1,7 +1,17 @@
 export const initialState = {
-  activeLoansSearch: [],
+  loansSearch: [],
   activeLoansResult: [],
-  basket: {},
+  pendingApprovedLoans: [],
+  rejectedLoans: [],
+
+  messagesSearch: [],
+  messagesResult: [],
+
+  employeesSearch: [],
+  employeesResult: [],
+
+  adminsSearch: [],
+  adminsResult: [],
 }
 
 
@@ -10,7 +20,7 @@ export const reducer = (state, action) => {
     case 'GET_ACTIVE_LOANS_SEARCH':
       return {
         ...state,
-        activeLoansSearch: [...action.items]
+        loansSearch: [...action.items]
       }
 
     case 'GET_ACTIVE_LOANS_RESULT':
@@ -19,10 +29,52 @@ export const reducer = (state, action) => {
         activeLoansResult: [...action.items]
       }
 
-    case 'ALL_DATA_FOR_SEARCH':
+    case 'GET_PENDING_APPROVED_LOANS':
       return {
         ...state,
-        basket: { ...action.items }
+        pendingApprovedLoans: [...action.items]
+      }
+
+    case 'GET_REJECTED_LOANS':
+      return {
+        ...state,
+        rejectedLoans: [...action.items]
+      }
+
+    case 'GET_MESSAGES_SEARCH':
+      return {
+        ...state,
+        messagesSearch: [...action.items]
+      }
+
+    case 'GET_MESSAGES_RESULT':
+      return {
+        ...state,
+        messagesResult: [...action.items]
+      }
+
+    case 'GET_EMPLOYEES_SEARCH':
+      return {
+        ...state,
+        employeesSearch: [...action.items]
+      }
+
+    case 'GET_EMPLOYEES_RESULT':
+      return {
+        ...state,
+        employeesResult: [...action.items]
+      }
+
+    case 'GET_ADMINS_SEARCH':
+      return {
+        ...state,
+        adminsSearch: [...action.items]
+      }
+
+    case 'GET_ADMINS_RESULT':
+      return {
+        ...state,
+        adminsResult: [...action.items]
       }
 
     default:

@@ -17,6 +17,7 @@ import axios from 'axios'
 import TableLayout from './../components/Tables'
 import Chart from '../components/graph/LineChart'
 // import { useStateValue } from '../StateProviders';
+import withAuth from './../components/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   root: {
