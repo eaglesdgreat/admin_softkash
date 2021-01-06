@@ -25,6 +25,8 @@ import axios from 'axios';
 import { Add, Close } from '@material-ui/icons'
 import { useSnackbar } from 'notistack'
 
+import validations from '../lib/validations';
+
 
 
 
@@ -126,14 +128,14 @@ function AddAdmin() {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar();
 
-  const [open, setOpen] = useState(false)
-  const [messages, setMessages] = useState({
-    ...initialState, success: '', failure: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [show, setShow] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [input, setInput] = useState({
+  const errorMessageStyle = {
+    color: "red",
+    fontSize: "13px",
+    fontWeight: "bolder",
+    fontStyle: "oblique"
+  };
+
+  const initialState = {
     first_name: "",
     last_name: "",
     email: "",
@@ -144,7 +146,16 @@ function AddAdmin() {
     role_name: "",
     role_id: "",
     staff_id: "",
+};
+
+  const [open, setOpen] = useState(false)
+  const [messages, setMessages] = useState({
+    ...initialState, success: '', failure: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [input, setInput] = useState(initialState);
 
   const handleAddInfluencerOpen = () => {
     setOpen(true);
@@ -157,6 +168,112 @@ function AddAdmin() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInput({ ...input, [name]: value });
+  }
+
+
+  const validateField = (e) => {
+
+    if (e.target.name === 'first_name') {
+      const validate = validations(input.first_name, 'First Name');
+      if (validate.status) {
+        setMessages({ ...messages, firstName: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, firstName: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'lastName') {
+      const validate = validations(state.lastName, 'Last Name');
+      if (validate.status) {
+        setMessages({ ...messages, lastName: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, lastName: '', success: '', failure: '' });
+      }
+    }
+
+
+    if (e.target.name === 'email') {
+      const validate = validations(state.email, 'Email', true, 'email');
+      if (validate.status) {
+        setMessages({ ...messages, email: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, email: '', success: '', failure: '' });
+      }
+    }
+
+
+    if (e.target.name === 'phone') {
+      const validate = validations(state.phone, 'Phone Number', true, 'digits');
+      if (validate.status) {
+        setMessages({ ...messages, phone: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, phone: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'password') {
+      const validate = validations(state.password, 'Password', true, 'password');
+      if (validate.status) {
+        setMessages({ ...messages, password: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, password: '', success: '', failure: '' });
+      }
+    }
+
+
+    if (e.target.name === 'passwordConfirmation') {
+      const validate = validations(state.passwordConfirmation, 'Confirm Password', true, 'compare', state.password);
+      if (validate.status) {
+        setMessages({ ...messages, passwordConfirmation: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, passwordConfirmation: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'address') {
+      const validate = validations(state.address, 'Address');
+      if (validate.status) {
+        setMessages({ ...messages, address: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, address: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'city') {
+      const validate = validations(state.address, 'City');
+      if (validate.status) {
+        setMessages({ ...messages, city: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, city: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'faculty') {
+      const validate = validations(state.faculty, 'Faculty');
+      if (validate.status) {
+        setMessages({ ...messages, faculty: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, faculty: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'department') {
+      const validate = validations(state.department, 'Department');
+      if (validate.status) {
+        setMessages({ ...messages, department: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, department: '', success: '', failure: '' });
+      }
+    }
+
+    if (e.target.name === 'matricNumber') {
+      const validate = validations(state.matricNumber, 'Matric Number');
+      if (validate.status) {
+        setMessages({ ...messages, matricNumber: validate.message, success: '', failure: '' });
+      } else {
+        setMessages({ ...messages, matricNumber: '', success: '', failure: '' });
+      }
+    }
   }
 
   // Add influencer form submit
