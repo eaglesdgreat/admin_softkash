@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Layout from './Layout'
+// import http from 'http2'
 import {
   Box,
   Typography,
@@ -15,6 +16,10 @@ import {
   Backdrop,
   Fade,
   InputBase,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  CircularProgress
 } from '@material-ui/core'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
@@ -23,6 +28,7 @@ import Link from 'next/link'
 import clsx from 'clsx';
 import axios from 'axios';
 import { Add, Close } from '@material-ui/icons'
+import Alert from '@material-ui/lab/Alert';
 import { useSnackbar } from 'notistack'
 
 import validations from '../lib/validations';
@@ -96,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#FFFFFF",
     borderRadius: '8px',
     border: "none",
+    height: '98%',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 8, 3),
     "&:focus": {
@@ -109,7 +116,6 @@ const useStyles = makeStyles((theme) => ({
     height: "42px",
     padding: "1rem",
     fontSize: "0.9rem",
-    marginBottom: "1.5rem",
   },
   label: {
     color: "000000, 90%",
@@ -117,8 +123,18 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonBox: {
     textAlign: "right",
-    margin: "4.5rem 0 2rem 0",
+    margin: "1.5rem 0 2rem 0",
   },
+  usertype: {
+    display: 'block',
+    '& > label > span.MuiFormControlLabel-label': {
+      fontSize: '14px'
+    },
+    '& > label > span > span > div > svg.MuiSvgIcon-root': {
+      height: '0.7em',
+      width: '0.7em'
+    }
+  }
 }))
 
 
@@ -130,9 +146,10 @@ function AddAdmin() {
 
   const errorMessageStyle = {
     color: "red",
-    fontSize: "13px",
-    fontWeight: "bolder",
-    fontStyle: "oblique"
+    fontSize: "11px",
+    fontWeight: "bold",
+    fontStyle: "normal",
+    marginBottom: "1.0rem"
   };
 
   const initialState = {
@@ -146,7 +163,7 @@ function AddAdmin() {
     role_name: "",
     role_id: "",
     staff_id: "",
-};
+  };
 
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState({
@@ -163,6 +180,8 @@ function AddAdmin() {
 
   const handleAddInfluencerClose = () => {
     setOpen(false);
+    setInput(initialState);
+    setMessages({ ...initialState, success: '', failure: '' });
   };
 
   const handleInputChange = (event) => {
@@ -176,24 +195,24 @@ function AddAdmin() {
     if (e.target.name === 'first_name') {
       const validate = validations(input.first_name, 'First Name');
       if (validate.status) {
-        setMessages({ ...messages, firstName: validate.message, success: '', failure: '' });
+        setMessages({ ...messages, first_name: validate.message, success: '', failure: '' });
       } else {
-        setMessages({ ...messages, firstName: '', success: '', failure: '' });
+        setMessages({ ...messages, first_name: '', success: '', failure: '' });
       }
     }
 
-    if (e.target.name === 'lastName') {
-      const validate = validations(state.lastName, 'Last Name');
+    if (e.target.name === 'last_name') {
+      const validate = validations(input.last_name, 'Last Name');
       if (validate.status) {
-        setMessages({ ...messages, lastName: validate.message, success: '', failure: '' });
+        setMessages({ ...messages, last_name: validate.message, success: '', failure: '' });
       } else {
-        setMessages({ ...messages, lastName: '', success: '', failure: '' });
+        setMessages({ ...messages, last_name: '', success: '', failure: '' });
       }
     }
 
 
     if (e.target.name === 'email') {
-      const validate = validations(state.email, 'Email', true, 'email');
+      const validate = validations(input.email, 'Email', true, 'email');
       if (validate.status) {
         setMessages({ ...messages, email: validate.message, success: '', failure: '' });
       } else {
@@ -202,17 +221,17 @@ function AddAdmin() {
     }
 
 
-    if (e.target.name === 'phone') {
-      const validate = validations(state.phone, 'Phone Number', true, 'digits');
+    if (e.target.name === 'phone_number') {
+      const validate = validations(input.phone_number, 'Phone Number', true, 'digits');
       if (validate.status) {
-        setMessages({ ...messages, phone: validate.message, success: '', failure: '' });
+        setMessages({ ...messages, phone_number: validate.message, success: '', failure: '' });
       } else {
-        setMessages({ ...messages, phone: '', success: '', failure: '' });
+        setMessages({ ...messages, phone_number: '', success: '', failure: '' });
       }
     }
 
     if (e.target.name === 'password') {
-      const validate = validations(state.password, 'Password', true, 'password');
+      const validate = validations(input.password, 'Password', true, 'password');
       if (validate.status) {
         setMessages({ ...messages, password: validate.message, success: '', failure: '' });
       } else {
@@ -221,57 +240,39 @@ function AddAdmin() {
     }
 
 
-    if (e.target.name === 'passwordConfirmation') {
-      const validate = validations(state.passwordConfirmation, 'Confirm Password', true, 'compare', state.password);
+    if (e.target.name === 'confirm_password') {
+      const validate = validations(input.confirm_password, 'Confirm Password', true, 'compare', input.password);
       if (validate.status) {
-        setMessages({ ...messages, passwordConfirmation: validate.message, success: '', failure: '' });
+        setMessages({ ...messages, confirm_password: validate.message, success: '', failure: '' });
       } else {
-        setMessages({ ...messages, passwordConfirmation: '', success: '', failure: '' });
+        setMessages({ ...messages, confirm_password: '', success: '', failure: '' });
       }
     }
 
-    if (e.target.name === 'address') {
-      const validate = validations(state.address, 'Address');
+    if (e.target.name === 'role_id') {
+      const validate = validations(input.role_id, 'Role Id');
       if (validate.status) {
-        setMessages({ ...messages, address: validate.message, success: '', failure: '' });
+        setMessages({ ...messages, role_id: validate.message, success: '', failure: '' });
       } else {
-        setMessages({ ...messages, address: '', success: '', failure: '' });
+        setMessages({ ...messages, role_id: '', success: '', failure: '' });
       }
     }
 
-    if (e.target.name === 'city') {
-      const validate = validations(state.address, 'City');
+    if (e.target.name === 'staff_id') {
+      const validate = validations(input.staff_id, 'Staff Id');
       if (validate.status) {
-        setMessages({ ...messages, city: validate.message, success: '', failure: '' });
+        setMessages({ ...messages, staff_id: validate.message, success: '', failure: '' });
       } else {
-        setMessages({ ...messages, city: '', success: '', failure: '' });
-      }
-    }
-
-    if (e.target.name === 'faculty') {
-      const validate = validations(state.faculty, 'Faculty');
-      if (validate.status) {
-        setMessages({ ...messages, faculty: validate.message, success: '', failure: '' });
-      } else {
-        setMessages({ ...messages, faculty: '', success: '', failure: '' });
+        setMessages({ ...messages, staff_id: '', success: '', failure: '' });
       }
     }
 
     if (e.target.name === 'department') {
-      const validate = validations(state.department, 'Department');
+      const validate = validations(input.department, 'Department');
       if (validate.status) {
         setMessages({ ...messages, department: validate.message, success: '', failure: '' });
       } else {
         setMessages({ ...messages, department: '', success: '', failure: '' });
-      }
-    }
-
-    if (e.target.name === 'matricNumber') {
-      const validate = validations(state.matricNumber, 'Matric Number');
-      if (validate.status) {
-        setMessages({ ...messages, matricNumber: validate.message, success: '', failure: '' });
-      } else {
-        setMessages({ ...messages, matricNumber: '', success: '', failure: '' });
       }
     }
   }
@@ -280,34 +281,164 @@ function AddAdmin() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const body = { ...input }
-    console.log(body)
+    let isValid = true;
 
-    // const token = isAuthenticated().authToken
-    const url = `${process.env.BACKEND_URL}/api/admin/login`
-
-    try {
-      const response = await axios.post(
-        url,
-        body,
-        // { headers: { authenticate: token } }
-      )
-
-      console.log(response);
-
-      if (response.data.success) {
-        enqueueSnackbar("Admin Created Successfully", {
-          variant: 'success',
-        });
+    if (isValid) {
+      const validate = validations(input.first_name, 'First Name');
+      if (validate.status) {
+        setMessages({ ...messages, first_name: validate.message });
+        isValid = false;
       }
-    } catch (error) {
-      enqueueSnackbar("Admin could not be created. Try again", {
-        variant: 'error',
-      });
-      console.log(error);
     }
 
-    setOpen(false);
+
+    if (isValid) {
+      const validate = validations(input.last_name, 'Last Name');
+      if (validate.status) {
+        setMessages({ ...messages, last_name: validate.message });
+        isValid = false;
+      }
+    }
+
+
+    if (isValid) {
+      const validate = validations(input.email, 'Email', true, 'email');
+      if (validate.status) {
+        setMessages({ ...messages, email: validate.message });
+        isValid = false;
+      }
+    }
+
+
+    if (isValid && input.phone_number) {
+      const validate = validations(input.phone_number, 'Phone Number', true, 'digits');
+      if (validate.status) {
+        setMessages({ ...messages, phone_number: validate.message });
+        isValid = false;
+      }
+    }
+
+
+    if (isValid) {
+      const validate = validations(input.password, 'Password', true, 'password');
+      if (validate.status) {
+        setMessages({ ...messages, password: validate.message });
+        isValid = false;
+      }
+    }
+
+
+    if (isValid) {
+      const validate = validations(input.confirm_password,
+        'Password Confirmation', true, 'compare', input.password);
+      if (validate.status) {
+        setMessages({ ...messages, confirm_password: validate.message });
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      const validate = validations(input.role_name, 'Role Name');
+      if (validate.status) {
+        setMessages({ ...messages, role_name: validate.message });
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      const validate = validations(input.role_id, 'Role Id');
+      if (validate.status) {
+        setMessages({ ...messages, role_id: validate.message });
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      const validate = validations(input.staff_id, 'Staff Id');
+      if (validate.status) {
+        setMessages({ ...messages, staff_id: validate.message });
+        isValid = false;
+      }
+    }
+
+    if (isValid) {
+      const validate = validations(input.department, 'Department');
+      if (validate.status) {
+        setMessages({ ...messages, department: validate.message });
+        isValid = false;
+      }
+    }
+
+    const body = {
+      first_name: input.first_name,
+      last_name: input.last_name,
+      email: input.email,
+      phone_number: input.phone_number,
+      department: input.department,
+      password: input.password,
+      role_name: input.role_name,
+      role_id: input.role_id,
+      staff_id: input.staff_id,
+    }
+    // console.log(body)
+    const url = `${process.env.BACKEND_URL}/api/admins`
+
+    if (isValid) {
+      setLoading(true);
+
+      try {
+        const response = await axios.post(
+          url,
+          body,
+        )
+        console.log(response.data)
+
+        // const router = useRouter()
+
+        // if (response.data.success === true) {
+          // router.push('/verifyemail')
+          setLoading(false);
+
+          setMessages({ ...messages, success: response.data.response_message });
+          setInput(initialState);
+          setOpen(false);
+
+          enqueueSnackbar(`Admin Created Successfully`, {
+            variant: 'success',
+          });
+        // }
+
+      } catch (e) {
+        console.log(e.response);
+
+        setLoading(false);
+
+        if (e.response) {
+          if (e.response.status >= 500) {
+            setMessages({
+              ...messages, failure:
+                `We are sorry. We can't process your 
+          request at the moment, please try again later` })
+
+            enqueueSnackbar("We are sorry. We can't process your request at the moment, please try again later", {
+              variant: 'error',
+            });
+          } else {
+            setMessages({ ...messages, failure: e.response.data.response_message })
+            enqueueSnackbar("Admin could not be created. Try again", {
+              variant: 'error',
+            });
+          }
+        }
+
+      }
+
+    }
+  }
+
+  const clearError = () => {
+    setInput(initialState);
+    setMessages({ ...initialState, success: '', failure: '' });
   }
 
   return (
@@ -359,29 +490,49 @@ function AddAdmin() {
         >
           <Fade in={open}>
             <Box className={classes.paper}>
-              <Button style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                borderRadius: "2px",
-                width: "4.2rem",
-                padding: 0,
-                margin: "1rem 0 2rem 0"
-              }}
-                size="large"
-                disableRipple
-                onClick={handleAddInfluencerClose}
+              <Box
+                display="flex"
               >
-                <Close style={{
-                  fontWeight: 500, fontSize: "1.2rem",
-                  color: "#000000", marginRight: "0.3rem"
-                }} />
-                <Typography style={{ fontWeight: 400, color: "#242120" }}>
-                  Close
-              </Typography>
-              </Button>
+                <h2 style={{ marginBottom: "1.5rem", color: '#007945' }} id="transition-modal-title">Add Admin User</h2>
 
-              <h2 style={{ marginBottom: "3rem" }} id="transition-modal-title">Add Admin User</h2>
+                <Button style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  borderRadius: "2px",
+                  width: "4.2rem",
+                  padding: 0,
+                  marginLeft: "15.5rem"
+                }}
+                  size="large"
+                  disableRipple
+                  onClick={handleAddInfluencerClose}
+                >
+                  <Close style={{
+                    fontWeight: 500, fontSize: "1.2rem",
+                    color: "#000000", marginRight: "0.3rem"
+                  }} />
+                  <Typography style={{ fontWeight: 400, color: "#242120" }}>
+                    Close
+                  </Typography>
+                </Button>
+              </Box>
+
+              {messages.failure &&
+                <Alert severity="error" style={{ width: '100%' }}
+                  onClose={() => clearError('failure')}
+                  color="error">
+                  {messages.failure}
+                </Alert>
+              }
+
+              {messages.success &&
+                <Alert severity="success" style={{ width: '100%' }}
+                  onClose={() => clearError('success')}
+                  color="info">
+                  {messages.success}
+                </Alert>
+              }
 
               <form noValidate onSubmit={handleSubmit}>
                 <Box style={{ display: "flex", justifyContent: "space-between" }}>
@@ -396,7 +547,20 @@ function AddAdmin() {
                       variant="outlined"
                       value={input.first_name}
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.first_name ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.first_name && (
+                        <span style={errorMessageStyle}>{messages.first_name}</span>
+                      )}
+                    </Box>
                   </Box>
 
                   <Box style={{ width: "48%" }}>
@@ -410,7 +574,20 @@ function AddAdmin() {
                       variant="outlined"
                       value={input.last_name}
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.last_name ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.last_name && (
+                        <span style={errorMessageStyle}>{messages.last_name}</span>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
 
@@ -423,9 +600,23 @@ function AddAdmin() {
                     name="email"
                     className={classes.textField}
                     variant="outlined"
+                    type="email"
                     value={input.email}
                     onChange={handleInputChange}
+                    onKeyUp={validateField}
+                    style={{
+                      marginBottom: messages.email ? '0px' : "1.0rem",
+                    }}
                   />
+
+                  <Box
+                    display="flex"
+                    style={{ width: '70%' }}
+                  >
+                    {messages.email && (
+                      <span style={errorMessageStyle}>{messages.email}</span>
+                    )}
+                  </Box>
                 </Box>
 
                 <Box style={{ display: "flex", justifyContent: "space-between" }}>
@@ -440,13 +631,27 @@ function AddAdmin() {
                       variant="outlined"
                       value={input.phone_number}
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.phone_number ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.phone_number && (
+                        <span style={errorMessageStyle}>{messages.phone_number}</span>
+                      )}
+                    </Box>
                   </Box>
 
                   <Box style={{ width: "48%" }}>
                     <Typography
                       className={classes.label}
                       component="legend">Department</Typography>
+
                     <InputBase
                       // style={{ height: "84px", }}
                       className={classes.textField}
@@ -457,7 +662,20 @@ function AddAdmin() {
                       value={input.department}
                       name="department"
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.department ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.department && (
+                        <span style={errorMessageStyle}>{messages.department}</span>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
 
@@ -473,13 +691,27 @@ function AddAdmin() {
                       variant="outlined"
                       value={input.staff_id}
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.staff_id ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.staff_id && (
+                        <span style={errorMessageStyle}>{messages.staff_id}</span>
+                      )}
+                    </Box>
                   </Box>
 
                   <Box style={{ width: "48%" }}>
                     <Typography
                       className={classes.label}
                       component="legend">Role Id</Typography>
+
                     <InputBase
                       className={classes.textField}
                       variant="outlined"
@@ -487,7 +719,20 @@ function AddAdmin() {
                       value={input.role_id}
                       name="role_id"
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.role_id ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.role_id && (
+                        <span style={errorMessageStyle}>{messages.role_id}</span>
+                      )}
+                    </Box>
                   </Box>
                 </Box>
 
@@ -501,23 +746,82 @@ function AddAdmin() {
                       name="password"
                       className={classes.textField}
                       variant="outlined"
+                      type="password"
                       value={input.password}
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.password ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.password && (
+                        <span style={errorMessageStyle}>{messages.password}</span>
+                      )}
+                    </Box>
                   </Box>
 
                   <Box style={{ width: "48%" }}>
                     <Typography
                       className={classes.label}
                       component="legend">Confirm Password</Typography>
+
                     <InputBase
                       className={classes.textField}
                       variant="outlined"
-                      type="text"
+                      type="password"
                       value={input.confirm_password}
                       name="confirm_password"
                       onChange={handleInputChange}
+                      onKeyUp={validateField}
+                      style={{
+                        marginBottom: messages.confirm_password ? '0px' : "1.0rem",
+                      }}
                     />
+
+                    <Box
+                      display="flex"
+                      style={{ width: '70%' }}
+                    >
+                      {messages.confirm_password && (
+                        <span style={errorMessageStyle}>{messages.confirm_password}</span>
+                      )}
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                >
+                  <Typography
+                    className={classes.label}
+                    component="legend"
+                  >
+                    Select Admin User Role
+                  </Typography>
+                  <RadioGroup
+                    className={classes.usertype}
+                    aria-label="roleName"
+                    name="role_name"
+                    value={input.role_name}
+                    onChange={handleInputChange}
+                  >
+                    <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
+                    <FormControlLabel value="Super Admin" control={<Radio />} label="Super Admin" />
+                  </RadioGroup>
+
+                  <Box
+                    display="flex"
+                    style={{ width: '70%' }}
+                  >
+                    {messages.role_name && (
+                      <span style={errorMessageStyle}>{messages.role_name}</span>
+                    )}
                   </Box>
                 </Box>
 
@@ -540,13 +844,12 @@ function AddAdmin() {
                       background: "#007945",
                       color: "#FFFFFF",
                       borderRadius: "4px",
+                      fontSize: "0.9rem"
                     }}
                     variant="contained"
                     onClick={handleSubmit}
                   >
-                    <Typography style={{ fontSize: "0.9rem", }}>
-                      ADD
-                    </Typography>
+                    {loading ? <CircularProgress size="2em" style={{ color: '#fff' }} /> : 'CREATE ADMIN'}
                   </Button>
                 </Box>
               </form>
