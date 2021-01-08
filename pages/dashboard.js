@@ -373,7 +373,7 @@ const Dashboard = (props) => {
 
     if (loan === 'all') {
       let items =
-        isErrorTotalLoans ? '' : isLoadingTotalLoans ? '' :
+        isErrorTotalLoans ? [] : isLoadingTotalLoans ? [] :
           totalLoansCount && totalLoansCount.data.data
             .filter(x => {
               const check = moment(x.created_at).format('YYYY').toString() === year;
@@ -402,7 +402,7 @@ const Dashboard = (props) => {
 
     if (loan === 'paid') {
       let items =
-        isErrorTotalLoans ? '' : isLoadingTotalLoans ? '' :
+        isErrorTotalLoans ? [] : isLoadingTotalLoans ? [] :
           totalLoansCount && totalLoansCount.data.data
             .filter(loan => loan.status.toLowerCase() === 'paid')
             .filter(x => {
@@ -432,8 +432,8 @@ const Dashboard = (props) => {
 
     if (loan === 'rejected') {
       let items =
-        isErrorTotalLoans ? '' : isLoadingTotalLoans ? '' :
-          totalLoansCount && totalLoansCount.data.data
+        (isErrorTotalLoans ? [] : isLoadingTotalLoans ? [] :
+          totalLoansCount && totalLoansCount.data.data)
             .filter(loan => loan.status.toLowerCase() === 'rejected')
             .filter(x => {
               const check = moment(x.createdAt).format('YYYY').toString() === year;
