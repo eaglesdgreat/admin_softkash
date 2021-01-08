@@ -133,12 +133,83 @@ function ActiveLoansList() {
     setPage(newPage)
   }
 
+
   // handler for pagination change per page
   const handleRowsChangePerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
   // console.log(activeLoansResult)
+
+
+  // This function calculate the data for a calender year (e.g 2020)
+  // and place the data in the graph (num of orders against month)
+  const onYearlyChangeActiveLoans = () => {
+    const year = moment().format('YYYY')
+
+    const newDate = []
+    let data = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+      'October', 'November', 'December']
+
+    let items =
+      (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
+        .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid')
+        .filter(x => {
+          const check = moment(x.created_at).format('YYYY').toString() === year;
+          // console.log(moment(x.createdAt).format('MMMM'))
+          return check
+        })
+    // console.log(items)
+
+    for (let count = 0; count < 12; count++) {
+      let item = items.filter(x => moment(x.created_at).format('MMMM') === data[0])
+        .map(amount => amount.amount).reduce((a, b) => a = Number(a) + Number(b), 0)
+      // console.log(item)
+
+      newDate.push(item)
+
+      // Remove the first element of the array and reassign data to be the new array
+      data.shift()
+      data = data
+      // console.log(data)
+    }
+
+    return newDate
+  }
+
+
+  const onYearlyChangeActiveAmount = () => {
+    const year = moment().format('YYYY')
+
+    const newDate = []
+    let data = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
+      'October', 'November', 'December']
+
+    let items =
+      (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
+        .filter(loan => loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
+        .filter(x => {
+          const check = moment(x.created_at).format('YYYY').toString() === year;
+          // console.log(moment(x.createdAt).format('MMMM'))
+          return check
+        })
+    // console.log(items)
+
+    for (let count = 0; count < 12; count++) {
+      let item = items.filter(x => moment(x.created_at).format('MMMM') === data[0])
+        .map(amount => amount.amount).reduce((a, b) => a = Number(a) + Number(b), 0)
+      // console.log(item)
+
+      newDate.push(item)
+
+      // Remove the first element of the array and reassign data to be the new array
+      data.shift()
+      data = data
+      // console.log(data)
+    }
+
+    return newDate
+  }
 
   // if (activeLoansResult.length > 0) {
   //   setPage(0)
@@ -450,7 +521,7 @@ function ActiveLoansList() {
             component="div"
             count={
               isError ? 0 : isLoading ? 0 : activeLoans &&
-              (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
+                (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
                   .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
                     || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue').length
             }
@@ -559,7 +630,7 @@ function ActiveLoansList() {
                     color: '#95AAC9',
                   }}
                 >
-                  Total Amount Per Month
+                  Inavtive Loans Per Month
                 </Typography>
 
                 <Box
@@ -583,21 +654,23 @@ function ActiveLoansList() {
               labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
               datasets: [
                 {
-                  label: "Borrowers Per Month",
+                  label: "Active Loans Amount Per Month",
                   backgroundColor: "#007945",
                   borderColor: "#007945",
                   borderWidth: 1,
                   borderRadius: '50px',
                   data: [65, 59, 80, 81, 56, 55, 40, 56, 70, 90, 78, 45]
+                  // data: onYearlyChangeActiveLoans()
                 },
 
                 {
-                  label: "Total Amount Per Month",
+                  label: "Inavtive Loans Per Month",
                   backgroundColor: "#D2DDEC",
                   borderColor: "#D2DDEC",
                   borderWidth: 1,
                   borderRadius: '50px',
                   data: [45, 79, 50, 41, 16, 85, 20, 45, 67, 89, 90, 67]
+                  // data: onYearlyChangeActiveAmount()
                 }
               ]
             }}

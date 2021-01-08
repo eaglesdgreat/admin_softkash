@@ -396,16 +396,16 @@ function AddAdmin() {
         // const router = useRouter()
 
         // if (response.data.success === true) {
-          // router.push('/verifyemail')
-          setLoading(false);
+        // router.push('/verifyemail')
+        setLoading(false);
 
-          setMessages({ ...messages, success: response.data.response_message });
-          setInput(initialState);
-          setOpen(false);
+        setMessages({ ...messages, success: response.data.response_message });
+        setInput(initialState);
+        setOpen(false);
 
-          enqueueSnackbar(`Admin Created Successfully`, {
-            variant: 'success',
-          });
+        enqueueSnackbar(`Admin Created Successfully`, {
+          variant: 'success',
+        });
         // }
 
       } catch (e) {
@@ -495,16 +495,17 @@ function AddAdmin() {
               >
                 <h2 style={{ marginBottom: "1.5rem", color: '#007945' }} id="transition-modal-title">Add Admin User</h2>
 
-                <Button style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  borderRadius: "2px",
-                  width: "4.2rem",
-                  padding: 0,
-                  marginLeft: "15.5rem"
-                }}
-                  size="large"
+                <Button
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    borderRadius: "2px",
+                    width: "4.2rem",
+                    padding: 0,
+                    marginLeft: "15.5rem"
+                  }}
+                  size="small"
                   disableRipple
                   onClick={handleAddInfluencerClose}
                 >
