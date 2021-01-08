@@ -195,6 +195,10 @@ export default function Index() {
     }
   }
 
+  const clearError = () => {
+    setMessages({ ...initialState, success: '', failure: '' });
+  }
+
 
   return (
     <div className={classes.root}>
@@ -294,7 +298,7 @@ export default function Index() {
           autoHideDuration={10000}
           message={
             <Alert severity="error" style={{ maxWidth: '1440px' }}
-              onClose={() => clearError('failure')}
+              onClose={() => clearError()}
               color="error">
               {messages.failure}
             </Alert>
@@ -313,7 +317,7 @@ export default function Index() {
           autoHideDuration={15000}
           message={
             <Alert severity="success" style={{ maxWidth: '1440px' }}
-              onClose={() => clearError('success')}
+              onClose={() => clearError()}
               color="info">
               {messages.success}
             </Alert>

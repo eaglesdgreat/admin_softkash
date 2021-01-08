@@ -178,7 +178,7 @@ function ModulePermission() {
         url,
         // { headers: { authenticate: token } }
       )
-      console.log(response.data)
+      // console.log(response.data)
 
       if (response.data) {
         // swr globla mutate methode for changing data in cache without revalidating 

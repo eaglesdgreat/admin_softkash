@@ -1,16 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import Alert from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar'
 
-import { isAuthenticated } from './../lib/auth.helper'
+import { logout, isAuthenticated } from './../lib/auth.helper'
 
 const AuthContext = createContext()
 
 function AuthProvider({ children }) {
   const { pathname, events } = useRouter()
+
   const url = `${process.env.BACKEND_URL}/api/admins/${isAuthenticated().id}`
 
   const [user, setUser] = useState()
+  const [open, setOpen] = useState(false)
+  const [message, setMessage] = useState('')
 
   // get the user profile, if it exists, from our API route
   async function getUser() {
@@ -54,6 +59,15 @@ function AuthProvider({ children }) {
       // router.replace('/')
     }
 
+    if (isAuthenticated().token && isAuthenticated().lock === 1) {
+      logout(() => {
+        window.location.href = '/'
+      })
+
+      setMessage(`You have been ban from access the admin dashboard. Contact those in charge for clarity.`);
+      setOpen(true)
+    }
+
     // Monitor routes
     events.on('routeChangeStart', handleRouteChange)
     return () => {
@@ -67,7 +81,28 @@ function AuthProvider({ children }) {
   }, [pathname])
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <>
+      <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+
+      {
+        message &&
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={open}
+          onClose={() => {
+            setOpen(false)
+          }}
+          autoHideDuration={10000}
+          message={
+            <Alert severity="error" style={{ maxWidth: '1440px' }}
+              onClose={() => clearError('failure')}
+              color="error">
+              {messages.failure}
+            </Alert>
+          }
+        />
+      }
+    </>
   )
 }
 
