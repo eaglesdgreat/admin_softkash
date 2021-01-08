@@ -373,12 +373,13 @@ const Dashboard = (props) => {
 
     if (loan === 'all') {
       let items =
-        totalLoansCount.data.data
-          .filter(x => {
-            const check = moment(x.created_at).format('YYYY').toString() === year;
-            // console.log(moment(x.createdAt).format('MMMM'))
-            return check
-          })
+        isErrorTotalLoans ? '' : isLoadingTotalLoans ? '' :
+          totalLoansCount && totalLoansCount.data.data
+            .filter(x => {
+              const check = moment(x.created_at).format('YYYY').toString() === year;
+              // console.log(moment(x.createdAt).format('MMMM'))
+              return check
+            })
       // console.log(items)
 
       for (let count = 0; count < 12; count++) {
@@ -401,13 +402,14 @@ const Dashboard = (props) => {
 
     if (loan === 'paid') {
       let items =
-        totalLoansCount.data.data
-          .filter(loan => loan.status.toLowerCase() === 'paid')
-          .filter(x => {
-            const check = moment(x.created_at).format('YYYY').toString() === year;
-            // console.log(moment(x.createdAt).format('MMMM'))
-            return check
-          })
+        isErrorTotalLoans ? '' : isLoadingTotalLoans ? '' :
+          totalLoansCount && totalLoansCount.data.data
+            .filter(loan => loan.status.toLowerCase() === 'paid')
+            .filter(x => {
+              const check = moment(x.created_at).format('YYYY').toString() === year;
+              // console.log(moment(x.createdAt).format('MMMM'))
+              return check
+            })
       // console.log(items)
 
       for (let count = 0; count < 12; count++) {
@@ -430,14 +432,15 @@ const Dashboard = (props) => {
 
     if (loan === 'rejected') {
       let items =
-        totalLoansCount.data.data
-          .filter(loan => loan.status.toLowerCase() === 'rejected')
-          .filter(x => {
-            const check = moment(x.createdAt).format('YYYY').toString() === year;
-            // console.log(moment(x.createdAt).format('MMMM'))
-            return check
-          })
-      console.log(items)
+        isErrorTotalLoans ? '' : isLoadingTotalLoans ? '' :
+          totalLoansCount && totalLoansCount.data.data
+            .filter(loan => loan.status.toLowerCase() === 'rejected')
+            .filter(x => {
+              const check = moment(x.createdAt).format('YYYY').toString() === year;
+              // console.log(moment(x.createdAt).format('MMMM'))
+              return check
+            })
+      // console.log(items)
 
       for (let count = 0; count < 12; count++) {
         let item = items.filter(x => moment(x.created_at).format('MMMM') === data[0])
