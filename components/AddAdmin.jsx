@@ -32,7 +32,7 @@ import Alert from '@material-ui/lab/Alert';
 import { useSnackbar } from 'notistack'
 
 import validations from '../lib/validations';
-
+import { isAuthenticated } from './../lib/auth.helper'
 
 
 
@@ -403,7 +403,7 @@ function AddAdmin() {
         setInput(initialState);
         setOpen(false);
 
-        enqueueSnackbar(`Admin Created Successfully`, {
+        enqueueSnackbar(`${response.data.response_message}`, {
           variant: 'success',
         });
         // }
@@ -425,7 +425,7 @@ function AddAdmin() {
             });
           } else {
             setMessages({ ...messages, failure: e.response.data.response_message })
-            enqueueSnackbar("Admin could not be created. Try again", {
+            enqueueSnackbar(`${e.response.data.response_message}. Try again`, {
               variant: 'error',
             });
           }

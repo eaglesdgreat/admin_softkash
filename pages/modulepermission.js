@@ -12,15 +12,23 @@ import {
   Box,
   Grid,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@material-ui/core'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import moment from 'moment'
 import useSWR, { mutate } from 'swr'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import clsx from 'clsx';
+import { useSnackbar } from 'notistack'
 
 import TableLayout from './../components/Tables'
 import { useStateValue } from '../StateProviders';
+import { isAuthenticated } from './../lib/auth.helper'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,22 +112,26 @@ const adminsData = () => {
 function ModulePermission() {
   const path = '/modulepermission'
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar();
 
   const [{ adminsResult }, dispatch] = useStateValue();
 
   const { admins, isLoading, isError } = adminsData()
   // console.log(admins)
 
-  const users = []
-  for (let id = 1; id <= 500; id++)
-    for (let name of ['Peterson Frankinstine'])
-      for (let email of ['softkash@example.com'])
-        for (let phone of ['07033390533'])
-          for (let role of ['Super Admin', 'Admin'])
-            users.push({ id, name, email, phone, role })
+  // const users = []
+  // for (let id = 1; id <= 500; id++)
+  //   for (let name of ['Peterson Frankinstine'])
+  //     for (let email of ['softkash@example.com'])
+  //       for (let phone of ['07033390533'])
+  //         for (let role of ['Super Admin', 'Admin'])
+  //           users.push({ id, name, email, phone, role })
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [open, setOpen] = useState(false)
+  const [adminDetails, setAdminDetails] = useState({})
+  const [loading, setLoading] = useState(false);
 
   // handle change per page
   const handleChangePage = (event, newPage) => {
@@ -131,6 +143,75 @@ function ModulePermission() {
   const handleRowsChangePerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
+  }
+
+  // click open dialog pop up
+  const handleDialogClick = () => {
+    setOpen(true)
+  }
+
+  // handle dialog close changes
+  const handleDialogClose = () => {
+    setOpen(false)
+  }
+
+  // block admin handler 
+  const handleBlockAdmin = async (e) => {
+    e.preventDefault()
+
+    // const token = isAuthenticated().authToken
+
+    const url = adminDetails.blockType === 0
+      ? `${process.env.BACKEND_URL}/api/disable/admin_users/${adminDetails.adminId}`
+      : `${process.env.BACKEND_URL}/api/enable/admin_users/${adminDetails.adminId}`
+
+    const mutateUrl = `${process.env.BACKEND_URL}/api/admins`
+
+    const num = admins.data.findIndex(o => o.id === adminDetails.adminId)
+
+    setLoading(true);
+
+    try {
+      // const response = { data: { body, success: 'You have successfully delected the product' } }
+      // console.log(response.data.body)
+      const response = await axios.post(
+        url,
+        // { headers: { authenticate: token } }
+      )
+      console.log(response.data)
+
+      if (response.data) {
+        // swr globla mutate methode for changing data in cache without revalidating 
+        mutate(mutateUrl, async () => {
+          let updatedOrders = admins.data
+          const mutateBlock = adminDetails.blockType === 0 ? 1 : 0
+
+          updatedOrders[num] = { ...updatedOrders[num],  lock: mutateBlock }
+
+          // console.log(updatedOrders[id - 1])
+
+          return updatedOrders
+        }, false)
+
+        setLoading(false);
+
+        handleDialogClose()
+
+        enqueueSnackbar(`${response.data.Response_message}`, {
+          variant: 'success',
+        });
+      }
+    } catch (e) {
+      console.log(e.response)
+
+      setLoading(false);
+
+      if (e.response) {
+        enqueueSnackbar(`${e.response.data.message}. Try again`, {
+          variant: 'error',
+        });
+      }
+    }
   }
 
   return (
@@ -407,6 +488,11 @@ function ModulePermission() {
                           ROLE
                         </Typography>
                       </TableCell>
+
+                      {
+                        isAuthenticated().role_name.toLowerCase() === 'super admin'
+                          ? <TableCell className={classes.tableCell}></TableCell> : ''
+                      }
                     </TableRow>
                   </TableHead>
 
@@ -509,6 +595,178 @@ function ModulePermission() {
                                 {user.role_name}
                               </Typography>
                             </TableCell>
+
+                            {
+                              isAuthenticated().role_name.toLowerCase() === 'super admin'
+                                ? <TableCell>
+                                  <Box
+                                    display="flex"
+                                    justifyContent="center"
+                                    style={{
+                                      // border: '1px solid #EAEAEA',
+                                      // borderRadius: '2px',
+                                      width: '100%',
+                                      // margin: 'auto',
+                                      // backgroundColor: 'rgba(255, 92, 0, 0.08)'
+                                    }}
+                                  >
+                                    <Button
+                                      variant="outlined"
+                                      size="small"
+                                      className={clsx(classes.typography, classes.button2)}
+                                      style={{
+                                        fontWeight: '450',
+                                        fontSize: '13px',
+                                        color: '#EAEAEA',
+                                        lineHeight: '15px',
+                                        borderRadius: '3px',
+
+                                      }}
+                                      onClick={
+                                        () => {
+                                          handleDialogClick()
+                                          setAdminDetails({
+                                            adminId: user.id,
+                                            name: `${user.first_name} ${user.last_name}`,
+                                            blockType: user.lock,
+                                          })
+                                        }
+                                      }
+                                    >
+                                      {user.lock === 0 ? 'BLOCK' : 'UNBLOCK'}
+                                    </Button>
+                                  </Box>
+                                  <Dialog
+                                    open={open}
+                                    onClose={handleDialogClose}
+                                    BackdropProps={{
+                                      style: {
+                                        opacity: .3
+                                      }
+                                    }}
+                                    PaperProps={{
+                                      style: {
+                                        borderRadius: '8px',
+                                        width: '428px',
+                                        // height: '369px',
+                                        paddingBottom: '5%',
+                                        paddingTop: '2.5%',
+                                        boxShadow: 'none'
+                                      }
+                                    }}
+                                  >
+                                    <DialogTitle>
+                                      <Typography
+                                        className={classes.typography}
+                                        style={{
+                                          fontWeight: '600',
+                                          fontSize: '24px',
+                                          lineHeight: '28px',
+                                        }}
+                                      >
+                                        Block Admin User
+                                      </Typography>
+                                    </DialogTitle>
+
+                                    <DialogContent>
+                                      <Box
+                                        display="flex"
+                                        component="span"
+                                        style={{
+                                          whiteSpace: 'initial',
+                                        }}
+                                      >
+                                        <Typography
+                                          className={classes.typography}
+                                          style={{
+                                            fontWeight: 'normal',
+                                            fontSize: '15px',
+                                            lineHeight: '22px',
+                                            color: '#242120',
+                                          }}
+                                        >
+                                          {
+                                            adminDetails.blockType === 0 ?
+                                              `Are you sure you want to block "${adminDetails.name}"
+                                          from accessing the admin platform?. You can cancel or click on the block
+                                          button to block this admin user.`
+
+                                              : `You are about to unblock "${adminDetails.name}"
+                                                and give him access to the admin platform again`
+                                          }
+                                        </Typography>
+                                      </Box>
+                                    </DialogContent>
+
+                                    <DialogActions>
+                                      <Box
+                                        display="flex"
+                                        style={{
+                                          // margin: 'auto',
+                                          marginRight: '25px',
+                                          // border: '1px solid red',
+                                        }}
+                                      >
+                                        <Button
+                                          size="large"
+                                          className={classes.button2}
+                                          onClick={handleBlockAdmin}
+                                          disableRipple
+                                          style={{
+                                            border: '2px solid #007945',
+                                          }}
+                                        >
+                                          {
+                                            loading
+                                              ? <CircularProgress size="2em" style={{ color: '#007945' }} /> :
+                                              <Typography
+                                                className={classes.typography}
+                                                style={{
+                                                  textAlign: 'center',
+                                                  color: '#007945',
+                                                  fontSize: '13px',
+                                                  fontWeight: '500',
+                                                  lineHeight: '15px',
+                                                  textTransform: 'uppercase',
+                                                  lineSpacing: '0.02em'
+                                                }}
+                                              >
+                                                {adminDetails.blockType === 0 ? 'block' : 'unblock'}
+                                              </Typography>
+                                          }
+                                        </Button>
+
+                                        <Button
+                                          size="large"
+                                          className={classes.button}
+                                          onClick={handleDialogClose}
+                                          disableRipple
+                                          style={{
+                                            border: '1px solid #007945',
+                                            backgroundColor: '#007945',
+                                            marginLeft: '20px'
+                                          }}
+                                        >
+                                          <Typography
+                                            className={classes.typography}
+                                            style={{
+                                              textAlign: 'center',
+                                              color: '#FFFFFF',
+                                              fontSize: '13px',
+                                              fontWeight: '500',
+                                              lineHeight: '15px',
+                                              textTransform: 'uppercase',
+                                              lineSpacing: '0.02em'
+                                            }}
+                                          >
+                                            cancel
+                                          </Typography>
+                                        </Button>
+                                      </Box>
+                                    </DialogActions>
+                                  </Dialog>
+                                </TableCell> : ''
+                            }
                           </TableRow>
                         ))
                     }
@@ -531,7 +789,7 @@ function ModulePermission() {
           }
         </TableContainer>
       </Box>
-    </TableLayout>
+    </TableLayout >
   )
 }
 
