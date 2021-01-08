@@ -591,34 +591,6 @@ function AddAdmin() {
                   </Box>
                 </Box>
 
-                <Box>
-                  <Typography
-                    className={classes.label}
-                    component="legend">Email</Typography>
-
-                  <InputBase
-                    name="email"
-                    className={classes.textField}
-                    variant="outlined"
-                    type="email"
-                    value={input.email}
-                    onChange={handleInputChange}
-                    onKeyUp={validateField}
-                    style={{
-                      marginBottom: messages.email ? '0px' : "1.0rem",
-                    }}
-                  />
-
-                  <Box
-                    display="flex"
-                    style={{ width: '70%' }}
-                  >
-                    {messages.email && (
-                      <span style={errorMessageStyle}>{messages.email}</span>
-                    )}
-                  </Box>
-                </Box>
-
                 <Box style={{ display: "flex", justifyContent: "space-between" }}>
                   <Box style={{ width: "48%" }}>
                     <Typography
@@ -733,6 +705,34 @@ function AddAdmin() {
                         <span style={errorMessageStyle}>{messages.role_id}</span>
                       )}
                     </Box>
+                  </Box>
+                </Box>
+
+                <Box>
+                  <Typography
+                    className={classes.label}
+                    component="legend">Email</Typography>
+
+                  <InputBase
+                    name="email"
+                    className={classes.textField}
+                    variant="outlined"
+                    type="email"
+                    value={input.email}
+                    onChange={handleInputChange}
+                    onKeyUp={validateField}
+                    style={{
+                      marginBottom: messages.email ? '0px' : "1.0rem",
+                    }}
+                  />
+
+                  <Box
+                    display="flex"
+                    style={{ width: '70%' }}
+                  >
+                    {messages.email && (
+                      <span style={errorMessageStyle}>{messages.email}</span>
+                    )}
                   </Box>
                 </Box>
 
