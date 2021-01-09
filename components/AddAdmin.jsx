@@ -382,6 +382,7 @@ function AddAdmin() {
     }
     // console.log(body)
     const url = `${process.env.BACKEND_URL}/api/admins`
+    const token = isAuthenticated().token
 
     if (isValid) {
       setLoading(true);
@@ -390,8 +391,9 @@ function AddAdmin() {
         const response = await axios.post(
           url,
           body,
+          { headers: { Authorization: token } }
         )
-        console.log(response.data)
+        // console.log(response.data)
 
         // const router = useRouter()
 
