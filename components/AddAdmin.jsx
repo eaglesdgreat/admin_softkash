@@ -391,7 +391,7 @@ function AddAdmin() {
         const response = await axios.post(
           url,
           body,
-          { headers: { Authorization: token } }
+          { headers: { Authorization: `Bearer ${token}` } }
         )
         // console.log(response.data)
 

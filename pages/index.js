@@ -172,16 +172,16 @@ export default function Index() {
 
       try {
         const response = await axios.post(url, body)
-        // console.log(response)
+        console.log(response.data.response_message.split('[]'))
 
         if(response.data) {
           setMessages({ ...messages, success: `${response.data.response_message}. You are being redirected to your dashboard` });
           setState(initialState)
           setOpen(true)
 
-          authenticate(response.data.data, () => {
-            return router.push('/dashboard')
-          })
+          // authenticate(response.data.data, () => {
+          //   return router.push('/dashboard')
+          // })
         }
       } catch (e) {
         setLoading(false);
