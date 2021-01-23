@@ -17,7 +17,8 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 
 import { authenticate } from './../lib/auth.helper'
-// import { useStateValue } from '../StateProviders';
+import { useStateValue } from '../StateProviders';
+import LoginDialog from '../components/LoginDialog'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -111,6 +112,10 @@ const validations = (value, name, required = true, type, secondValue) => {
 export default function Index() {
   const classes = useStyles()
   const router = useRouter()
+
+  const [{ loginDialog }, dispatch] = useStateValue();
+  const [value, setValue] = useState('')
+  const [emailValue, setEmailValue] = useState('')
   
   const errorMessageStyle = {
     color: "red",
@@ -172,12 +177,21 @@ export default function Index() {
 
       try {
         const response = await axios.post(url, body)
-        console.log(response.data.response_message.split('[]'))
+        console.log(response.data.response_message.split('[')[1].split(']')[0])
+        const token = response.data.response_message.split('[')[1].split(']')[0]
+        setValue(token)
+        setEmailValue(state.email)
 
         if(response.data) {
-          setMessages({ ...messages, success: `${response.data.response_message}. You are being redirected to your dashboard` });
+          setMessages({ ...messages, success: `Token has been send to your email` });
           setState(initialState)
           setOpen(true)
+          setLoading(false);
+
+          dispatch({
+            type: 'OPEN_LOGIN_DIALOG',
+            items: true
+          })
 
           // authenticate(response.data.data, () => {
           //   return router.push('/dashboard')
@@ -185,12 +199,12 @@ export default function Index() {
         }
       } catch (e) {
         setLoading(false);
-        // console.log(e.response.data)
-        if (e.response.data) {
-          setMessages({ ...messages, failure: `${e.response.data.response_message}. Try again or click forget password` })
-          setOpen(true)
-          setState(initialState)
-        }
+        console.log(e)
+        // if (e.response.data) {
+        //   setMessages({ ...messages, failure: `${e.response.data.response_message}. Try again or click forget password` })
+        //   setOpen(true)
+        //   setState(initialState)
+        // }
       }
     }
   }
@@ -281,6 +295,8 @@ export default function Index() {
                     {loading ? <CircularProgress size="2em" style={{ color: '#fff' }} /> : 'LOGIN'}
                   </Button>
                 </form>
+
+                <LoginDialog authToken={value} email={emailValue} />
               </Box>
             </CardContent>
           </Card>

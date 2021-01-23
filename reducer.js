@@ -12,6 +12,8 @@ export const initialState = {
 
   adminsSearch: [],
   adminsResult: [],
+
+  loginDialog: false
 }
 
 
@@ -75,6 +77,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         adminsResult: [...action.items]
+      }
+
+    case 'OPEN_LOGIN_DIALOG':
+      return {
+        ...state,
+        loginDialog: action.items
       }
 
     default:
