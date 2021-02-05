@@ -161,7 +161,7 @@ export default function View() {
 
   // Fetching data from backend with SWR
   const { loan, isLoading, isError } = loanData();
-  console.log(loan.data[0])
+  // console.log(loan.data[0])
 
   return (
     <TableLayout path={path}>
