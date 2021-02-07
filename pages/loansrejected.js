@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Table,
   TablePagination,
@@ -12,100 +12,96 @@ import {
   Box,
   Grid,
   CircularProgress,
-} from '@material-ui/core'
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import moment from 'moment'
-import NumberFormat from 'react-number-format'
-import useSWR, { mutate } from 'swr'
-import { useRouter } from 'next/router'
-import axios from 'axios'
+} from "@material-ui/core";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
+import NumberFormat from "react-number-format";
+import useSWR, { mutate } from "swr";
+import { useRouter } from "next/router";
+import axios from "axios";
+import Link from "next/link";
 
-import TableLayout from '../components/Tables'
+import TableLayout from "../components/Tables";
 // import Graph from './../components/graph/DashboardGraph'
-import { useStateValue } from '../StateProviders';
+import { useStateValue } from "../StateProviders";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    background: 'rgba(0, 121, 69, 0.05)',
-    borderRadius: '25px'
+    background: "rgba(0, 121, 69, 0.05)",
+    borderRadius: "25px",
   },
   typography: {
-    fontFamily: 'Century Gothic',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '18px',
-    lineHeight: '28px',
-    letterSpacing: '-1%',
-    color: '#007945',
+    fontFamily: "Century Gothic",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "18px",
+    lineHeight: "28px",
+    letterSpacing: "-1%",
+    color: "#007945",
   },
   box: {
-    fontFamily: 'Century Gothic',
-    fontStyle: 'normal',
-    fontWeight: 'bold',
-    fontSize: '24px',
-    lineHeight: '28px',
-    letterSpacing: '0.1px',
+    fontFamily: "Century Gothic",
+    fontStyle: "normal",
+    fontWeight: "bold",
+    fontSize: "24px",
+    lineHeight: "28px",
+    letterSpacing: "0.1px",
   },
   button: {
-    '&:hover,&:focus': {
-      backgroundColor: '#ffffff00',
+    "&:hover,&:focus": {
+      backgroundColor: "#ffffff00",
     },
-    border: '1px solid #E4EBF6',
-    borderRadius: '4px',
+    border: "1px solid #E4EBF6",
+    borderRadius: "4px",
   },
   tContainer: {
-    border: '1px solid #E4EBF6',
-    borderRadius: '10px',
-    background: '#FFFFFF'
+    border: "1px solid #E4EBF6",
+    borderRadius: "10px",
+    background: "#FFFFFF",
   },
   box2: {
     paddingRight: 20,
-    width: '100%',
-    display: 'flex',
-
+    width: "100%",
+    display: "flex",
   },
-}))
-
+}));
 
 const fetcher = async (...arg) => {
   // const [url, token] = arg
-  const [url] = arg
+  const [url] = arg;
 
   const response = await axios.get(
-    url,
+    url
     // { headers: { authenticate: token } }
-  )
+  );
 
-  return response.data
-}
-
+  return response.data;
+};
 
 const loansRejectedData = () => {
   // const router = useRouter()
 
-  const url = `${process.env.BACKEND_URL}/api/loans/by_status/rejected`
+  const url = `${process.env.BACKEND_URL}/api/loans`;
 
   // const token = isAuthenticated().authToken
 
-  const { data, error } = useSWR([url], fetcher, { shouldRetryOnError: false })
+  const { data, error } = useSWR([url], fetcher, { shouldRetryOnError: false });
 
   return {
     loansRejected: data,
     isLoading: !error && !data,
-    isError: error
-  }
-}
-
-
+    isError: error,
+  };
+};
 
 function LoansRejected() {
-  const path = '/loansrejected'
-  const classes = useStyles()
+  const path = "/loansrejected";
+  const classes = useStyles();
 
   const [{ rejectedLoans }, dispatch] = useStateValue();
 
-  const { loansRejected, isLoading, isError } = loansRejectedData()
-  // console.log(loansRejected)
+  const { loansRejected, isLoading, isError } = loansRejectedData();
+  // console.log(loansRejected);
 
   // const users = []
   // for (let id = 1; id <= 1000; id++)
@@ -119,19 +115,19 @@ function LoansRejected() {
   //                 for (let account_number of ['0125957592'])
   //                   users.push({ id, name, email, amount, date, status, forward, account_name, account_number })
 
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // handle change per page
   const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
+    setPage(newPage);
+  };
 
   // handler for pagination change per page
   const handleRowsChangePerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   // console.log(rejectedLoans)
 
   return (
@@ -139,8 +135,8 @@ function LoansRejected() {
       <Box
         display="flex"
         style={{
-          marginTop: '5px',
-          marginBottom: '15px'
+          marginTop: "5px",
+          marginBottom: "15px",
         }}
       >
         <Grid
@@ -155,66 +151,68 @@ function LoansRejected() {
               display="flex"
               flexDirection="column"
               style={{
-                width: '100%',
-                height: '148px',
-                background: '#FF0000',
-                borderRadius: '13px',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                paddingLeft: '30px',
-                paddingRight: '20px',
+                width: "100%",
+                height: "148px",
+                background: "#FF0000",
+                borderRadius: "13px",
+                paddingTop: "20px",
+                paddingBottom: "20px",
+                paddingLeft: "30px",
+                paddingRight: "20px",
               }}
             >
               <Typography
                 className={classes.box}
                 style={{
-                  color: '#FFFFFF',
-                  marginBottom: '20px',
-                  fontWeight: '400',
-                  fontFamily: 'Roboto',
-                  fontSize: '24px',
-                  lineHeight: '28px',
-                  letterSpacing: '0.1px'
+                  color: "#FFFFFF",
+                  marginBottom: "20px",
+                  fontWeight: "400",
+                  fontFamily: "Roboto",
+                  fontSize: "24px",
+                  lineHeight: "28px",
+                  letterSpacing: "0.1px",
                 }}
               >
-                {'Loans Rejected'}
+                {"Loans Rejected"}
               </Typography>
 
-              {
-                isError ? (<p>Try Again Please</p>)
-                  : isLoading ?
-                    <Box
-                      display="flex"
-                      justifyContent="flex-start"
-                    >
-                      <CircularProgress style={{ 'color': '#FFFFFF' }} />
-                    </Box> : loansRejected &&
-                    <Typography
-                      className={classes.box}
-                      style={{
-                        color: '#FFFFFF',
-                        marginBottom: '20px',
-                        fontWeight: 'bold',
-                        fontFamily: 'Mulish',
-                        fontSize: '40px',
-                        lineHeight: '18px',
-                        letterSpacing: '1px'
-                      }}
-                    >
-                      <NumberFormat
-                        value={
-                          (rejectedLoans.length < 1 ? loansRejected.data : rejectedLoans)
-                            .filter(loan => loan.status.toLowerCase() === 'rejected')
-                            .map(loan => loan.amount)
-                            .reduce((a, b) => a = Number(a) + Number(b), 0)
-
-                        }
-                        displayType={'text'}
-                        thousandSeparator={true}
-                        prefix={'₦'}
-                      />
-                    </Typography>
-              }
+              {isError ? (
+                <p>Try Again Please</p>
+              ) : isLoading ? (
+                <Box display="flex" justifyContent="flex-start">
+                  <CircularProgress style={{ color: "#FFFFFF" }} />
+                </Box>
+              ) : (
+                loansRejected && (
+                  <Typography
+                    className={classes.box}
+                    style={{
+                      color: "#FFFFFF",
+                      marginBottom: "20px",
+                      fontWeight: "bold",
+                      fontFamily: "Mulish",
+                      fontSize: "40px",
+                      lineHeight: "18px",
+                      letterSpacing: "1px",
+                    }}
+                  >
+                    <NumberFormat
+                      value={(rejectedLoans.length < 1
+                        ? loansRejected.data.data
+                        : rejectedLoans
+                      )
+                        .filter(
+                          (loan) => loan.status.toLowerCase() === "rejected"
+                        )
+                        .map((loan) => loan.amount)
+                        .reduce((a, b) => (a = Number(a) + Number(b)), 0)}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"₦"}
+                    />
+                  </Typography>
+                )
+              )}
             </Box>
           </Grid>
         </Grid>
@@ -225,29 +223,21 @@ function LoansRejected() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell
-                  align="left"
-                  size="medium"
-                  variant="head"
-                >
+                <TableCell align="left" size="medium" variant="head">
                   <Typography
                     className={classes.typography}
                     style={{
-                      fontFamily: 'Cerebri Sans',
-                      fontSize: '36px',
-                      lineHeight: '46px',
-                      letterSpacing: '-0.01em',
+                      fontFamily: "Cerebri Sans",
+                      fontSize: "36px",
+                      lineHeight: "46px",
+                      letterSpacing: "-0.01em",
                     }}
                   >
                     Loans Rejected
                   </Typography>
                 </TableCell>
 
-                <TableCell
-                  align="center"
-                  size="medium"
-                  variant="head"
-                >
+                <TableCell align="center" size="medium" variant="head">
                   <Button
                     variant="text"
                     className={classes.button}
@@ -257,10 +247,10 @@ function LoansRejected() {
                     <Typography
                       className={classes.typography}
                       style={{
-                        fontSize: '13px',
-                        lineHeight: '21px',
-                        color: '#12263F',
-                        fontWeight: '400',
+                        fontSize: "13px",
+                        lineHeight: "21px",
+                        color: "#12263F",
+                        fontWeight: "400",
                       }}
                     >
                       View All
@@ -271,158 +261,152 @@ function LoansRejected() {
             </TableHead>
           </Table>
 
-          {
-            isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
-              : isLoading ?
-                (<Box
-                  display="flex"
-                  justifyContent="center"
-                  style={{
-                    width: '100%',
-                    margin: 'auto',
-                    paddingLeft: 100,
-                    paddingRight: 100,
-                    paddingTop: 150,
-                    paddingBottom: 150,
-                  }}
-                >
-                  <CircularProgress style={{ color: '#007945' }} />
-                </Box>)
-                : loansRejected &&
-                <Table>
-                  <TableHead>
-                    <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
-                      <TableCell
-                        size="small"
-                        className={classes.tableCell}
+          {isError ? (
+            <Box display="flex" style={{ margin: "auto" }}>
+              <p>Try Again Please</p>
+            </Box>
+          ) : isLoading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              style={{
+                width: "100%",
+                margin: "auto",
+                paddingLeft: 100,
+                paddingRight: 100,
+                paddingTop: 150,
+                paddingBottom: 150,
+              }}
+            >
+              <CircularProgress style={{ color: "#007945" }} />
+            </Box>
+          ) : (
+            loansRejected && (
+              <Table>
+                <TableHead>
+                  <TableRow style={{ background: "rgba(249, 250, 252, 0.5)" }}>
+                    <TableCell size="small" className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          S/N
-                        </Typography>
-                      </TableCell>
+                        S/N
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        align="center"
-                        size="small"
-                        className={classes.tableCell}
+                    <TableCell
+                      align="center"
+                      size="small"
+                      className={classes.tableCell}
+                    >
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          NAME
-                        </Typography>
-                      </TableCell>
+                        NAME
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          EMAIL ADDRESS
-                        </Typography>
-                      </TableCell>
+                        EMAIL ADDRESS
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          AMOUNT
-                        </Typography>
-                      </TableCell>
+                        AMOUNT
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          DATE
-                        </Typography>
-                      </TableCell>
+                        DATE
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          STATUS
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
+                        STATUS
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
 
-                  <TableBody>
-                    {
-                      (rejectedLoans.length < 1 ? loansRejected.data : rejectedLoans)
-                        .filter(loan => loan.status.toLowerCase() === 'rejected')
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(user => (
-                          <TableRow key={user.id}>
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                <TableBody>
+                  {(rejectedLoans.length < 1
+                    ? loansRejected.data.data
+                    : rejectedLoans
+                  )
+                    .filter((loan) => loan.status.toLowerCase() === "rejected")
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((user, i) => (
+                      <TableRow key={user.id}>
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontFamily: 'Cerebri Sans',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontFamily: "Cerebri Sans",
+                                  fontWeight: "400",
                                 }}
                               >
-                                {user.id}
+                                {i + 1}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
-                              <Box
-                                display="flex"
-                              >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                            <a style={{ textDecoration: "none" }}>
+                              <Box display="flex">
                                 <Button
                                   size="small"
                                   variant="text"
@@ -435,122 +419,143 @@ function LoansRejected() {
                                 <Box
                                   display="flex"
                                   flexDirection="column"
-                                  style={{
-                                    // marginLeft: '10px'
-                                  }}
+                                  style={
+                                    {
+                                      // marginLeft: '10px'
+                                    }
+                                  }
                                 >
                                   <Typography
                                     className={classes.typography}
                                     style={{
-                                      fontSize: '15px',
-                                      lineHeight: '165.1%',
-                                      marginBottom: '5px',
-                                      color: '#283E59',
-                                      fontFamily: 'Cerebri Sans',
-                                      fontWeight: '400'
+                                      fontSize: "15px",
+                                      lineHeight: "165.1%",
+                                      marginBottom: "5px",
+                                      color: "#283E59",
+                                      fontFamily: "Cerebri Sans",
+                                      fontWeight: "400",
                                     }}
                                   >
-                                    {user.user.first_name}  {user.user.last_name}
+                                    {user.user.first_name} {user.user.last_name}
                                   </Typography>
 
                                   <Typography
                                     className={classes.typography}
                                     style={{
-                                      fontSize: '9px',
-                                      lineHeight: '15px',
-                                      color: '#283E59',
-                                      fontFamily: 'Cerebri Sans',
-                                      fontWeight: '400'
+                                      fontSize: "9px",
+                                      lineHeight: "15px",
+                                      color: "#283E59",
+                                      fontFamily: "Cerebri Sans",
+                                      fontWeight: "400",
                                     }}
                                   >
                                     {user.user.username}
                                   </Typography>
                                 </Box>
                               </Box>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontFamily: 'Cerebri Sans',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontFamily: "Cerebri Sans",
+                                  fontWeight: "400",
                                 }}
                               >
                                 {user.user.email}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontFamily: 'Cerebri Sans',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontFamily: "Cerebri Sans",
+                                  fontWeight: "400",
                                 }}
                               >
                                 <NumberFormat
                                   value={user.amount}
-                                  displayType={'text'}
+                                  displayType={"text"}
                                   thousandSeparator={true}
-                                  prefix={'₦'}
+                                  prefix={"₦"}
                                 />
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontFamily: 'Cerebri Sans',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontFamily: "Cerebri Sans",
+                                  fontWeight: "400",
                                 }}
                               >
-                                {moment(user.created_at).format('DD/MM/YYYY')}
+                                {moment(user.created_at).format("DD/MM/YYYY")}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#FF0000',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#FF0000",
+                                  fontWeight: "400",
                                 }}
                               >
                                 {user.status}
                               </Typography>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                    }
-                  </TableBody>
-                </Table>
-          }
+                            </a>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            )
+          )}
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
-            count={isError ? 0 : isLoading ? 0 : loansRejected 
-              && (rejectedLoans.length < 1 ? loansRejected.data.length : rejectedLoans.length)}
+            count={
+              isError
+                ? 0
+                : isLoading
+                ? 0
+                : loansRejected &&
+                  (rejectedLoans.length < 1
+                    ? loansRejected.data.data
+                    : rejectedLoans.length
+                  ).filter((loan) => loan.status.toLowerCase() === "rejected").length
+            }
             page={page}
             style={{ paddingRight: 30 }}
             onChangePage={handleChangePage}
@@ -560,7 +565,7 @@ function LoansRejected() {
         </TableContainer>
       </Box>
     </TableLayout>
-  )
+  );
 }
 
-export default LoansRejected
+export default LoansRejected;

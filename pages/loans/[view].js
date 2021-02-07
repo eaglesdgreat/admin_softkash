@@ -12,7 +12,7 @@ import {
   Paper,
   Grow,
   Popper,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
 import { ArrowBackIos, EditOutlined } from "@material-ui/icons";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -21,11 +21,11 @@ import useSWR from "swr";
 import axios from "axios";
 import moment from "moment";
 import NumberFormat from "react-number-format";
+import { useSnackbar } from "notistack";
 
 import TableLayout from "./../../components/Tables";
 // import { isAuthenticated } from '../../../lib/auth.helper'
 // import PrivateRoute from './../../../Components/PrivateRoute'
-
 
 // CSS Styles
 const useStyles = makeStyles(() => ({
@@ -94,8 +94,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
-
 const fetcher = async (...arg) => {
   const [url, token] = arg;
 
@@ -106,8 +104,6 @@ const fetcher = async (...arg) => {
   return response.data;
 };
 
-
-
 const loanData = () => {
   const router = useRouter();
   const { view } = router.query;
@@ -116,12 +112,13 @@ const loanData = () => {
 
   // const token = isAuthenticated().authToken;
 
-  const { data, error } = useSWR([url], fetcher);
+  const { data, error, mutate: statusMutate } = useSWR([url], fetcher);
 
   return {
     loan: data,
     isLoading: !error && !data,
     isError: error,
+    statusMutate,
   };
 };
 
@@ -129,21 +126,70 @@ export default function View() {
   const path = "/loanspending";
   const classes = useStyles();
   const router = useRouter();
-  const { view } = router.query;
+  const { enqueueSnackbar } = useSnackbar();
+  const { view, type } = router.query;
+  // console.log(type)
 
   const menuList = [
-    { name: 'Select Status', value: '', disabled: true, title: '' },
-    { name: 'Approve loan', value: 'approved', disabled: false, title: 'Select this status if you want to approve this loan' },
-    { name: 'Reject Loan', value: 'rejected', disabled: false, title: 'Select this status if you want to reject this loan' },
-    { name: 'Current Active Loan', value: 'running', disabled: false, title: "This is the loan that has been paid to the client and the status is 'running'" },
-  ]
+    { name: "Select Status", value: "", disabled: true, title: "" },
+    {
+      name: "Approve Loan",
+      value: "approved",
+      disabled: false,
+      title: "Select this status if you want to approve this loan",
+    },
+    {
+      name: "Reject Loan",
+      value: "rejected",
+      disabled: false,
+      title: "Select this status if you want to reject this loan",
+    },
+    {
+      name: "Current Active Loan",
+      value: "running",
+      disabled: false,
+      title: "This is the loan that has been paid to the client and the status is 'running'",
+    },
+  ];
+
+  const menuList2 = [
+    { name: "Select Status", value: "", disabled: true, title: "" },
+    {
+      name: "Approve Loan",
+      value: "approved",
+      disabled: false,
+      title: "Select this status if you want to approve this loan",
+    },
+  ];
+
+  const menuList3 = [
+    { name: "Select Status", value: "", disabled: true, title: "" },
+    {
+      name: "Paid Loan",
+      value: "paid",
+      disabled: false,
+      title: "Select this status if you want to set this loan as paid loan for the user",
+    },
+    {
+      name: "Unpaid Loan",
+      value: "un-paid",
+      disabled: false,
+      title: "Select this status if you want to set this loan as paid loan for the user",
+    },
+    {
+      name: "Overdue Loan",
+      value: "overdue",
+      disabled: false,
+      title: "Select this status if this loan has been overdue payment by the user",
+    },
+  ];
 
   // Fetching data from backend with SWR
-  const { loan, isLoading, isError } = loanData();
+  const { loan, isLoading, isError, statusMutate } = loanData();
   // console.log(loan.data[0])
 
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState('')
+  const [selected, setSelected] = useState("");
   const anchorRef = useRef(null);
 
   const openMenu = () => {
@@ -170,18 +216,35 @@ export default function View() {
   }, [open]);
 
   const handleStatusUpdate = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const { myValue } = e.currentTarget.dataset;
-    console.log(myValue)
+    console.log(myValue);
 
     const url = `${process.env.BACKEND_URL}/api/loans/${view}`;
 
     try {
-      const response = await axios.put(url, { status: myValue })
-      console.log(response)
-    } catch(e) {
-      console.log(e)
+      const response = await axios.put(url, { status: myValue });
+      console.log(response.data.data);
+
+      if (response.data.data) {
+        statusMutate((data) => {
+          return {
+            ...loan.data[0],
+            status: { ...data.data[0], status: myValue },
+          };
+        }, false);
+
+        enqueueSnackbar(`Loan status has been updated`, {
+          variant: "success",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+
+      enqueueSnackbar(`Error updating loan status try again`, {
+        variant: "error",
+      });
     }
   };
 
@@ -228,61 +291,158 @@ export default function View() {
                   fontSize: "0.8rem",
                   fontWeight: 500,
                   color: "#007945",
-                  textTransform: 'uppercase',
+                  textTransform: "uppercase",
                 }}
               >
                 update status
               </Typography>
             </Button>
 
-            <Popper
-              open={open}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin:
-                      placement === "bottom" ? "center top" : "center bottom",
-                  }}
+            {type === "approvedloan" ? (
+              <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === "bottom" ? "center top" : "center bottom",
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id="menu-list-grow"
+                          // onKeyDown={handleListKeyDown}
+                        >
+                          {menuList.map((item, i) => (
+                            <Tooltip title={item.title} key={i}>
+                              <MenuItem
+                                data-my-value={item.value}
+                                onClick={(e) => {
+                                  setSelected(item.value);
+                                  handleStatusUpdate(e);
+                                }}
+                                disabled={item.disabled}
+                                selected={item.value === selected}
+                              >
+                                {item.name}
+                              </MenuItem>
+                            </Tooltip>
+                          ))}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            ) : type === "rejectedloan" ? (
+              <Popper
+                open={open}
+                anchorEl={anchorRef.current}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === "bottom" ? "center top" : "center bottom",
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={open}
+                          id="menu-list-grow"
+                          // onKeyDown={handleListKeyDown}
+                        >
+                          {menuList2.map((item, i) => (
+                            <Tooltip title={item.title} key={i}>
+                              <MenuItem
+                                data-my-value={item.value}
+                                onClick={(e) => {
+                                  setSelected(item.value);
+                                  handleStatusUpdate(e);
+                                }}
+                                disabled={item.disabled}
+                                selected={item.value === selected}
+                              >
+                                {item.name}
+                              </MenuItem>
+                            </Tooltip>
+                          ))}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            ) : (
+              type === "activeloan" && (
+                <Popper
+                  open={open}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  transition
+                  disablePortal
                 >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList
-                        autoFocusItem={open}
-                        id="menu-list-grow"
-                        // onKeyDown={handleListKeyDown}
-                      >
-                        {menuList.map((item, i) => (
-                          <Tooltip title={item.title} key={i}>
-                            <MenuItem
-                              data-my-value={item.value}
-                              onClick={(e) => {
-                                setSelected(item.value)
-                                handleStatusUpdate(e);
-                              }}
-                              disabled={item.disabled}
-                              selected={item.value === selected}
-                            >
-                              {item.name}
-                            </MenuItem>
-                          </Tooltip>
-                        ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList
+                            autoFocusItem={open}
+                            id="menu-list-grow"
+                            // onKeyDown={handleListKeyDown}
+                          >
+                            {/* {router.pathname === "/loanspending" */}
+                            {menuList3.map((item, i) => (
+                              <Tooltip title={item.title} key={i}>
+                                <MenuItem
+                                  data-my-value={item.value}
+                                  onClick={(e) => {
+                                    setSelected(item.value);
+                                    handleStatusUpdate(e);
+                                  }}
+                                  disabled={item.disabled}
+                                  selected={item.value === selected}
+                                >
+                                  {item.name}
+                                </MenuItem>
+                              </Tooltip>
+                            ))}
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              )
+            )}
           </Box>
         </Box>
 
         {isError ? (
-          <PrivateRoute isError={isError} />
+          <Box display="flex" style={{ margin: "auto" }}>
+            <p>Try Again Please</p>
+          </Box>
         ) : isLoading ? (
           <Box
             display="flex"
@@ -334,16 +494,6 @@ export default function View() {
                         {loan.data[0].user.username}
                       </Typography>
                     </Box>
-                    {/* <Typography
-                      style={{
-                        fontWeight: 600,
-                        color: "#FFFFFF",
-                        fontSize: "1.2rem",
-                      }}
-                    >
-                      {loan.data[0].user.first_name}{" "}
-                      {loan.data[0].user.last_name}
-                    </Typography> */}
 
                     <Box className={classes.status}>
                       {loan.data[0].status.toLowerCase() === "approved" ? (

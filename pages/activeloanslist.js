@@ -222,29 +222,21 @@ function ActiveLoansList() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell
-                  align="left"
-                  size="medium"
-                  variant="head"
-                >
+                <TableCell align="left" size="medium" variant="head">
                   <Typography
                     className={classes.typography}
                     style={{
-                      fontFamily: 'Cerebri Sans',
-                      fontSize: '36px',
-                      lineHeight: '46px',
-                      letterSpacing: '-0.01em',
+                      fontFamily: "Cerebri Sans",
+                      fontSize: "36px",
+                      lineHeight: "46px",
+                      letterSpacing: "-0.01em",
                     }}
                   >
                     Active Loans List
                   </Typography>
                 </TableCell>
 
-                <TableCell
-                  align="center"
-                  size="medium"
-                  variant="head"
-                >
+                <TableCell align="center" size="medium" variant="head">
                   <Button
                     variant="text"
                     className={classes.button}
@@ -254,10 +246,10 @@ function ActiveLoansList() {
                     <Typography
                       className={classes.typography}
                       style={{
-                        fontSize: '13px',
-                        lineHeight: '21px',
-                        color: '#12263F',
-                        fontWeight: '400',
+                        fontSize: "13px",
+                        lineHeight: "21px",
+                        color: "#12263F",
+                        fontWeight: "400",
                       }}
                     >
                       View All
@@ -268,262 +260,285 @@ function ActiveLoansList() {
             </TableHead>
           </Table>
 
-          {
-            isError ? (<Box display="flex" style={{ margin: 'auto' }}><p>Try Again Please</p></Box>)
-              : isLoading ?
-                (<Box
-                  display="flex"
-                  justifyContent="center"
-                  style={{
-                    width: '100%',
-                    margin: 'auto',
-                    paddingLeft: 100,
-                    paddingRight: 100,
-                    paddingTop: 150,
-                    paddingBottom: 150,
-                  }}
-                >
-                  <CircularProgress style={{ color: '#007945' }} />
-                </Box>)
-                : activeLoans &&
-                <Table>
-                  <TableHead>
-                    <TableRow style={{ background: 'rgba(249, 250, 252, 0.5)' }}>
-                      <TableCell
-                        size="small"
-                        className={classes.tableCell}
+          {isError ? (
+            <Box display="flex" style={{ margin: "auto" }}>
+              <p>Try Again Please</p>
+            </Box>
+          ) : isLoading ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              style={{
+                width: "100%",
+                margin: "auto",
+                paddingLeft: 100,
+                paddingRight: 100,
+                paddingTop: 150,
+                paddingBottom: 150,
+              }}
+            >
+              <CircularProgress style={{ color: "#007945" }} />
+            </Box>
+          ) : (
+            activeLoans && (
+              <Table>
+                <TableHead>
+                  <TableRow style={{ background: "rgba(249, 250, 252, 0.5)" }}>
+                    <TableCell size="small" className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          S/N
-                        </Typography>
-                      </TableCell>
+                        S/N
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        align="left"
-                        size="small"
-                        className={classes.tableCell}
+                    <TableCell
+                      align="left"
+                      size="small"
+                      className={classes.tableCell}
+                    >
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          NAME
-                        </Typography>
-                      </TableCell>
+                        NAME
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          EMAIL ADDRESS
-                        </Typography>
-                      </TableCell>
+                        EMAIL ADDRESS
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          AMOUNT
-                        </Typography>
-                      </TableCell>
+                        AMOUNT
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          DATE
-                        </Typography>
-                      </TableCell>
+                        DATE
+                      </Typography>
+                    </TableCell>
 
-                      <TableCell
-                        className={classes.tableCell}
+                    <TableCell className={classes.tableCell}>
+                      <Typography
+                        className={classes.typography}
+                        style={{
+                          fontSize: "12px",
+                          lineHeight: "15px",
+                          color: "#95AAC9",
+                          letterSpacing: "0.08em",
+                        }}
                       >
-                        <Typography
-                          className={classes.typography}
-                          style={{
-                            fontSize: '12px',
-                            lineHeight: '15px',
-                            color: '#95AAC9',
-                            letterSpacing: '0.08em',
-                          }}
-                        >
-                          STATUS
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
+                        STATUS
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
 
-                  <TableBody>
-                    {
-                      (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
-                        .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
-                          || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue')
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((user, i) => (
-                          <TableRow key={user.id}>
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                <TableBody>
+                  {(activeLoansResult.length < 1
+                    ? activeLoans.data.data
+                    : activeLoansResult
+                  )
+                    .filter(
+                      (loan) =>
+                        loan.status.toLowerCase() === "running" ||
+                        loan.status.toLowerCase() === "paid" ||
+                        loan.status.toLowerCase() === "un-paid" ||
+                        loan.status.toLowerCase() === "overdue"
+                    )
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((user, i) => (
+                      <TableRow key={user.id}>
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
                                 {i + 1}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
-                                {user.user ? user.user.first_name : 'User'}  {user.user ? user.user.last_name : 'User'}
+                                {user.user ? user.user.first_name : "User"}{" "}
+                                {user.user ? user.user.last_name : "User"}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
-                                {user.user ? user.user.email : 'Email'}
+                                {user.user ? user.user.email : "Email"}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
                                 <NumberFormat
                                   value={user.amount}
-                                  displayType={'text'}
+                                  displayType={"text"}
                                   thousandSeparator={true}
-                                  prefix={'₦'}
+                                  prefix={"₦"}
                                 />
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
-                                {moment(user.created_at).format('DD/MM/YYYY')}
+                                {moment(user.created_at).format("DD/MM/YYYY")}
                               </Typography>
 
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
-                                {moment(user.created_at).format('hh:mm a')}
+                                {moment(user.created_at).format("hh:mm a")}
                               </Typography>
-                            </TableCell>
+                            </a>
+                          </Link>
+                        </TableCell>
 
-                            <TableCell
-                              className={classes.tableCell}
-                            >
+                        <TableCell className={classes.tableCell}>
+                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'?type='activeloan'`}>
+                            <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
                                 style={{
-                                  fontSize: '15px',
-                                  lineHeight: '165.1%',
-                                  color: '#283E59',
-                                  fontWeight: '400'
+                                  fontSize: "15px",
+                                  lineHeight: "165.1%",
+                                  color: "#283E59",
+                                  fontWeight: "400",
                                 }}
                               >
                                 {user.status}
                               </Typography>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                    }
-                  </TableBody>
-                </Table>
-          }
+                            </a>
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            )
+          )}
           <TablePagination
             rowsPerPageOptions={[3, 5, 10, 20]}
             component="div"
             count={
-              isError ? 0 : isLoading ? 0 : activeLoans &&
-                (activeLoansResult.length < 1 ? activeLoans.data.data : activeLoansResult)
-                  .filter(loan => loan.status.toLowerCase() === 'running' || loan.status.toLowerCase() === 'paid'
-                    || loan.status.toLowerCase() === 'un-paid' || loan.status.toLowerCase() === 'overdue').length
+              isError
+                ? 0
+                : isLoading
+                ? 0
+                : activeLoans &&
+                  (activeLoansResult.length < 1
+                    ? activeLoans.data.data
+                    : activeLoansResult
+                  ).filter(
+                    (loan) =>
+                      loan.status.toLowerCase() === "running" ||
+                      loan.status.toLowerCase() === "paid" ||
+                      loan.status.toLowerCase() === "un-paid" ||
+                      loan.status.toLowerCase() === "overdue"
+                  ).length
             }
             page={page}
             style={{ paddingRight: 30 }}
@@ -537,41 +552,41 @@ function ActiveLoansList() {
       <Box
         diaplay="flex"
         style={{
-          paddingTop: '30px',
-          width: '100%',
+          paddingTop: "30px",
+          width: "100%",
         }}
       >
         <Box
           display="flex"
           flexDirection="column"
           style={{
-            background: '#ffffff',
-            width: '96%',
-            border: '1px solid #E4EBF6',
-            borderRadius: '10px'
+            background: "#ffffff",
+            width: "96%",
+            border: "1px solid #E4EBF6",
+            borderRadius: "10px",
           }}
         >
           <Box
             display="flex"
             // justifyContent="flex-start"
             style={{
-              background: '#ffffff',
+              background: "#ffffff",
               // borderRadius: '10px',
-              width: '96%',
-              paddingTop: '20px',
-              paddingLeft: '20px',
-              paddingBottom: '20px',
+              width: "96%",
+              paddingTop: "20px",
+              paddingLeft: "20px",
+              paddingBottom: "20px",
             }}
           >
             <Typography
               style={{
-                fontFamily: 'Cerebri Sans',
-                fontSize: '24px',
-                fontWeight: '600',
-                lineHeight: '30.48px',
-                fontStyle: 'normal',
-                letterSpacing: '-1%',
-                color: '#007945'
+                fontFamily: "Cerebri Sans",
+                fontSize: "24px",
+                fontWeight: "600",
+                lineHeight: "30.48px",
+                fontStyle: "normal",
+                letterSpacing: "-1%",
+                color: "#007945",
               }}
             >
               Active Loans Stats
@@ -581,21 +596,18 @@ function ActiveLoansList() {
               display="flex"
               justifyContent="flex-end"
               style={{
-                width: '69%'
+                width: "69%",
               }}
             >
-              <Box
-                display="flex"
-                justifyContent="flex-end"
-              >
+              <Box display="flex" justifyContent="flex-end">
                 <Typography
                   style={{
-                    fontFamily: 'Cerebri Sans',
-                    fontWeight: '400',
-                    fontSize: '13px',
-                    lineHeight: '21px',
-                    letterSpacing: '-0.01em',
-                    color: '#95AAC9',
+                    fontFamily: "Cerebri Sans",
+                    fontWeight: "400",
+                    fontSize: "13px",
+                    lineHeight: "21px",
+                    letterSpacing: "-0.01em",
+                    color: "#95AAC9",
                   }}
                 >
                   Active Loans Per Month
@@ -605,10 +617,10 @@ function ActiveLoansList() {
                   display="flex"
                   component="span"
                   style={{
-                    marginLeft: '7px',
-                    width: '25px',
-                    height: '25px',
-                    background: '#007945'
+                    marginLeft: "7px",
+                    width: "25px",
+                    height: "25px",
+                    background: "#007945",
                   }}
                 ></Box>
               </Box>
@@ -617,17 +629,17 @@ function ActiveLoansList() {
                 display="flex"
                 justifyContent="flex-end"
                 style={{
-                  paddingLeft: '30px'
+                  paddingLeft: "30px",
                 }}
               >
                 <Typography
                   style={{
-                    fontFamily: 'Cerebri Sans',
-                    fontWeight: '400',
-                    fontSize: '13px',
-                    lineHeight: '21px',
-                    letterSpacing: '-0.01em',
-                    color: '#95AAC9',
+                    fontFamily: "Cerebri Sans",
+                    fontWeight: "400",
+                    fontSize: "13px",
+                    lineHeight: "21px",
+                    letterSpacing: "-0.01em",
+                    color: "#95AAC9",
                   }}
                 >
                   Inavtive Loans Per Month
@@ -637,29 +649,42 @@ function ActiveLoansList() {
                   display="flex"
                   component="span"
                   style={{
-                    marginLeft: '7px',
-                    width: '25px',
-                    height: '25px',
-                    background: '#D2DDEC'
+                    marginLeft: "7px",
+                    width: "25px",
+                    height: "25px",
+                    background: "#D2DDEC",
                   }}
                 ></Box>
               </Box>
             </Box>
           </Box>
 
-          <Divider style={{ border: '1px solid #EDF2F9' }} />
+          <Divider style={{ border: "1px solid #EDF2F9" }} />
 
           <Graph
             data={{
-              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              labels: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "June",
+                "July",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ],
               datasets: [
                 {
                   label: "Active Loans Amount Per Month",
                   backgroundColor: "#007945",
                   borderColor: "#007945",
                   borderWidth: 1,
-                  borderRadius: '50px',
-                  data: [65, 59, 80, 81, 56, 55, 40, 56, 70, 90, 78, 45]
+                  borderRadius: "50px",
+                  data: [65, 59, 80, 81, 56, 55, 40, 56, 70, 90, 78, 45],
                   // data: onYearlyChangeActiveLoans()
                 },
 
@@ -668,17 +693,17 @@ function ActiveLoansList() {
                   backgroundColor: "#D2DDEC",
                   borderColor: "#D2DDEC",
                   borderWidth: 1,
-                  borderRadius: '50px',
-                  data: [45, 79, 50, 41, 16, 85, 20, 45, 67, 89, 90, 67]
+                  borderRadius: "50px",
+                  data: [45, 79, 50, 41, 16, 85, 20, 45, 67, 89, 90, 67],
                   // data: onYearlyChangeActiveAmount()
-                }
-              ]
+                },
+              ],
             }}
           />
         </Box>
       </Box>
-    </TableLayout >
-  )
+    </TableLayout>
+  );
 }
 
 export default ActiveLoansList
