@@ -16,7 +16,7 @@ import Alert from '@material-ui/lab/Alert'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
-import { authenticate } from './../lib/auth.helper'
+import { saveCredentials } from './../lib/auth.helper'
 import { useStateValue } from '../StateProviders';
 import LoginDialog from '../components/LoginDialog'
 
@@ -114,8 +114,8 @@ export default function Index() {
   const router = useRouter()
 
   const [{ loginDialog }, dispatch] = useStateValue();
-  const [value, setValue] = useState('')
-  const [emailValue, setEmailValue] = useState('')
+  // const [value, setValue] = useState('')
+  // const [emailValue, setEmailValue] = useState('')
   
   const errorMessageStyle = {
     color: "red",
@@ -141,7 +141,7 @@ export default function Index() {
   const handleChange = (event) => {
     const { name, value } = event.target
     setState({ ...state, [name]: value })
-  }
+  } 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -169,7 +169,6 @@ export default function Index() {
       password: state.password || null,
     }
 
-
     const url = `${process.env.BACKEND_URL}/api/admin/login`
 
     if (isValid) {
@@ -179,8 +178,7 @@ export default function Index() {
         const response = await axios.post(url, body)
         console.log(response.data.response_message.split('[')[1].split(']')[0])
         const token = response.data.response_message.split('[')[1].split(']')[0]
-        setValue(token)
-        setEmailValue(state.email)
+        saveCredentials({ token, email:body.email, password: body.password })
 
         if(response.data) {
           setMessages({ ...messages, success: `Token has been send to your email` });
@@ -296,7 +294,7 @@ export default function Index() {
                   </Button>
                 </form>
 
-                <LoginDialog authToken={value} email={emailValue} />
+                <LoginDialog />
               </Box>
             </CardContent>
           </Card>

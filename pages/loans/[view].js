@@ -1,32 +1,31 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Box,
   Typography,
   Button,
   Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TablePagination,
-  TableHead,
-  TableRow,
   CircularProgress,
+  MenuItem,
+  MenuList,
+  ClickAwayListener,
+  Paper,
+  Grow,
+  Popper,
+  Tooltip
 } from "@material-ui/core";
 import { ArrowBackIos, EditOutlined } from "@material-ui/icons";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import axios from "axios";
-// import ReactLoading from "react-loading";
-// import moment from "moment";
-// import NumberFormat from "react-number-format";
+import moment from "moment";
+import NumberFormat from "react-number-format";
 
 import TableLayout from "./../../components/Tables";
 // import { isAuthenticated } from '../../../lib/auth.helper'
 // import PrivateRoute from './../../../Components/PrivateRoute'
-// import Switch from '../../../Components/Switch';
+
 
 // CSS Styles
 const useStyles = makeStyles(() => ({
@@ -96,33 +95,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: "#FFFFFF",
-    color: "#252525",
-    borderBottom: "none",
-  },
-  body: {
-    fontSize: 14,
-    borderBottom: "none",
-  },
-}))(TableCell);
-
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: "#FFFFFF",
-    },
-    "&:hover": {
-      background: "#F4F6F7",
-    },
-    cursor: "pointer",
-    transition: "all 0.3s ease-in-out 0s",
-  },
-}))(TableRow);
-
-
 
 const fetcher = async (...arg) => {
   const [url, token] = arg;
@@ -159,9 +131,59 @@ export default function View() {
   const router = useRouter();
   const { view } = router.query;
 
+  const menuList = [
+    { name: 'Select Status', value: '', disabled: true, title: '' },
+    { name: 'Approve loan', value: 'approved', disabled: false, title: 'Select this status if you want to approve this loan' },
+    { name: 'Reject Loan', value: 'rejected', disabled: false, title: 'Select this status if you want to reject this loan' },
+    { name: 'Current Active Loan', value: 'running', disabled: false, title: "This is the loan that has been paid to the client and the status is 'running'" },
+  ]
+
   // Fetching data from backend with SWR
   const { loan, isLoading, isError } = loanData();
   // console.log(loan.data[0])
+
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState('')
+  const anchorRef = useRef(null);
+
+  const openMenu = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = useRef(open);
+
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+  const handleStatusUpdate = async (e) => {
+    e.preventDefault()
+
+    const { myValue } = e.currentTarget.dataset;
+    console.log(myValue)
+
+    const url = `${process.env.BACKEND_URL}/api/loans/${view}`;
+
+    try {
+      const response = await axios.put(url, { status: myValue })
+      console.log(response)
+    } catch(e) {
+      console.log(e)
+    }
+  };
 
   return (
     <TableLayout path={path}>
@@ -185,9 +207,15 @@ export default function View() {
               alignItems: "center",
             }}
           >
-            {/* <Link href={"/loans/[edit]"} as={`/loans/${view}`}> */}
-            {/* <span className={classes.edit}> */}
-            <Button size="large" className={classes.buttonHover} disableRipple>
+            <Button
+              size="large"
+              className={classes.buttonHover}
+              disableRipple
+              onClick={openMenu}
+              ref={anchorRef}
+              aria-controls={open ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+            >
               <EditOutlined
                 style={{
                   fontSize: "0.9rem",
@@ -200,13 +228,56 @@ export default function View() {
                   fontSize: "0.8rem",
                   fontWeight: 500,
                   color: "#007945",
+                  textTransform: 'uppercase',
                 }}
               >
                 update status
               </Typography>
             </Button>
-            {/* </span>
-            </Link> */}
+
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              transition
+              disablePortal
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === "bottom" ? "center top" : "center bottom",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="menu-list-grow"
+                        // onKeyDown={handleListKeyDown}
+                      >
+                        {menuList.map((item, i) => (
+                          <Tooltip title={item.title} key={i}>
+                            <MenuItem
+                              data-my-value={item.value}
+                              onClick={(e) => {
+                                setSelected(item.value)
+                                handleStatusUpdate(e);
+                              }}
+                              disabled={item.disabled}
+                              selected={item.value === selected}
+                            >
+                              {item.name}
+                            </MenuItem>
+                          </Tooltip>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
           </Box>
         </Box>
 
@@ -366,8 +437,8 @@ export default function View() {
                             textTransform: "uppercase",
                           }}
                         >
-                          {loan.data.type_of_business
-                            ? loan.data.type_of_business
+                          {loan.data[0].type_of_business
+                            ? loan.data[0].type_of_business
                             : ""}
                         </Typography>
                       </Box>
@@ -383,8 +454,7 @@ export default function View() {
                   <Typography>
                     {loan.data[0].start_date
                       ? moment(loan.data[0].start_date).format("YYYY MMM DD")
-                      : ""}
-                    {" "}
+                      : ""}{" "}
                     {loan.data[0].end_date
                       ? moment(loan.data[0].end_date).format("YYYY MMM DD")
                       : ""}
@@ -401,195 +471,296 @@ export default function View() {
                   }}
                   className={classes.boxRight}
                 >
-                  <Box style={{ marginBottom: "1.5rem" }}>
-                    <Typography style={{ color: "#6A6A6A" }}>
-                      Account Number
-                    </Typography>
+                  <Box display="flex">
+                    <Box style={{ marginBottom: "1.5rem" }}>
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Account Number
+                      </Typography>
 
-                    <Typography
-                      style={{
-                        padding: "0.15rem 0",
-                        color: "#242120",
-                      }}
-                    >
-                      {loan.data[0].account_number}
-                    </Typography>
-                  </Box>
-
-                  <Box style={{ marginBottom: "1.5rem" }}>
-                    <Typography style={{ color: "#6A6A6A" }}>
-                      Referred by
-                    </Typography>
-
-                    {/* <Link
-                    href={
-                      user.user.userTypes.split(",").includes("user")
-                        ? `/users/signup/${user.user.invited_by.id}`
-                        : user.user.userTypes.split(",").includes("customer")
-                        ? `/users/customer/${user.user.invited_by.id}`
-                        : user.user.userTypes.split(",").includes("vendor") ||
-                          user.user.userTypes.split(",").includes("wholesaler")
-                        ? `/users/vendor/${user.user.invited_by.id}`
-                        : user.user.userTypes.split(",").includes("influencer")
-                        ? `/influencers/all/${user.user.invited_by.id}?code=${user.user.invited_by.refCode}`
-                        : ""
-                    }
-                  >
-                    <a> */}
-                    <Typography
-                      style={{
-                        padding: "0.15rem 0",
-                        color: "#242120",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {/* {user.user.invited_by.firstName}{" "}
-                        {user.user.invited_by.lastName} */}{" "}
-                      ref Name
-                    </Typography>
-                    {/* </a>
-                  </Link> */}
-                  </Box>
-
-                  <Box style={{ display: "flex" }}>
-                    <Box style={{ marginRight: "5rem" }}>
-                      <Box>
-                        <Typography
-                          style={{ color: "#6A6A6A", marginRight: "1rem" }}
-                        >
-                          Total Referral
-                        </Typography>
-
-                        <Typography
-                          style={{
-                            padding: "0.15rem 0",
-                            color: "#242120",
-                          }}
-                        >
-                          {/* {user.user.my_referrers.length} */} 30
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography
-                          style={{
-                            color: "#6A6A6A",
-                            marginRight: "1rem",
-                            marginTop: "0.5rem",
-                          }}
-                        >
-                          Referral Code
-                        </Typography>
-
-                        <Typography
-                          style={{
-                            padding: "0.15rem 0",
-                            color: "#242120",
-                          }}
-                        >
-                          {/* {user.user.refCode} */} 012345
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography
-                          style={{
-                            color: "#6A6A6A",
-                            marginRight: "1rem",
-                            marginTop: "0.5rem",
-                          }}
-                        >
-                          Sign -up Platform
-                        </Typography>
-
-                        <Typography
-                          style={{
-                            padding: "0.15rem 0",
-                            color: "#242120",
-                          }}
-                        >
-                          {/* {user.user.platform === "wholesaler"
-                          ? "Wholesale Center"
-                          : "Marketplace Center"} */}{" "}
-                          Platform
-                        </Typography>
-                      </Box>
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        {loan.data[0].account_number}
+                      </Typography>
                     </Box>
 
-                    <Box>
-                      <Box>
-                        <Typography
-                          style={{
-                            color: "#6A6A6A",
-                            marginRight: "1rem",
-                          }}
-                        >
-                          Verified Referrals
-                        </Typography>
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "50px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Amount
+                      </Typography>
 
-                        <Typography
-                          style={{
-                            padding: "0.15rem 0",
-                            color: "#242120",
-                          }}
-                        >
-                          {/* {
-                          user.user.my_referrers.filter(
-                            (ref) => ref.activated === 1
-                          ).length
-                        } */}{" "}
-                          40
-                        </Typography>
-                      </Box>
-
-                      <Box>
-                        <Typography
-                          style={{
-                            color: "#6A6A6A",
-                            marginRight: "1rem",
-                            marginTop: "0.5rem",
-                          }}
-                        >
-                          Earnings
-                        </Typography>
-                        <Typography
-                          style={{
-                            padding: "0.15rem 0",
-                            color: "#242120",
-                          }}
-                        >
-                          {/* <NumberFormat
-                          value={user.customer_earnings_payments
-                            .map((earn) => earn.amount)
-                            .reduce((a, b) => (a = Number(a) + Number(b)), 0)}
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        <NumberFormat
+                          value={loan.data[0].amount}
                           displayType={"text"}
                           thousandSeparator={true}
                           prefix={"₦"}
-                        /> */}
-                          2000000000000
-                        </Typography>
-                      </Box>
+                        />
+                      </Typography>
+                    </Box>
 
-                      <Box>
-                        <Typography
-                          style={{
-                            color: "#6A6A6A",
-                            marginRight: "1rem",
-                            marginTop: "0.5rem",
-                          }}
-                        >
-                          Sign-up Date
-                        </Typography>
-                        <Typography
-                          style={{
-                            padding: "0.15rem 0",
-                            color: "#242120",
-                          }}
-                        >
-                          {/* {moment(user.user.createdAt).format("MMM DD, YYYY")} */}
-                          today
-                        </Typography>
-                      </Box>
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "50px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Remaining Unpaid Loan Balance
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        <NumberFormat
+                          value={loan.data[0].amount_remain}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"₦"}
+                        />
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex">
+                    <Box style={{ marginBottom: "1.5rem" }}>
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Type
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        {loan.data[0].loan_type}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "50px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Business Name
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        {loan.data[0].business_name}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "50px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Business Description
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        {loan.data[0].business_description}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex">
+                    <Box style={{ marginBottom: "1.5rem" }}>
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Interest
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        <NumberFormat
+                          value={loan.data[0].interest}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"₦"}
+                        />
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "50px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Interest Rate
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        {loan.data[0].interest_rate}%
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "50px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Interest Rate Type
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        {loan.data[0].interest_rate_type}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex">
+                    <Box style={{ marginBottom: "1.5rem" }}>
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Total Amount and Interest
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        <NumberFormat
+                          value={loan.data[0].total_amount_and_interest}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"₦"}
+                        />
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "30px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Interest Remaining
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        <NumberFormat
+                          value={loan.data[0].interest_remain}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"₦"}
+                        />
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "30px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Principal Amount
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        <NumberFormat
+                          value={loan.data[0].principal_remain}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          prefix={"₦"}
+                        />
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Box display="flex">
+                    <Box style={{ marginBottom: "1.5rem" }}>
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Reason for Loan
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                        }}
+                      >
+                        {loan.data[0].reason}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "30px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Tenure
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        {loan.data[0].tenure}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      style={{ marginBottom: "1.5rem", paddingLeft: "30px" }}
+                    >
+                      <Typography style={{ color: "#6A6A6A" }}>
+                        Loan Tenure Type
+                      </Typography>
+
+                      <Typography
+                        style={{
+                          padding: "0.15rem 0",
+                          color: "#242120",
+                          whiteSpace: "initial",
+                        }}
+                      >
+                        {loan.data[0].tenure_type}
+                      </Typography>
                     </Box>
                   </Box>
                 </Box>
