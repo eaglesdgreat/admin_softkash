@@ -270,7 +270,7 @@ export default function View() {
               alignItems: "center",
             }}
           >
-            <Button
+            {/* <Button
               size="large"
               className={classes.buttonHover}
               disableRipple
@@ -296,98 +296,38 @@ export default function View() {
               >
                 update status
               </Typography>
-            </Button>
+            </Button> */}
 
             {type === "approvedloan" ? (
-              <Popper
-                open={open}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                transition
-                disablePortal
-              >
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
+              <>
+                <Button
+                  size="large"
+                  className={classes.buttonHover}
+                  disableRipple
+                  onClick={openMenu}
+                  ref={anchorRef}
+                  aria-controls={open ? "menu-list-grow" : undefined}
+                  aria-haspopup="true"
+                >
+                  <EditOutlined
                     style={{
-                      transformOrigin:
-                        placement === "bottom" ? "center top" : "center bottom",
+                      fontSize: "0.9rem",
+                      color: "#007945",
+                      marginRight: "0.3rem",
+                    }}
+                  />
+                  <Typography
+                    style={{
+                      fontSize: "0.8rem",
+                      fontWeight: 500,
+                      color: "#007945",
+                      textTransform: "uppercase",
                     }}
                   >
-                    <Paper>
-                      <ClickAwayListener onClickAway={handleClose}>
-                        <MenuList
-                          autoFocusItem={open}
-                          id="menu-list-grow"
-                          // onKeyDown={handleListKeyDown}
-                        >
-                          {menuList.map((item, i) => (
-                            <Tooltip title={item.title} key={i}>
-                              <MenuItem
-                                data-my-value={item.value}
-                                onClick={(e) => {
-                                  setSelected(item.value);
-                                  handleStatusUpdate(e);
-                                }}
-                                disabled={item.disabled}
-                                selected={item.value === selected}
-                              >
-                                {item.name}
-                              </MenuItem>
-                            </Tooltip>
-                          ))}
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            ) : type === "rejectedloan" ? (
-              <Popper
-                open={open}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                transition
-                disablePortal
-              >
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    style={{
-                      transformOrigin:
-                        placement === "bottom" ? "center top" : "center bottom",
-                    }}
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={handleClose}>
-                        <MenuList
-                          autoFocusItem={open}
-                          id="menu-list-grow"
-                          // onKeyDown={handleListKeyDown}
-                        >
-                          {menuList2.map((item, i) => (
-                            <Tooltip title={item.title} key={i}>
-                              <MenuItem
-                                data-my-value={item.value}
-                                onClick={(e) => {
-                                  setSelected(item.value);
-                                  handleStatusUpdate(e);
-                                }}
-                                disabled={item.disabled}
-                                selected={item.value === selected}
-                              >
-                                {item.name}
-                              </MenuItem>
-                            </Tooltip>
-                          ))}
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            ) : (
-              type === "activeloan" && (
+                    update status
+                  </Typography>
+                </Button>
+
                 <Popper
                   open={open}
                   anchorEl={anchorRef.current}
@@ -412,8 +352,7 @@ export default function View() {
                             id="menu-list-grow"
                             // onKeyDown={handleListKeyDown}
                           >
-                            {/* {router.pathname === "/loanspending" */}
-                            {menuList3.map((item, i) => (
+                            {menuList.map((item, i) => (
                               <Tooltip title={item.title} key={i}>
                                 <MenuItem
                                   data-my-value={item.value}
@@ -434,6 +373,161 @@ export default function View() {
                     </Grow>
                   )}
                 </Popper>
+              </>
+            ) : type === "rejectedloan" ? (
+              <>
+                <Button
+                  size="large"
+                  className={classes.buttonHover}
+                  disableRipple
+                  onClick={openMenu}
+                  ref={anchorRef}
+                  aria-controls={open ? "menu-list-grow" : undefined}
+                  aria-haspopup="true"
+                >
+                  <EditOutlined
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "#007945",
+                      marginRight: "0.3rem",
+                    }}
+                  />
+                  <Typography
+                    style={{
+                      fontSize: "0.8rem",
+                      fontWeight: 500,
+                      color: "#007945",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    update status
+                  </Typography>
+                </Button>
+
+                <Popper
+                  open={open}
+                  anchorEl={anchorRef.current}
+                  role={undefined}
+                  transition
+                  disablePortal
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom"
+                            ? "center top"
+                            : "center bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleClose}>
+                          <MenuList
+                            autoFocusItem={open}
+                            id="menu-list-grow"
+                            // onKeyDown={handleListKeyDown}
+                          >
+                            {menuList2.map((item, i) => (
+                              <Tooltip title={item.title} key={i}>
+                                <MenuItem
+                                  data-my-value={item.value}
+                                  onClick={(e) => {
+                                    setSelected(item.value);
+                                    handleStatusUpdate(e);
+                                  }}
+                                  disabled={item.disabled}
+                                  selected={item.value === selected}
+                                >
+                                  {item.name}
+                                </MenuItem>
+                              </Tooltip>
+                            ))}
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </>
+            ) : (
+              type === "activeloan" && (
+                <>
+                  <Button
+                    size="large"
+                    className={classes.buttonHover}
+                    disableRipple
+                    onClick={openMenu}
+                    ref={anchorRef}
+                    aria-controls={open ? "menu-list-grow" : undefined}
+                    aria-haspopup="true"
+                  >
+                    <EditOutlined
+                      style={{
+                        fontSize: "0.9rem",
+                        color: "#007945",
+                        marginRight: "0.3rem",
+                      }}
+                    />
+                    <Typography
+                      style={{
+                        fontSize: "0.8rem",
+                        fontWeight: 500,
+                        color: "#007945",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      update status
+                    </Typography>
+                  </Button>
+
+                  <Popper
+                    open={open}
+                    anchorEl={anchorRef.current}
+                    role={undefined}
+                    transition
+                    disablePortal
+                  >
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === "bottom"
+                              ? "center top"
+                              : "center bottom",
+                        }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList
+                              autoFocusItem={open}
+                              id="menu-list-grow"
+                              // onKeyDown={handleListKeyDown}
+                            >
+                              {/* {router.pathname === "/loanspending" */}
+                              {menuList3.map((item, i) => (
+                                <Tooltip title={item.title} key={i}>
+                                  <MenuItem
+                                    data-my-value={item.value}
+                                    onClick={(e) => {
+                                      setSelected(item.value);
+                                      handleStatusUpdate(e);
+                                    }}
+                                    disabled={item.disabled}
+                                    selected={item.value === selected}
+                                  >
+                                    {item.name}
+                                  </MenuItem>
+                                </Tooltip>
+                              ))}
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
+                </>
               )
             )}
           </Box>
