@@ -453,7 +453,7 @@ function LoansPending() {
                     .map((user, i) => (
                       <TableRow key={user.id}>
                         <TableCell>
-                          <Link href={"/loans/[view]?type='approvedloan'"} as={`/loans/${user.id}?type='approvedloan'`}>
+                          <Link href={"/loans/[view]?type=approvedloan"} as={`/loans/${user.id}?type=approvedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -472,7 +472,7 @@ function LoansPending() {
                         </TableCell>
 
                         <TableCell>
-                          <Link href={"/loans/[view]?type='approvedloan'"} as={`/loans/${user.id}?type='approvedloan'`}>
+                          <Link href={"/loans/[view]?type=approvedloan"} as={`/loans/${user.id}?type=approvedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -491,7 +491,7 @@ function LoansPending() {
                         </TableCell>
 
                         <TableCell>
-                          <Link href={"/loans/[view]?type='approvedloan'"} as={`/loans/${user.id}?type='approvedloan'`}>
+                          <Link href={"/loans/[view]?type=approvedloan"} as={`/loans/${user.id}?type=approvedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -510,7 +510,7 @@ function LoansPending() {
                         </TableCell>
 
                         <TableCell>
-                          <Link href={"/loans/[view]?type='approvedloan'"} as={`/loans/${user.id}?type='approvedloan'`}>
+                          <Link href={"/loans/[view]?type=approvedloan"} as={`/loans/${user.id}?type=approvedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -534,7 +534,7 @@ function LoansPending() {
                         </TableCell>
 
                         <TableCell>
-                          <Link href={"/loans/[view]?type='approvedloan'"} as={`/loans/${user.id}?type='approvedloan'`}>
+                          <Link href={"/loans/[view]?type=approvedloan"} as={`/loans/${user.id}?type=approvedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -553,7 +553,7 @@ function LoansPending() {
                         </TableCell>
 
                         <TableCell>
-                          <Link href={"/loans/[view]?type='approvedloan'"} as={`/loans/${user.id}?type='approvedloan'`}>
+                          <Link href={"/loans/[view]?type=approvedloan"} as={`/loans/${user.id}?type=approvedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}

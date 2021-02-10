@@ -385,7 +385,7 @@ function LoansRejected() {
                     .map((user, i) => (
                       <TableRow key={user.id}>
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                          <Link href={"/loans/[view]?type=rejectedloan"} as={`/loans/${user.id}?type=rejectedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -404,7 +404,7 @@ function LoansRejected() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                          <Link href={"/loans/[view]?type=rejectedloan"} as={`/loans/${user.id}?type=rejectedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Box display="flex">
                                 <Button
@@ -458,7 +458,7 @@ function LoansRejected() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                          <Link href={"/loans/[view]?type=rejectedloan"} as={`/loans/${user.id}?type=rejectedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -477,7 +477,7 @@ function LoansRejected() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                          <Link href={"/loans/[view]?type=rejectedloan"} as={`/loans/${user.id}?type=rejectedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -501,7 +501,7 @@ function LoansRejected() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                          <Link href={"/loans/[view]?type=rejectedloan"} as={`/loans/${user.id}?type=rejectedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -520,7 +520,7 @@ function LoansRejected() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='rejectedloan'"} as={`/loans/${user.id}?type='rejectedloan'`}>
+                          <Link href={"/loans/[view]?type=rejectedloan"} as={`/loans/${user.id}?type=rejectedloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}

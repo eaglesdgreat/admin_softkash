@@ -19,6 +19,7 @@ import useSWR, { mutate } from 'swr'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
+import Link from 'next/link'
 
 import TableLayout from '../components/Tables'
 import Graph from '../components/graph/BarChart'
@@ -390,7 +391,7 @@ function ActiveLoansList() {
                     .map((user, i) => (
                       <TableRow key={user.id}>
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                          <Link href={"/loans/[view]?type=activeloan"} as={`/loans/${user.id}?type=activeloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -408,7 +409,7 @@ function ActiveLoansList() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                          <Link href={"/loans/[view]?type=activeloan"} as={`/loans/${user.id}?type=activeloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -427,7 +428,7 @@ function ActiveLoansList() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                          <Link href={"/loans/[view]?type=activeloan"} as={`/loans/${user.id}?type=activeloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -445,7 +446,7 @@ function ActiveLoansList() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                          <Link href={"/loans/[view]?type=activeloan"} as={`/loans/${user.id}?type=activeloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -468,7 +469,7 @@ function ActiveLoansList() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'`}>
+                          <Link href={"/loans/[view]?type=activeloan"} as={`/loans/${user.id}?type=activeloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
@@ -498,7 +499,7 @@ function ActiveLoansList() {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          <Link href={"/loans/[view]?type='activeloan'"} as={`/loans/${user.id}?type='activeloan'?type='activeloan'`}>
+                          <Link href={"/loans/[view]?type=activeloan"} as={`/loans/${user.id}?type=activeloan?type=activeloan`}>
                             <a style={{ textDecoration: "none" }}>
                               <Typography
                                 className={classes.typography}
